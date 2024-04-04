@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎来到我的博客</title>
+    <style>
+        body {
+            background-image: url('back.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        header {
+            background-color: #ffffff00;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        article {
+            flex: 1 0 400px;
+            margin: 20px;
+            background-color: rgba(255, 255, 255, 0.389);
+            border-radius: 20px;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            padding-bottom: 20px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        footer {
+            background-color: #f8f9fa00;
+            text-align: center;
+            padding: 0px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            position: fixed;
+            bottom: 0;
+        }
+
+        h2 {
+            color: rgb(0, 136, 255);
+            font-size: 200%;
+            text-align: center;
+        }
+
+        a {
+            color: rgb(0, 34, 255);
+            font-size: 120%;
+            text-align: center;
+            padding-left: 5%;
+        }
+
+        p {
+            font-size: 150%;
+            text-align: center;
+        }
+
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding-top: 43%;
+            margin: 20px;
+            background-color: rgba(255, 255, 255, 0);
+            overflow-y: auto;
+            max-height: calc(100% - 60px);
+            padding-bottom: 80px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                background-image: url('mobile.png');
+                background-size: cover;
+                background-attachment: fixed;
+                background-position: center;
+            }
+
+            main {
+                padding-top: 175%;
+                margin: 20px;
+                background-color: rgba(255, 255, 255, 0);
+                overflow-y: auto;
+                max-height: calc(100% - 60px);
+                padding-bottom: 100px;
+            }
+
+            article {
+                flex: 1 0 200px;
+                margin: 10px;
+                background-color: rgba(255, 255, 255, 0.389);
+                border-radius: 20px;
+                backdrop-filter: blur(6px);
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+                padding-bottom: 20px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            footer {
+                background-color: #f8f9fa00;
+                text-align: center;
+                width: 100%;
+                backdrop-filter: blur(10px);
+                position: fixed;
+                bottom: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1 style="font-size: 250%;color:rgb(229, 83, 237);">chen6019的博客</h1>
+        <p>还在学习中，效果一般请见谅</p>
+    </header>
+    <main>
+        <article>
+            <h2>开机自动登陆校园网</h2>
+            <p>登陆校园网的软件经常掉线，很麻烦，所以写了个脚本，开机自动登陆校园网,在无法登陆校园网时自动连接wifi(需要输入WiFi名称和密码)。</p>
+            <a href="https://github.com/chen6019/Windows-bat/tree/main/%E6%A0%A1%E5%9B%AD%E7%BD%91"
+                target="_blank">Bat脚本</a>
+            <br>
+            <a href="#" target="_blank">PowerShell脚本(暂未开放)</a>
+        </article>
+        <article>
+            <h2>开机自动启动软件</h2>
+            <p>开机自动启动软件，可以让软件在开机时自动启动，不用手动启动软件。</p>
+            <a href="#" target="_blank">PowerShell脚本(暂未开放)</a>
+        </article>
+        <article>
+            <h2>定时关机</h2>
+            <p>定时关机脚本，可以自定义时间，单位为秒(1分钟=60秒)</p>
+            <a href="https://github.com/chen6019/Windows-bat" target="_blank">Bat脚本</a>
+        </article>
+        <article>
+            <h2>测试标题</h2>
+            <p>测试描述内容</p>
+            <a href="#" target="_blank">测试链接</a>
+        </article>
+        <article>
+            <h2>测试标题</h2>
+            <p>测试描述内容</p>
+            <a href="#" target="_blank">测试链接</a>
+        </article>
+        <article>
+            <h2>测试标题</h2>
+            <p>测试描述内容</p>
+            <a href="#" target="_blank">测试链接</a>
+        </article>
+        <article>
+            <h2>测试标题</h2>
+            <p>测试描述内容</p>
+            <a href="#" target="_blank">测试链接</a>
+        </article>
+        <article>
+            <h2>测试标题</h2>
+            <p>测试描述内容</p>
+            <a href="#" target="_blank">测试链接</a>
+        </article>
+        <article>
+            <h2>测试标题</h2>
+            <p>测试描述内容</p>
+            <a href="#" target="_blank">测试链接</a>
+        </article>
+    </main>
+    <footer>
+        <a style="padding-left: 0%;" href="https://github.com/chen6019" target="_blank">关于chen6019</a>
+        <p>网页内容归chen6019所有 &copy; 2024</p>
+    </footer>
+</body>
+
+</html>
