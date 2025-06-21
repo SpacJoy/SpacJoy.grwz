@@ -210,3 +210,27 @@ body.vertical-layout {
         background-position: right center !important;
     }
 }
+
+/* 标题图标样式 */
+h1 img {
+    width: 128px;
+    height: 128px;
+    vertical-align: middle;
+    margin-right: 10px;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+}
+
+/* 图标悬停效果 */
+h1 img:hover {
+    transform: scale(1.1);
+}
+
+/* 移动端图标大小调整 */
+@media (max-width: 800px) {
+    h1 img {
+        width: 128px;
+        height: 128px;
+        margin-right: 8px;
+    }
+}
