@@ -1,0 +1,95 @@
+ /* 设置整个网页背景样式 */
+ body {
+     overflow-y: scroll;
+     scrollbar-width: auto;
+ }
+
+ /* 隐藏Webkit浏览器的滚动条 */
+ body::-webkit-scrollbar {
+     display: none;
+ }
+
+ /* 设置页面底部样式 */
+ footer {
+    position: relative;
+    padding: 10px;
+    bottom: 0;
+ }
+ main {
+    margin-top: 55%;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    max-height: calc(100% - 60px);
+}
+
+ /* 设置文章样式 */
+ article {
+     flex: 1 0 300px;
+     margin: 20px;
+     background-color: rgba(255, 255, 255, 0.389);
+     border-radius: 20px;
+     backdrop-filter: blur(8px);
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.339);
+     padding-bottom: 20px;
+     padding-left: 20px;
+     padding-right: 20px;
+ }
+
+ /* 设置h2标题样式 */
+ h2 {
+     color: rgb(0, 136, 255);
+     font-size: 160%;
+     text-align: center;
+ }
+
+ /* 设置链接样式 */
+ .lj {
+     color: rgb(0, 34, 255);
+     font-size: 120%;
+     text-align: center;
+     padding-left: 5%;
+     text-decoration: none;
+ }
+
+ /* 设置移动端样式 */
+ @media (max-width: 600px) {
+
+     /* 设置移动端背景图样式 */
+     body {
+         background-image: url('mobile.png');
+         background-size: cover;
+         background-attachment: fixed;
+         background-position: center;
+     }
+
+     /* 设置移动端主要内容样式 */
+     main {
+         padding-top: 200%;
+         margin: 15px;
+     }
+
+     /* 设置移动端文章样式 */
+     article {
+         flex: 1 0 250px;
+         margin: 10px;
+         border-radius: 20px;
+         backdrop-filter: blur(6px);
+         box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+     }
+
+     /* 设置移动端h1标题样式 */
+     h1 {
+         padding-left: 15%;
+     }
+
+     /* 设置页面顶部标题样式 */
+     header {
+         width: 101%;
+     }
+
+     /* 设置页面底部样式 */
+     footer {
+         width: 101%;
+         margin-left: -2%;
+     }
+ }

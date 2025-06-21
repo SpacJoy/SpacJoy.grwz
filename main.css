@@ -1,0 +1,186 @@
+/* HTML: <div class="loader"></div> 
+<script> 
+// 在3秒后隐藏 loader 并显示内容
+setTimeout(function () {
+        document.querySelector('.loader').style.display='none';
+        document.querySelector('.content').style.display='block';
+    }, 1000);
+</script>
+<div class="content">
+< !-- 在这里添加你想显示的其他内容 -->
+</div> */
+.loader {
+    position: fixed;
+    width: 70px;
+    aspect-ratio: 1;
+    background:
+        radial-gradient(farthest-side, #ffa516 90%, #0000) center/16px 16px,
+        radial-gradient(farthest-side, green 90%, #0000) bottom/12px 12px;
+    background-repeat: no-repeat;
+    animation: l17 1s infinite linear;
+    position: fixed;
+    /* 修改为固定定位 */
+    top: 50%;
+    /* 上边距设置为50% */
+    left: 50%;
+    /* 左边距设置为50% */
+    z-index: 1;
+}
+
+.loader::before {
+    content: "";
+    position: absolute;
+    width: 8px;
+    aspect-ratio: 1;
+    inset: auto 0 16px;
+    margin: auto;
+    background: #ccc;
+    border-radius: 50%;
+    transform-origin: 50% calc(100% + 10px);
+    animation: inherit;
+    animation-duration: 0.5s;
+}
+
+@keyframes l17 {
+    100% {
+        transform: rotate(1turn)
+    }
+}
+/* 添加模糊效果的 div */
+.blur-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(20px);
+    z-index: 1;
+    /* 设置 z-index 为 1 */
+}
+
+/* <header><h1><a class="home" href="index.html">chen的工具箱</a></h1><h2>->下一页</h2></header> */
+.home {
+    color: rgba(0, 120, 249, 0.911);
+    text-decoration: none;
+}
+ /* 设置页面顶部标题样式 */
+header {
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    margin-left: -2%;
+    position: fixed;
+    top: 0;
+    width: 105%;
+    display: flex;
+    align-items: baseline;
+    z-index: 1;
+}
+/* 设置h1标题样式 */
+h1 {
+    color: rgba(0, 136, 255, 0.628);
+    text-shadow: 0 0 8px rgba(0, 136, 255, 0.628);
+    font-size: 300%;
+    text-align: left;
+    padding-left: 10%;
+}
+
+h2 {
+    color: rgba(0, 136, 255, 0.628);
+    text-shadow: 0 0 8px rgba(0, 136, 255, 0.628);
+    font-size: 300%;
+    text-align: left;
+    padding-left: 2%;
+}
+
+body {
+    background-image: url('back.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+/* 设置页面底部样式 */
+footer {
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    margin-left: -2%;
+    position: fixed;
+    bottom: 0;
+    width: 105%;
+    padding-top: 15px;
+    text-align: center;
+    z-index: 1;
+}
+.gn {
+    color: rgba(0, 120, 249, 0.911);
+    font-size: 110%;
+    text-align: center;
+    text-decoration: none;
+}
+ /* 设置段落文本样式 */
+ p {
+     font-size: 135%;
+     text-align: center;
+ }
+
+ .btn {
+     width: 100%;
+     height: 40px;
+     font-size: 20px;
+     background-color: #007bff;
+     color: white;
+     border: none;
+     border-radius: 10px;
+     cursor: pointer;
+     transition: 0.3s;
+    }
+/* 设置主要内容样式 */
+main {
+    display: flex;
+    justify-content: space-around;
+    z-index: 2;
+}
+        /* 设置移动端样式 */
+        @media (max-width: 600px) {
+    
+            /* 设置移动端背景图样式 */
+            body {
+                background-image: url('mobile.png');
+                background-size: cover;
+                background-attachment: fixed;
+                background-position: center;
+            }
+    
+            /* 设置移动端主要内容样式 */
+            main {
+                padding-top: 200%;
+                margin: 15px;
+            }
+    
+            /* 设置移动端文章样式 */
+            article {
+                flex: 1 0 250px;
+                margin: 10px;
+                border-radius: 20px;
+                backdrop-filter: blur(6px);
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            }
+    
+            /* 设置移动端h1标题样式 */
+            h1 {
+                padding-left: 5%;
+            }
+    
+            /* 设置页面顶部标题样式 */
+            header {
+                width: 101%;
+                font-size: 65%;
+                text-align: left;
+            }
+    
+            /* 设置页面底部样式 */
+            footer {
+                width: 101%;
+                margin-left: -2%;
+            }
+        }

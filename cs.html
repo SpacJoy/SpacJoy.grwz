@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试</title>
+</head>
+<link rel="stylesheet" type="text/css" href="main.css">
+<body>
+    <!-- 添加模糊效果的 div -->
+    <div class="blur-effect"></div> 
+    <div class="loader"></div>
+    <header>
+        <h1><a class="home" href="index.html">chen的工具箱</a></h1>
+        <h2>->下一页</h2>
+    </header>
+    <script>
+        // 在3秒后隐藏 loader 并显示内容
+        setTimeout(function () {
+            document.querySelector('.loader').style.display = 'none';
+            document.querySelector('.blur-effect').style.display = 'none';
+        }, 1000);
+    </script>
+    <div class="content">
+        <!-- 在这里添加你想显示的其他内容 -->
+    </div>
+    <footer>
+        <a href="https://github.com/chen6019" class="gn">关于chen6019</a>
+        <p>网页内容归chen6019所有 &copy; 2024</p>
+    </footer>
+</body>
+</html>
