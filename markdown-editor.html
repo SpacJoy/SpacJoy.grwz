@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Markdown编辑器 - 喵~呜~~！</title>
+		<link rel="icon" type="image/png" href="res/top.png" />
+		<!-- 
+        设置网页样式
+    -->
+		<link rel="stylesheet" type="text/css" href="main.css" />
+		<link rel="stylesheet" type="text/css" href="markdown-editor.css" />
+		<!-- Markdown解析库 -->
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	</head>
+
+	<body>
+		<div class="blur-effect"></div>
+		<div class="loader">
+			<img id="loading-gif" src="" alt="Loading..." />
+		</div>
+		<header>
+			<h1>
+				<img src="res/top.png" alt="Logo" />
+				<a href="index.html" class="home">喵~~~？嗷~呜~~！</a>
+			</h1>
+			<nav>
+				<a href="index.html" class="nav-link">返回首页</a>
+			</nav>
+		</header>
+
+		<script>
+			// 随机选择加载GIF
+			const loadingGifs = [
+				{ src: "res/Loading.gif", width: "400px", height: "400px" },
+				{ src: "res/Loading1.gif", width: "400px", height: "400px" },
+				{ src: "res/Loading2.gif", width: "400px", height: "400px" },
+				{ src: "res/Loading3.gif", width: "549px", height: "297px" },
+				{ src: "res/Loading4.gif", width: "200px", height: "240px" },
+			];
+			const randomGif =
+				loadingGifs[Math.floor(Math.random() * loadingGifs.length)];
+			const loadingImg = document.getElementById("loading-gif");
+			loadingImg.src = randomGif.src;
+			loadingImg.style.width = randomGif.width;
+			loadingImg.style.height = randomGif.height;
+
+			// 在800ms后隐藏 loader 并显示内容
+			setTimeout(function () {
+				document.querySelector(".loader").style.display = "none";
+				document.querySelector(".blur-effect").style.display = "none";
+			}, 800);
+
+			// Markdown功能初始化
+			function initMarkdown() {
+				const markdownInput = document.getElementById("markdown-input");
+				const markdownOutput =
+					document.getElementById("markdown-output");
+
+				if (markdownInput && markdownOutput) {
+					// 实时预览功能
+					function updatePreview() {
+						const markdownText = markdownInput.value;
+						if (typeof marked !== "undefined") {
+							markdownOutput.innerHTML =
+								marked.parse(markdownText);
+						} else {
+							markdownOutput.innerHTML =
+								'<p style="color: red;">Markdown库加载失败，请检查网络连接</p>';
+						}
+					}
+
+					// 监听输入变化
+					markdownInput.addEventListener("input", updatePreview);
+
+					// 初始化默认内容
+					markdownInput.value = `# 欢迎使用Markdown编辑器！
+
+这是一个**实时预览**的Markdown编辑器。
+
+## 支持的功能：
+- **粗体文本**
+- *斜体文本*
+- [链接](https://github.com/chen6019)
+- \`行内代码\`
+
+### 代码块：
+\`\`\`javascript
+console.log("Hello, Markdown!");
+\`\`\`
+
+> 这是一个引用块
+
+1. 有序列表项1
+2. 有序列表项2
+
+- 无序列表项
+- 另一个列表项
+
+### 表格支持：
+| 功能 | 状态 | 描述 |
+|------|------|------|
+| 标题 | ✅ | 支持1-6级标题 |
+| 粗体/斜体 | ✅ | 完全支持 |
+| 链接 | ✅ | 内外链都支持 |
+| 代码 | ✅ | 行内和块级 |
+
+---
+
+**提示：** 在左侧输入框中编辑Markdown，右侧会实时显示渲染效果！`;
+
+					// 初始化预览
+					updatePreview();
+
+					// 添加键盘快捷键
+					markdownInput.addEventListener("keydown", function (e) {
+						// Ctrl+S 或 Cmd+S 保存到本地存储
+						if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+							e.preventDefault();
+							localStorage.setItem(
+								"markdown-content",
+								markdownInput.value
+							);
+							showNotification("内容已保存到本地存储");
+						}
+
+						// Tab键插入4个空格
+						if (e.key === "Tab") {
+							e.preventDefault();
+							const start = markdownInput.selectionStart;
+							const end = markdownInput.selectionEnd;
+							markdownInput.value =
+								markdownInput.value.substring(0, start) +
+								"    " +
+								markdownInput.value.substring(end);
+							markdownInput.selectionStart =
+								markdownInput.selectionEnd = start + 4;
+						}
+					});
+
+					// 从本地存储恢复内容
+					const savedContent =
+						localStorage.getItem("markdown-content");
+					if (savedContent) {
+						markdownInput.value = savedContent;
+						updatePreview();
+					}
+				}
+			}
+
+			// 显示通知
+			function showNotification(message) {
+				const notification = document.createElement("div");
+				notification.className = "notification";
+				notification.textContent = message;
+				document.body.appendChild(notification);
+
+				setTimeout(() => {
+					notification.classList.add("show");
+				}, 100);
+
+				setTimeout(() => {
+					notification.classList.remove("show");
+					setTimeout(() => {
+						document.body.removeChild(notification);
+					}, 300);
+				}, 2000);
+			}
+
+			// 页面加载完成后初始化Markdown
+			window.addEventListener("load", initMarkdown);
+		</script>
+
+		<main class="markdown-editor-main">
+			<!-- 工具栏 -->
+			<div class="toolbar">
+				<button
+					class="tool-btn"
+					onclick="insertMarkdown('**', '**')"
+					title="粗体"
+				>
+					<strong>B</strong>
+				</button>
+				<button
+					class="tool-btn"
+					onclick="insertMarkdown('*', '*')"
+					title="斜体"
+				>
+					<em>I</em>
+				</button>
+				<button
+					class="tool-btn"
+					onclick="insertMarkdown('`', '`')"
+					title="行内代码"
+				>
+					&lt;/&gt;
+				</button>
+				<button
+					class="tool-btn"
+					onclick="insertMarkdown('[', '](url)')"
+					title="链接"
+				>
+					🔗
+				</button>
+				<button
+					class="tool-btn"
+					onclick="insertMarkdown('> ', '')"
+					title="引用"
+				>
+					💬
+				</button>
+				<button
+					class="tool-btn"
+					onclick="insertMarkdown('- ', '')"
+					title="列表"
+				>
+					📝
+				</button>
+				<button class="tool-btn" onclick="clearEditor()" title="清空">
+					🗑️
+				</button>
+				<button
+					class="tool-btn"
+					onclick="downloadMarkdown()"
+					title="下载"
+				>
+					💾
+				</button>
+			</div>
+
+			<!-- Markdown编辑区域 -->
+			<section class="markdown-section">
+				<div class="markdown-container">
+					<div class="markdown-input">
+						<h3>
+							输入区域
+							<span class="shortcut-hint">Ctrl+S 保存</span>
+						</h3>
+						<textarea
+							id="markdown-input"
+							placeholder="在这里输入Markdown内容...&#10;&#10;支持的格式：&#10;# 标题&#10;**粗体** *斜体*&#10;- 列表项&#10;[链接](https://example.com)&#10;```代码块```"
+						></textarea>
+					</div>
+					<div class="markdown-output">
+						<h3>预览区域</h3>
+						<div id="markdown-output"></div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer>
+			<a
+				style="padding-left: 0%"
+				href="https://github.com/chen6019"
+				class="gn"
+				target="_blank"
+				>关于chen6019</a
+			>
+			<p>网页内容归chen6019所有 &copy; 2025</p>
+		</footer>
+
+		<script>
+			// 工具栏功能
+			function insertMarkdown(before, after) {
+				const textarea = document.getElementById("markdown-input");
+				const start = textarea.selectionStart;
+				const end = textarea.selectionEnd;
+				const text = textarea.value;
+				const selectedText = text.substring(start, end);
+
+				textarea.value =
+					text.substring(0, start) +
+					before +
+					selectedText +
+					after +
+					text.substring(end);
+				textarea.focus();
+				textarea.selectionStart = start + before.length;
+				textarea.selectionEnd =
+					start + before.length + selectedText.length;
+
+				// 触发输入事件以更新预览
+				textarea.dispatchEvent(new Event("input"));
+			}
+
+			function clearEditor() {
+				if (confirm("确定要清空编辑器内容吗？")) {
+					document.getElementById("markdown-input").value = "";
+					document.getElementById("markdown-output").innerHTML = "";
+				}
+			}
+
+			function downloadMarkdown() {
+				const content = document.getElementById("markdown-input").value;
+				const blob = new Blob([content], { type: "text/markdown" });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement("a");
+				a.href = url;
+				a.download = "document.md";
+				a.click();
+				URL.revokeObjectURL(url);
+			}
+		</script>
+	</body>
+</html>

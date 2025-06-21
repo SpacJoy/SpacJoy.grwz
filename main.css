@@ -234,3 +234,334 @@ h1 img:hover {
         margin-right: 8px;
     }
 }
+
+/* Markdown编辑器样式 */
+.markdown-section {
+    width: 100%;
+    margin: 30px 0;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.markdown-section h2 {
+    text-align: center;
+    color: rgba(0, 136, 255, 0.628);
+    margin-bottom: 20px;
+    font-size: 200%;
+}
+
+.markdown-container {
+    display: flex;
+    gap: 20px;
+    height: 400px;
+}
+
+.markdown-input, .markdown-output {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.markdown-input h3, .markdown-output h3 {
+    color: rgba(0, 136, 255, 0.628);
+    margin-bottom: 10px;
+    font-size: 120%;
+    text-align: center;
+}
+
+#markdown-input {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid rgba(0, 136, 255, 0.3);
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: none;
+    outline: none;
+    backdrop-filter: blur(5px);
+}
+
+#markdown-input:focus {
+    border-color: rgba(0, 136, 255, 0.6);
+    box-shadow: 0 0 10px rgba(0, 136, 255, 0.3);
+}
+
+#markdown-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#markdown-output {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid rgba(0, 136, 255, 0.3);
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+    overflow-y: auto;
+    backdrop-filter: blur(5px);
+}
+
+/* Markdown渲染内容样式 */
+#markdown-output h1, #markdown-output h2, #markdown-output h3 {
+    color: rgba(0, 136, 255, 0.8);
+    margin: 15px 0 10px 0;
+}
+
+#markdown-output p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+#markdown-output code {
+    background-color: rgba(0, 136, 255, 0.2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+#markdown-output pre {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 15px 0;
+}
+
+#markdown-output blockquote {
+    border-left: 4px solid rgba(0, 136, 255, 0.6);
+    padding-left: 15px;
+    margin: 15px 0;
+    background-color: rgba(0, 136, 255, 0.1);
+    border-radius: 0 8px 8px 0;
+}
+
+#markdown-output a {
+    color: rgba(0, 136, 255, 0.8);
+    text-decoration: none;
+    border-bottom: 1px dotted;
+}
+
+#markdown-output a:hover {
+    color: rgba(0, 136, 255, 1);
+}
+
+#markdown-output ul, #markdown-output ol {
+    padding-left: 25px;
+    margin: 10px 0;
+}
+
+#markdown-output li {
+    margin: 5px 0;
+}
+
+/* 移动端样式调整 */
+@media (max-width: 800px) {
+    .markdown-container {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .markdown-input, .markdown-output {
+        height: 300px;
+    }
+    
+    #markdown-input, #markdown-output {
+        font-size: 12px;
+    }
+    
+    .markdown-section {
+        margin: 20px 0;
+        padding: 15px;
+    }
+}
+
+/* Markdown显示区域样式 */
+.markdown-display-section {
+    width: 100%;
+    margin: 30px 0;
+    padding: 25px;
+    background-color: rgba(255, 255, 255, 0.389);
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.339);
+}
+
+.markdown-display-section h2 {
+    text-align: center;
+    color: rgba(0, 136, 255, 0.8);
+    margin-bottom: 25px;
+    font-size: 180%;
+    text-shadow: 0 0 10px rgba(0, 136, 255, 0.3);
+}
+
+.markdown-content {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+/* Markdown内容样式 */
+.markdown-content h1, .markdown-content h2, .markdown-content h3,
+.markdown-content h4, .markdown-content h5, .markdown-content h6 {
+    color: rgba(0, 136, 255, 0.8);
+    margin: 25px 0 15px 0;
+    text-shadow: 0 0 8px rgba(0, 136, 255, 0.3);
+}
+
+.markdown-content h2 {
+    font-size: 1.6em;
+    border-bottom: 2px solid rgba(0, 136, 255, 0.3);
+    padding-bottom: 8px;
+}
+
+.markdown-content h3 {
+    font-size: 1.3em;
+    border-bottom: 1px solid rgba(0, 136, 255, 0.2);
+    padding-bottom: 5px;
+}
+
+.markdown-content p {
+    margin: 15px 0;
+    line-height: 1.8;
+}
+
+.markdown-content strong {
+    color: rgba(0, 136, 255, 0.9);
+    font-weight: bold;
+}
+
+.markdown-content em {
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
+}
+
+.markdown-content code {
+    background-color: rgba(0, 136, 255, 0.15);
+    color: rgba(0, 136, 255, 0.9);
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+}
+
+.markdown-content pre {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 20px 0;
+    border-left: 4px solid rgba(0, 136, 255, 0.5);
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid rgba(0, 136, 255, 0.6);
+    padding: 15px 20px;
+    margin: 20px 0;
+    background-color: rgba(0, 136, 255, 0.08);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.markdown-content a {
+    color: rgba(0, 136, 255, 0.8);
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(0, 136, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.markdown-content a:hover {
+    color: rgba(0, 136, 255, 1);
+    border-bottom-style: solid;
+}
+
+.markdown-content ul, .markdown-content ol {
+    padding-left: 25px;
+    margin: 15px 0;
+}
+
+.markdown-content li {
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+.markdown-content li::marker {
+    color: rgba(0, 136, 255, 0.7);
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 2px solid rgba(0, 136, 255, 0.3);
+    margin: 30px 0;
+    background: linear-gradient(90deg, transparent, rgba(0, 136, 255, 0.3), transparent);
+    height: 1px;
+}
+
+/* 表格样式 */
+.markdown-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.markdown-content th, .markdown-content td {
+    border: 1px solid rgba(0, 136, 255, 0.2);
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.markdown-content th {
+    background-color: rgba(0, 136, 255, 0.15);
+    color: rgba(0, 136, 255, 0.9);
+    font-weight: bold;
+}
+
+.markdown-content td {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* 任务列表样式 */
+.markdown-content input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: rgba(0, 136, 255, 0.8);
+}
+
+/* 移动端适配 */
+@media (max-width: 800px) {    .markdown-display-section {
+        margin: 20px 0;
+        padding: 20px;
+        backdrop-filter: blur(16px);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        border-radius: 20px;
+    }
+    
+    .markdown-content {
+        font-size: 14px;
+    }
+    
+    .markdown-content h2 {
+        font-size: 1.4em;
+    }
+    
+    .markdown-content h3 {
+        font-size: 1.2em;
+    }
+    
+    .markdown-content ul, .markdown-content ol {
+        padding-left: 20px;
+    }
+    
+    .markdown-content pre {
+        padding: 15px;
+        font-size: 12px;
+    }
+}

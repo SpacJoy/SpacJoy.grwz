@@ -34,12 +34,12 @@
      padding-left: 20px;
      padding-right: 20px;
  }
-
  /* 设置h2标题样式 */
  h2 {
      color: rgb(0, 136, 255);
      font-size: 160%;
      text-align: center;
+     text-shadow: 0 0 10px rgba(0, 136, 255, 0.5);
  }
 
  /* 设置链接样式 */

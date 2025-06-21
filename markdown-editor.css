@@ -1,0 +1,341 @@
+/* Markdown编辑器专用样式 */
+
+/* 主容器样式 */
+.markdown-editor-main {
+	margin-top: 120px;
+	padding: 20px;
+	min-height: calc(100vh - 200px);
+}
+
+/* 导航链接样式 */
+.nav-link {
+	color: rgba(0, 136, 255, 0.8);
+	text-decoration: none;
+	padding: 8px 15px;
+	border-radius: 5px;
+	background-color: rgba(0, 136, 255, 0.1);
+	transition: all 0.3s ease;
+	margin-left: 20px;
+}
+
+.nav-link:hover {
+	background-color: rgba(0, 136, 255, 0.2);
+	color: rgba(0, 136, 255, 1);
+}
+
+/* 工具栏样式 */
+.toolbar {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 20px;
+	padding: 15px;
+	background-color: rgba(255, 255, 255, 0.1);
+	border-radius: 10px;
+	backdrop-filter: blur(8px);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+	flex-wrap: wrap;
+}
+
+.tool-btn {
+	padding: 8px 12px;
+	background-color: rgba(0, 136, 255, 0.2);
+	border: 1px solid rgba(0, 136, 255, 0.3);
+	border-radius: 6px;
+	color: white;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-size: 14px;
+	min-width: 40px;
+}
+
+.tool-btn:hover {
+	background-color: rgba(0, 136, 255, 0.4);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 8px rgba(0, 136, 255, 0.3);
+}
+
+.tool-btn:active {
+	transform: translateY(0);
+}
+
+/* Markdown编辑器样式增强 */
+.markdown-section {
+	width: 100%;
+	margin: 0;
+	padding: 20px;
+	background-color: rgba(255, 255, 255, 0.1);
+	border-radius: 15px;
+	backdrop-filter: blur(8px);
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.markdown-section h2 {
+	text-align: center;
+	color: rgba(0, 136, 255, 0.628);
+	margin-bottom: 20px;
+	font-size: 200%;
+}
+
+.markdown-container {
+	display: flex;
+	gap: 20px;
+	height: 600px;
+}
+
+.markdown-input,
+.markdown-output {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.markdown-input h3,
+.markdown-output h3 {
+	color: rgba(0, 136, 255, 0.628);
+	margin-bottom: 10px;
+	font-size: 120%;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
+
+.shortcut-hint {
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.6);
+	background-color: rgba(0, 136, 255, 0.2);
+	padding: 2px 6px;
+	border-radius: 4px;
+}
+
+#markdown-input {
+	flex: 1;
+	padding: 15px;
+	border: 2px solid rgba(0, 136, 255, 0.3);
+	border-radius: 10px;
+	background-color: rgba(255, 255, 255, 0.1);
+	color: white;
+	font-family: "Consolas", "Monaco", "Courier New", monospace;
+	font-size: 14px;
+	line-height: 1.6;
+	resize: none;
+	outline: none;
+	backdrop-filter: blur(5px);
+	tab-size: 4;
+}
+
+#markdown-input:focus {
+	border-color: rgba(0, 136, 255, 0.6);
+	box-shadow: 0 0 15px rgba(0, 136, 255, 0.3);
+}
+
+#markdown-input::placeholder {
+	color: rgba(255, 255, 255, 0.5);
+}
+
+#markdown-output {
+	flex: 1;
+	padding: 15px;
+	border: 2px solid rgba(0, 136, 255, 0.3);
+	border-radius: 10px;
+	background-color: rgba(255, 255, 255, 0.05);
+	color: white;
+	overflow-y: auto;
+	backdrop-filter: blur(5px);
+}
+
+/* Markdown渲染内容样式增强 */
+#markdown-output h1,
+#markdown-output h2,
+#markdown-output h3,
+#markdown-output h4,
+#markdown-output h5,
+#markdown-output h6 {
+	color: rgba(0, 136, 255, 0.8);
+	margin: 20px 0 10px 0;
+	border-bottom: 1px solid rgba(0, 136, 255, 0.3);
+	padding-bottom: 5px;
+}
+
+#markdown-output h1 {
+	font-size: 2em;
+}
+#markdown-output h2 {
+	font-size: 1.7em;
+}
+#markdown-output h3 {
+	font-size: 1.4em;
+}
+
+#markdown-output p {
+	margin: 15px 0;
+	line-height: 1.7;
+}
+
+#markdown-output code {
+	background-color: rgba(0, 136, 255, 0.2);
+	padding: 3px 6px;
+	border-radius: 4px;
+	font-family: "Consolas", "Monaco", "Courier New", monospace;
+	font-size: 13px;
+}
+
+#markdown-output pre {
+	background-color: rgba(0, 0, 0, 0.4);
+	padding: 20px;
+	border-radius: 8px;
+	overflow-x: auto;
+	margin: 20px 0;
+	border-left: 4px solid rgba(0, 136, 255, 0.6);
+}
+
+#markdown-output pre code {
+	background: none;
+	padding: 0;
+	color: #f8f8f2;
+}
+
+#markdown-output blockquote {
+	border-left: 4px solid rgba(0, 136, 255, 0.6);
+	padding: 10px 20px;
+	margin: 20px 0;
+	background-color: rgba(0, 136, 255, 0.1);
+	border-radius: 0 8px 8px 0;
+	font-style: italic;
+}
+
+#markdown-output a {
+	color: rgba(0, 136, 255, 0.8);
+	text-decoration: none;
+	border-bottom: 1px dotted;
+	transition: color 0.3s ease;
+}
+
+#markdown-output a:hover {
+	color: rgba(0, 136, 255, 1);
+}
+
+#markdown-output ul,
+#markdown-output ol {
+	padding-left: 30px;
+	margin: 15px 0;
+}
+
+#markdown-output li {
+	margin: 8px 0;
+	line-height: 1.6;
+}
+
+#markdown-output table {
+	border-collapse: collapse;
+	width: 100%;
+	margin: 20px 0;
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+#markdown-output th,
+#markdown-output td {
+	border: 1px solid rgba(0, 136, 255, 0.3);
+	padding: 12px;
+	text-align: left;
+}
+
+#markdown-output th {
+	background-color: rgba(0, 136, 255, 0.2);
+	font-weight: bold;
+}
+
+#markdown-output hr {
+	border: none;
+	border-top: 2px solid rgba(0, 136, 255, 0.4);
+	margin: 30px 0;
+}
+
+/* 通知样式 */
+.notification {
+	position: fixed;
+	top: 100px;
+	right: 20px;
+	background-color: rgba(0, 136, 255, 0.9);
+	color: white;
+	padding: 12px 20px;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	transform: translateX(100%);
+	transition: transform 0.3s ease;
+	z-index: 1000;
+}
+
+.notification.show {
+	transform: translateX(0);
+}
+
+/* 移动端样式调整 */
+@media (max-width: 800px) {
+	.markdown-editor-main {
+		margin-top: 100px;
+		padding: 10px;
+	}
+
+	.toolbar {
+		padding: 10px;
+		gap: 8px;
+	}
+
+	.tool-btn {
+		padding: 6px 10px;
+		font-size: 12px;
+		min-width: 35px;
+	}
+
+	.markdown-container {
+		flex-direction: column;
+		height: auto;
+		gap: 15px;
+	}
+
+	.markdown-input,
+	.markdown-output {
+		height: 300px;
+	}
+
+	#markdown-input,
+	#markdown-output {
+		font-size: 12px;
+		padding: 12px;
+	}
+
+	.markdown-section {
+		padding: 15px;
+	}
+
+	.shortcut-hint {
+		display: none;
+	}
+
+	.nav-link {
+		margin-left: 10px;
+		padding: 6px 12px;
+		font-size: 14px;
+	}
+}
+
+/* 滚动条美化 */
+#markdown-output::-webkit-scrollbar {
+	width: 8px;
+}
+
+#markdown-output::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.2);
+	border-radius: 4px;
+}
+
+#markdown-output::-webkit-scrollbar-thumb {
+	background: rgba(0, 136, 255, 0.5);
+	border-radius: 4px;
+}
+
+#markdown-output::-webkit-scrollbar-thumb:hover {
+	background: rgba(0, 136, 255, 0.7);
+}
