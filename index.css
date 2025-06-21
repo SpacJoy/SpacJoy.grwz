@@ -16,7 +16,7 @@
     bottom: 0;
  }
  main {
-    margin-top: 50%;
+    margin-top: 38%;
     flex-wrap: wrap;
     overflow-y: auto;
     max-height: calc(100% - 60px);
@@ -49,9 +49,9 @@
      text-align: center;
      padding-left: 5%;
      text-decoration: none;
- }
- /* 设置移动端样式 */
- @media (max-width: 600px) {     /* 设置移动端浅色模式背景图样式 */
+ } /* 设置移动端样式 */
+ @media (max-width: 800px) {
+     /* 设置移动端浅色模式背景图样式 */
      body {
          background-image: url('res/v_bright_back.png.jpg');
          background-size: cover;
@@ -59,18 +59,10 @@
          background-position: center;
      }
 
-     /* 移动端深色模式背景 */
-     @media (prefers-color-scheme: dark) {
-         body {
-             background-image: url('res/v_dark_back.png.jpg');
-             background-position: right center;
-         }
-     }
-
      /* 设置移动端主要内容样式 */
      main {
-         padding-top: 185%;
-         margin: 15px;
+         padding-top: 100%;
+         margin: 20px;
      }
 
      /* 设置移动端文章样式 */
@@ -100,9 +92,9 @@
  }
 
  /* 移动端深色模式背景 - 单独的媒体查询确保兼容性 */
- @media (max-width: 600px) and (prefers-color-scheme: dark) {
+ @media (max-width: 800px) and (prefers-color-scheme: dark) {
      body {
          background-image: url('res/v_dark_back.png.jpg') !important;
-         background-position: right center;
+         background-position: right center !important;
      }
  }

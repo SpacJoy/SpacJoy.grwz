@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>欢迎来到我的工具箱</title>
+    <title>喵~呜~~！</title>
     <link rel="icon" type="image/png" href="res/top.png">
     <!-- 
         设置网页样式
@@ -21,7 +21,8 @@
         <h1>喵~~~？嗷~呜~~！</h1>
         <!-- <p>还在学习中，效果一般请见谅</p> -->
         <!-- <p>欢迎来到我的工具箱，这里有一些我常用的工具，欢迎大家提出宝贵意见。</p> -->
-    </header>    <script>
+    </header>
+    <script>
         // 随机选择加载GIF
         const loadingGifs = [
             { src: 'res/Loading.gif', width: '400px', height: '400px' },
@@ -34,13 +35,52 @@
         const loadingImg = document.getElementById('loading-gif');
         loadingImg.src = randomGif.src;
         loadingImg.style.width = randomGif.width;
-        loadingImg.style.height = randomGif.height;
+        loadingImg.style.height = randomGif.height;        // 检测主容器布局变化并切换背景
+        function checkLayoutAndSwitchBackground() {
+            const main = document.querySelector('main.container');
+            
+            if (main) {
+                // 获取main容器的计算样式
+                const computedStyle = window.getComputedStyle(main);
+                const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+                const marginTop = parseFloat(computedStyle.marginTop) || 0;
+                
+                // 判断逻辑优化：
+                // 1. 检查是否匹配移动端媒体查询（宽度 <= 800px）
+                // 2. 或者检查是否有显著的padding-top（移动端特征）
+                const isMobileWidth = window.innerWidth <= 800;
+                const hasSignificantPadding = paddingTop > window.innerHeight * 0.5; // padding-top > 50%视口高度
+                
+                // 移动端或有显著padding-top时使用竖屏背景
+                const isVerticalLayout = isMobileWidth || hasSignificantPadding;
+                
+                // 切换背景类
+                if (isVerticalLayout) {
+                    document.body.classList.add('vertical-layout');
+                    document.body.classList.remove('horizontal-layout');
+                } else {
+                    document.body.classList.add('horizontal-layout');
+                    document.body.classList.remove('vertical-layout');
+                }
+                
+                // 调试信息
+                console.log(`Width: ${window.innerWidth}px, Padding-top: ${paddingTop}px, Margin-top: ${marginTop}px, Layout: ${isVerticalLayout ? 'Vertical' : 'Horizontal'}`);
+            }
+        }
+        // 检测初始布局
+        setTimeout(checkLayoutAndSwitchBackground, 20);
         
-        // 在500ms后隐藏 loader 并显示内容
+        // 在800ms后隐藏 loader 并显示内容
         setTimeout(function () {
             document.querySelector('.loader').style.display = 'none';
             document.querySelector('.blur-effect').style.display = 'none';
+            
         }, 800);
+        
+        // 监听窗口大小变化
+        window.addEventListener('resize', function() {
+            setTimeout(checkLayoutAndSwitchBackground, 20);
+        });
     </script>
     <main class="container">
         <article>
