@@ -19,7 +19,7 @@
     <header>
         <h1>
             <img src="res/top.png" alt="Logo">
-            喵~~~？嗷~呜~~！
+            喵~？嗷~呜~~！
         </h1>
         <!-- <p>还在学习中，效果一般请见谅</p> -->
         <!-- <p>欢迎来到我的工具箱，这里有一些我常用的工具，欢迎大家提出宝贵意见。</p> -->
@@ -71,15 +71,144 @@
         }
         // 检测初始布局
         setTimeout(checkLayoutAndSwitchBackground, 20);
-        
-        // 在800ms后隐藏 loader 并显示内容
+          // 在800ms后隐藏 loader 并显示内容
         setTimeout(function () {
             document.querySelector('.loader').style.display = 'none';
             document.querySelector('.blur-effect').style.display = 'none';
-              }, 800);        // 监听窗口大小变化
+            
+            // 延迟1秒后显示滑动提示通知
+            setTimeout(showScrollNotification, 1000);
+        }, 800);        // 监听窗口大小变化
         window.addEventListener('resize', function() {
             setTimeout(checkLayoutAndSwitchBackground, 20);
         });
+
+        // 显示滑动提示通知
+        function showScrollNotification() {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            notification.className = 'scroll-notification';
+            notification.textContent = '向下滑动查看更多';
+            
+            // 添加到页面
+            document.body.appendChild(notification);
+            
+            // 显示动画
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // 5秒后自动隐藏
+            setTimeout(() => {
+                hideScrollNotification(notification);
+            }, 5000);            // 点击通知隐藏 - 增强版本支持触摸和点击
+            const handleNotificationClick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('通知被点击，开始滚动到内容区域');
+                
+                hideScrollNotification(notification);
+                
+                // 平滑滚动到内容区域 - 修复竖屏状态下的滚动问题
+                const main = document.querySelector('main.container') || document.querySelector('main');
+                
+                if (main) {
+                    console.log('找到main元素，尝试滚动');
+                    // 使用多种滚动方式确保兼容性
+                    try {
+                        // 首先尝试使用getBoundingClientRect计算精确位置
+                        const mainRect = main.getBoundingClientRect();
+                        const scrollTop = window.pageYOffset + mainRect.top - 60; // 减去60px的偏移（考虑header）
+                        
+                        if (scrollTop > 0) {
+                            window.scrollTo({ 
+                                top: scrollTop, 
+                                behavior: 'smooth',
+                                block: 'start' 
+                            });
+                            console.log(`滚动到位置: ${scrollTop}px`);
+                        } else {
+                            // 备用方案：使用scrollIntoView
+                            main.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'start',
+                                inline: 'nearest'
+                            });
+                            console.log('使用scrollIntoView滚动');
+                        }
+                    } catch (e) {
+                        console.log('滚动出错，使用备用方案:', e);
+                        // 备用方案：直接滚动到计算位置
+                        const mainRect = main.getBoundingClientRect();
+                        const scrollTop = window.pageYOffset + mainRect.top - 60;
+                        window.scrollTo({ top: Math.max(0, scrollTop), behavior: 'smooth' });
+                    }
+                } else {
+                    console.log('未找到main元素，尝试其他方式');
+                    // 如果找不到main元素，尝试其他方式
+                    const articles = document.querySelectorAll('article');
+                    if (articles.length > 0) {
+                        console.log('滚动到第一个article');
+                        articles[0].scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start',
+                            inline: 'nearest'
+                        });
+                    } else {
+                        console.log('使用最后的备用方案');
+                        // 最后的备用方案：滚动一个屏幕高度
+                        const scrollTarget = Math.min(window.innerHeight * 0.8, document.body.scrollHeight * 0.3);
+                        window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+                    }
+                }
+            };
+            
+            // 同时添加点击和触摸事件支持
+            notification.addEventListener('click', handleNotificationClick, { passive: false });
+            notification.addEventListener('touchend', handleNotificationClick, { passive: false });
+              // 检测滚动，如果用户开始滚动则隐藏通知
+            let hasScrolled = false;
+            let scrollTimeout;
+            
+            const scrollHandler = () => {
+                if (!hasScrolled && window.scrollY > 30) { // 降低滚动阈值，更敏感
+                    hasScrolled = true;
+                    clearTimeout(scrollTimeout);
+                    hideScrollNotification(notification);
+                    window.removeEventListener('scroll', scrollHandler);
+                    console.log('用户开始滚动，隐藏通知');
+                }
+            };
+            
+            // 使用节流来优化滚动性能
+            const throttledScrollHandler = () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(scrollHandler, 50);
+            };
+            
+            window.addEventListener('scroll', throttledScrollHandler, { passive: true });
+        }        // 隐藏滑动提示通知 - 增强版本
+        function hideScrollNotification(notification) {
+            if (notification && notification.parentNode && !notification.classList.contains('hide')) {
+                console.log('隐藏通知');
+                notification.classList.remove('show');
+                notification.classList.add('hide');
+                
+                // 移除事件监听器防止内存泄漏
+                notification.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    if (notification && notification.parentNode) {
+                        try {
+                            notification.parentNode.removeChild(notification);
+                            console.log('通知元素已移除');
+                        } catch (e) {
+                            console.log('移除通知元素时出错:', e);
+                        }
+                    }
+                }, 600); // 稍微延长动画时间确保完整播放
+            }
+        }
     </script><main class="container">
         <article>
             <h2>Openlist</h2>
@@ -108,7 +237,6 @@
             <button class="btn" onclick="window.open('markdown-editor.html', '_blank')">前往编辑器</button>        </article>
           <!-- 个人简介和信息展示区域 -->
         <section class="markdown-display-section">
-            <h2>欢迎来到我的个人主页</h2>
             <div class="markdown-content" id="markdown-content">
                 <!-- 可爱的图片展示 -->
                 <div style="text-align: center; margin: 20px 0;">
