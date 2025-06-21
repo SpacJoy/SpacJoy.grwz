@@ -1,4 +1,4 @@
- /* 设置整个网页背景样式 */
+/* 设置整个网页背景样式 */
  body {
      overflow-y: scroll;
      scrollbar-width: auto;
@@ -50,21 +50,25 @@
      padding-left: 5%;
      text-decoration: none;
  }
-
  /* 设置移动端样式 */
- @media (max-width: 600px) {
-
-     /* 设置移动端背景图样式 */
+ @media (max-width: 600px) {     /* 设置移动端浅色模式背景图样式 */
      body {
-         background-image: url('mobile.png');
+         background-image: url('v_bright_back.png.jpg');
          background-size: cover;
          background-attachment: fixed;
-         background-position: center;
+         background-position: right center;
+     }
+
+     /* 移动端深色模式背景 */
+     @media (prefers-color-scheme: dark) {
+         body {
+             background-image: url('v_dark_back.png.jpg');
+         }
      }
 
      /* 设置移动端主要内容样式 */
      main {
-         padding-top: 200%;
+         padding-top: 185%;
          margin: 15px;
      }
 
@@ -91,5 +95,12 @@
      footer {
          width: 101%;
          margin-left: -2%;
+     }
+ }
+
+ /* 移动端深色模式背景 - 单独的媒体查询确保兼容性 */
+ @media (max-width: 600px) and (prefers-color-scheme: dark) {
+     body {
+         background-image: url('v_dark_back.png.jpg') !important;
      }
  }

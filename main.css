@@ -92,11 +92,33 @@ h2 {
     padding-left: 2%;
 }
 
+/* 默认浅色模式横屏背景 */
 body {
-    background-image: url('back.jpg');
+    background-image: url('bright_back.png');
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
+}
+
+/* 深色模式横屏背景 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-image: url('dark_back.png');
+    }
+}
+
+/* 浅色模式竖屏背景 */
+@media (orientation: portrait) {
+    body {
+        background-image: url('v_bright_back.png.jpg');
+    }
+}
+
+/* 深色模式竖屏背景 */
+@media (prefers-color-scheme: dark) and (orientation: portrait) {
+    body {
+        background-image: url('v_dark_back.png.jpg');
+    }
 }
 
 /* 设置页面底部样式 */
@@ -139,21 +161,18 @@ main {
     display: flex;
     justify-content: space-around;
     z-index: 2;
-}
-        /* 设置移动端样式 */
-        @media (max-width: 600px) {
-    
-            /* 设置移动端背景图样式 */
+}        /* 设置移动端样式 */
+        @media (max-width: 600px) {            /* 设置移动端浅色模式背景图样式 */
             body {
-                background-image: url('mobile.png');
+                background-image: url('v_bright_back.png.jpg');
                 background-size: cover;
                 background-attachment: fixed;
-                background-position: center;
+                background-position: right center;
             }
     
             /* 设置移动端主要内容样式 */
             main {
-                padding-top: 200%;
+                padding-top: 185%;
                 margin: 15px;
             }
     
@@ -184,3 +203,9 @@ main {
                 margin-left: -2%;
             }
         }
+/* 移动端深色模式背景 - 单独的媒体查询确保兼容性 */
+@media (max-width: 600px) and (prefers-color-scheme: dark) {
+    body {
+        background-image: url('v_dark_back.png.jpg') !important;
+    }
+}
