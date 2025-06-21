@@ -16,7 +16,7 @@
     bottom: 0;
  }
  main {
-    margin-top: 55%;
+    margin-top: 50%;
     flex-wrap: wrap;
     overflow-y: auto;
     max-height: calc(100% - 60px);
@@ -53,16 +53,17 @@
  /* 设置移动端样式 */
  @media (max-width: 600px) {     /* 设置移动端浅色模式背景图样式 */
      body {
-         background-image: url('v_bright_back.png.jpg');
+         background-image: url('res/v_bright_back.png.jpg');
          background-size: cover;
          background-attachment: fixed;
-         background-position: right center;
+         background-position: center;
      }
 
      /* 移动端深色模式背景 */
      @media (prefers-color-scheme: dark) {
          body {
-             background-image: url('v_dark_back.png.jpg');
+             background-image: url('res/v_dark_back.png.jpg');
+             background-position: right center;
          }
      }
 
@@ -101,6 +102,7 @@
  /* 移动端深色模式背景 - 单独的媒体查询确保兼容性 */
  @media (max-width: 600px) and (prefers-color-scheme: dark) {
      body {
-         background-image: url('v_dark_back.png.jpg') !important;
+         background-image: url('res/v_dark_back.png.jpg') !important;
+         background-position: right center;
      }
  }

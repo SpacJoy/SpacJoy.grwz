@@ -94,7 +94,7 @@ h2 {
 
 /* 默认浅色模式横屏背景 */
 body {
-    background-image: url('bright_back.png');
+    background-image: url('res/bright_back.png');
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
@@ -103,21 +103,21 @@ body {
 /* 深色模式横屏背景 */
 @media (prefers-color-scheme: dark) {
     body {
-        background-image: url('dark_back.png');
+        background-image: url('res/dark_back.png');
     }
 }
 
 /* 浅色模式竖屏背景 */
 @media (orientation: portrait) {
     body {
-        background-image: url('v_bright_back.png.jpg');
+        background-image: url('res/v_bright_back.png.jpg');
     }
 }
 
 /* 深色模式竖屏背景 */
 @media (prefers-color-scheme: dark) and (orientation: portrait) {
     body {
-        background-image: url('v_dark_back.png.jpg');
+        background-image: url('res/v_dark_back.png.jpg');
     }
 }
 
@@ -164,10 +164,10 @@ main {
 }        /* 设置移动端样式 */
         @media (max-width: 600px) {            /* 设置移动端浅色模式背景图样式 */
             body {
-                background-image: url('v_bright_back.png.jpg');
+                background-image: url('res/v_bright_back.png.jpg');
                 background-size: cover;
                 background-attachment: fixed;
-                background-position: right center;
+                background-position: center;
             }
     
             /* 设置移动端主要内容样式 */
@@ -206,6 +206,7 @@ main {
 /* 移动端深色模式背景 - 单独的媒体查询确保兼容性 */
 @media (max-width: 600px) and (prefers-color-scheme: dark) {
     body {
-        background-image: url('v_dark_back.png.jpg') !important;
+        background-image: url('res/v_dark_back.png.jpg') !important;
+        background-position: right center;
     }
 }
