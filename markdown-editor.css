@@ -1,10 +1,11 @@
 /* Markdown编辑器专用样式 */
 
-/* 主容器样式 */
+/* 主容器样式 - 工具栏在内部 */
 .markdown-editor-main {
-	margin-top: 120px;
+	margin-top: 160px; /* 增加顶部边距避免被header挡住 */
+	margin-bottom: 80px; /* 保持底部边距以适应footer */
 	padding: 20px;
-	min-height: calc(100vh - 200px);
+	min-height: calc(100vh - 320px); /* 调整最小高度 */
 }
 
 /* 导航链接样式 */
@@ -23,29 +24,30 @@
 	color: rgba(0, 136, 255, 1);
 }
 
-/* 工具栏样式 */
+/* 工具栏样式 - 在输入区域内部 */
 .toolbar {
 	display: flex;
-	gap: 10px;
-	margin-bottom: 20px;
-	padding: 15px;
+	gap: 8px;
+	margin-bottom: 15px;
+	padding: 12px;
 	background-color: rgba(255, 255, 255, 0.1);
-	border-radius: 10px;
-	backdrop-filter: blur(8px);
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+	border-radius: 8px;
+	backdrop-filter: blur(50px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 	flex-wrap: wrap;
+	justify-content: flex-start;
 }
 
 .tool-btn {
-	padding: 8px 12px;
+	padding: 6px 10px;
 	background-color: rgba(0, 136, 255, 0.2);
 	border: 1px solid rgba(0, 136, 255, 0.3);
-	border-radius: 6px;
+	border-radius: 5px;
 	color: white;
 	cursor: pointer;
 	transition: all 0.3s ease;
-	font-size: 14px;
-	min-width: 40px;
+	font-size: 13px;
+	min-width: 36px;
 }
 
 .tool-btn:hover {
@@ -65,7 +67,7 @@
 	padding: 20px;
 	background-color: rgba(255, 255, 255, 0.1);
 	border-radius: 15px;
-	backdrop-filter: blur(8px);
+	backdrop-filter: blur(50px);
 	box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
@@ -79,7 +81,8 @@
 .markdown-container {
 	display: flex;
 	gap: 20px;
-	height: 600px;
+	height: calc(100vh - 380px); /* 调整高度计算，为header留出更多空间 */
+	min-height: 400px; /* 保持最小高度 */
 }
 
 .markdown-input,
@@ -114,24 +117,37 @@
 	padding: 15px;
 	border: 2px solid rgba(0, 136, 255, 0.3);
 	border-radius: 10px;
-	background-color: rgba(255, 255, 255, 0.1);
+	background: linear-gradient(135deg, 
+		rgba(0, 0, 0, 0.4) 0%, 
+		rgba(0, 136, 255, 0.1) 50%, 
+		rgba(0, 0, 0, 0.3) 100%);
 	color: white;
 	font-family: "Consolas", "Monaco", "Courier New", monospace;
 	font-size: 14px;
 	line-height: 1.6;
 	resize: none;
 	outline: none;
-	backdrop-filter: blur(5px);
+	backdrop-filter: blur(15px);
 	tab-size: 4;
+	box-shadow: 
+		inset 0 2px 10px rgba(0, 0, 0, 0.3),
+		0 4px 20px rgba(0, 136, 255, 0.2),
+		0 0 0 1px rgba(255, 255, 255, 0.1);
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 #markdown-input:focus {
 	border-color: rgba(0, 136, 255, 0.6);
-	box-shadow: 0 0 15px rgba(0, 136, 255, 0.3);
+	box-shadow: 
+		inset 0 2px 10px rgba(0, 0, 0, 0.3),
+		0 4px 25px rgba(0, 136, 255, 0.4),
+		0 0 0 1px rgba(255, 255, 255, 0.2),
+		0 0 30px rgba(0, 136, 255, 0.3);
 }
 
 #markdown-input::placeholder {
-	color: rgba(255, 255, 255, 0.5);
+	color: rgba(255, 255, 255, 0.6);
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #markdown-output {
@@ -139,10 +155,18 @@
 	padding: 15px;
 	border: 2px solid rgba(0, 136, 255, 0.3);
 	border-radius: 10px;
-	background-color: rgba(255, 255, 255, 0.05);
+	background: linear-gradient(135deg, 
+		rgba(0, 0, 0, 0.3) 0%, 
+		rgba(0, 136, 255, 0.08) 50%, 
+		rgba(0, 0, 0, 0.25) 100%);
 	color: white;
 	overflow-y: auto;
-	backdrop-filter: blur(5px);
+	backdrop-filter: blur(15px);
+	box-shadow: 
+		inset 0 2px 10px rgba(0, 0, 0, 0.3),
+		0 4px 20px rgba(0, 136, 255, 0.15),
+		0 0 0 1px rgba(255, 255, 255, 0.1);
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 /* Markdown渲染内容样式增强 */
@@ -152,10 +176,11 @@
 #markdown-output h4,
 #markdown-output h5,
 #markdown-output h6 {
-	color: rgba(0, 136, 255, 0.8);
+	color: rgba(0, 136, 255, 0.9);
 	margin: 20px 0 10px 0;
 	border-bottom: 1px solid rgba(0, 136, 255, 0.3);
 	padding-bottom: 5px;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 #markdown-output h1 {
@@ -171,49 +196,70 @@
 #markdown-output p {
 	margin: 15px 0;
 	line-height: 1.7;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 #markdown-output code {
-	background-color: rgba(0, 136, 255, 0.2);
+	background: linear-gradient(135deg, 
+		rgba(0, 136, 255, 0.3) 0%, 
+		rgba(0, 136, 255, 0.2) 100%);
 	padding: 3px 6px;
 	border-radius: 4px;
 	font-family: "Consolas", "Monaco", "Courier New", monospace;
 	font-size: 13px;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 #markdown-output pre {
-	background-color: rgba(0, 0, 0, 0.4);
+	background: linear-gradient(135deg, 
+		rgba(0, 0, 0, 0.6) 0%, 
+		rgba(0, 0, 0, 0.4) 100%);
 	padding: 20px;
 	border-radius: 8px;
 	overflow-x: auto;
 	margin: 20px 0;
 	border-left: 4px solid rgba(0, 136, 255, 0.6);
+	box-shadow: 
+		inset 0 2px 8px rgba(0, 0, 0, 0.4),
+		0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 #markdown-output pre code {
 	background: none;
 	padding: 0;
 	color: #f8f8f2;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
 }
 
 #markdown-output blockquote {
 	border-left: 4px solid rgba(0, 136, 255, 0.6);
 	padding: 10px 20px;
 	margin: 20px 0;
-	background-color: rgba(0, 136, 255, 0.1);
+	background: linear-gradient(135deg, 
+		rgba(0, 136, 255, 0.15) 0%, 
+		rgba(0, 136, 255, 0.1) 100%);
 	border-radius: 0 8px 8px 0;
 	font-style: italic;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+	box-shadow: 
+		inset 0 1px 3px rgba(0, 0, 0, 0.2),
+		0 2px 8px rgba(0, 136, 255, 0.1);
 }
 
 #markdown-output a {
-	color: rgba(0, 136, 255, 0.8);
+	color: rgba(0, 136, 255, 0.9);
 	text-decoration: none;
 	border-bottom: 1px dotted;
-	transition: color 0.3s ease;
+	transition: all 0.3s ease;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 #markdown-output a:hover {
 	color: rgba(0, 136, 255, 1);
+	text-shadow: 
+		1px 1px 2px rgba(0, 0, 0, 0.8),
+		0 0 8px rgba(0, 136, 255, 0.5);
 }
 
 #markdown-output ul,
@@ -225,13 +271,17 @@
 #markdown-output li {
 	margin: 8px 0;
 	line-height: 1.6;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 #markdown-output table {
 	border-collapse: collapse;
 	width: 100%;
 	margin: 20px 0;
-	background-color: rgba(255, 255, 255, 0.05);
+	background: linear-gradient(135deg, 
+		rgba(255, 255, 255, 0.08) 0%, 
+		rgba(255, 255, 255, 0.03) 100%);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 #markdown-output th,
@@ -239,11 +289,15 @@
 	border: 1px solid rgba(0, 136, 255, 0.3);
 	padding: 12px;
 	text-align: left;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 #markdown-output th {
-	background-color: rgba(0, 136, 255, 0.2);
+	background: linear-gradient(135deg, 
+		rgba(0, 136, 255, 0.3) 0%, 
+		rgba(0, 136, 255, 0.2) 100%);
 	font-weight: bold;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #markdown-output hr {
@@ -273,31 +327,35 @@
 
 /* 移动端样式调整 */
 @media (max-width: 800px) {
-	.markdown-editor-main {
-		margin-top: 100px;
-		padding: 10px;
+	.toolbar {
+		padding: 8px;
+		gap: 6px;
+		margin-bottom: 10px;
 	}
 
-	.toolbar {
+	.markdown-editor-main {
+		margin-top: 140px; /* 移动端header高度较小 */
+		margin-bottom: 70px; /* 为移动端footer留出空间 */
 		padding: 10px;
-		gap: 8px;
 	}
 
 	.tool-btn {
-		padding: 6px 10px;
-		font-size: 12px;
-		min-width: 35px;
+		padding: 5px 8px;
+		font-size: 11px;
+		min-width: 30px;
 	}
 
 	.markdown-container {
 		flex-direction: column;
-		height: auto;
+		height: calc(100vh - 310px); /* 调整移动端高度计算 */
+		min-height: 300px;
 		gap: 15px;
 	}
 
 	.markdown-input,
 	.markdown-output {
-		height: 300px;
+		flex: 1;
+		min-height: 150px;
 	}
 
 	#markdown-input,

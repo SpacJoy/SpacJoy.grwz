@@ -110,9 +110,7 @@ console.log("Hello, Markdown!");
 **提示：** 在左侧输入框中编辑Markdown，右侧会实时显示渲染效果！`;
 
 					// 初始化预览
-					updatePreview();
-
-					// 添加键盘快捷键
+					updatePreview();					// 添加键盘快捷键
 					markdownInput.addEventListener("keydown", function (e) {
 						// Ctrl+S 或 Cmd+S 保存到本地存储
 						if ((e.ctrlKey || e.metaKey) && e.key === "s") {
@@ -122,6 +120,82 @@ console.log("Hello, Markdown!");
 								markdownInput.value
 							);
 							showNotification("内容已保存到本地存储");
+						}
+
+						// Ctrl+A 全选
+						if ((e.ctrlKey || e.metaKey) && e.key === "a") {
+							e.preventDefault();
+							markdownInput.select();
+						}
+
+						// Ctrl+Z 撤销 (浏览器默认行为)
+						// Ctrl+Y 或 Ctrl+Shift+Z 重做 (浏览器默认行为)
+
+						// Ctrl+D 复制当前行
+						if ((e.ctrlKey || e.metaKey) && e.key === "d") {
+							e.preventDefault();
+							duplicateCurrentLine();
+						}
+
+						// Ctrl+L 选择当前行
+						if ((e.ctrlKey || e.metaKey) && e.key === "l") {
+							e.preventDefault();
+							selectCurrentLine();
+						}
+
+						// Ctrl+Shift+K 删除当前行
+						if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "K") {
+							e.preventDefault();
+							deleteCurrentLine();
+						}
+
+						// Ctrl+/ 切换行注释
+						if ((e.ctrlKey || e.metaKey) && e.key === "/") {
+							e.preventDefault();
+							toggleLineComment();
+						}
+
+						// Ctrl+B 粗体
+						if ((e.ctrlKey || e.metaKey) && e.key === "b") {
+							e.preventDefault();
+							insertMarkdown("**", "**");
+						}
+
+						// Ctrl+I 斜体
+						if ((e.ctrlKey || e.metaKey) && e.key === "i") {
+							e.preventDefault();
+							insertMarkdown("*", "*");
+						}
+
+						// Ctrl+K Ctrl+C 注释选中的行
+						if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+							e.preventDefault();
+							// 等待下一个按键
+							waitForSecondKey(e);
+						}
+
+						// Alt+↑ 向上移动行
+						if (e.altKey && e.key === "ArrowUp") {
+							e.preventDefault();
+							moveLineUp();
+						}
+
+						// Alt+↓ 向下移动行
+						if (e.altKey && e.key === "ArrowDown") {
+							e.preventDefault();
+							moveLineDown();
+						}
+
+						// Ctrl+Enter 在下方插入新行
+						if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+							e.preventDefault();
+							insertNewLineBelow();
+						}
+
+						// Ctrl+Shift+Enter 在上方插入新行
+						if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "Enter") {
+							e.preventDefault();
+							insertNewLineAbove();
 						}
 
 						// Tab键插入4个空格
@@ -135,6 +209,12 @@ console.log("Hello, Markdown!");
 								markdownInput.value.substring(end);
 							markdownInput.selectionStart =
 								markdownInput.selectionEnd = start + 4;
+						}
+
+						// Shift+Tab 减少缩进
+						if (e.shiftKey && e.key === "Tab") {
+							e.preventDefault();
+							removeIndentation();
 						}
 					});
 
@@ -168,77 +248,78 @@ console.log("Hello, Markdown!");
 			}
 
 			// 页面加载完成后初始化Markdown
-			window.addEventListener("load", initMarkdown);
-		</script>
-
+			window.addEventListener("load", initMarkdown);		</script>
 		<main class="markdown-editor-main">
-			<!-- 工具栏 -->
-			<div class="toolbar">
-				<button
-					class="tool-btn"
-					onclick="insertMarkdown('**', '**')"
-					title="粗体"
-				>
-					<strong>B</strong>
-				</button>
-				<button
-					class="tool-btn"
-					onclick="insertMarkdown('*', '*')"
-					title="斜体"
-				>
-					<em>I</em>
-				</button>
-				<button
-					class="tool-btn"
-					onclick="insertMarkdown('`', '`')"
-					title="行内代码"
-				>
-					&lt;/&gt;
-				</button>
-				<button
-					class="tool-btn"
-					onclick="insertMarkdown('[', '](url)')"
-					title="链接"
-				>
-					🔗
-				</button>
-				<button
-					class="tool-btn"
-					onclick="insertMarkdown('> ', '')"
-					title="引用"
-				>
-					💬
-				</button>
-				<button
-					class="tool-btn"
-					onclick="insertMarkdown('- ', '')"
-					title="列表"
-				>
-					📝
-				</button>
-				<button class="tool-btn" onclick="clearEditor()" title="清空">
-					🗑️
-				</button>
-				<button
-					class="tool-btn"
-					onclick="downloadMarkdown()"
-					title="下载"
-				>
-					💾
-				</button>
-			</div>
-
 			<!-- Markdown编辑区域 -->
 			<section class="markdown-section">
 				<div class="markdown-container">
 					<div class="markdown-input">
-						<h3>
+						<!-- 工具栏 -->
+						<div class="toolbar">
+							<button
+								class="tool-btn"
+								onclick="insertMarkdown('**', '**')"
+								title="粗体"
+							>
+								<strong>B</strong>
+							</button>
+							<button
+								class="tool-btn"
+								onclick="insertMarkdown('*', '*')"
+								title="斜体"
+							>
+								<em>I</em>
+							</button>
+							<button
+								class="tool-btn"
+								onclick="insertMarkdown('`', '`')"
+								title="行内代码"
+							>
+								&lt;/&gt;
+							</button>
+							<button
+								class="tool-btn"
+								onclick="insertMarkdown('[', '](url)')"
+								title="链接"
+							>
+								🔗
+							</button>
+							<button
+								class="tool-btn"
+								onclick="insertMarkdown('> ', '')"
+								title="引用"
+							>
+								💬
+							</button>
+							<button
+								class="tool-btn"
+								onclick="insertMarkdown('- ', '')"
+								title="列表"
+							>
+								📝
+							</button>
+							<button class="tool-btn" onclick="clearEditor()" title="清空">
+								🗑️
+							</button>							<button
+								class="tool-btn"
+								onclick="downloadMarkdown()"
+								title="下载"
+							>
+								💾
+							</button>
+							<button
+								class="tool-btn"
+								onclick="showShortcutHelp()"
+								title="快捷键帮助"
+							>
+								❓
+							</button>
+						</div>						<h3>
 							输入区域
-							<span class="shortcut-hint">Ctrl+S 保存</span>
-						</h3>
-						<textarea
+							<span class="shortcut-hint">快捷键: Ctrl+S保存 | Ctrl+B粗体 | Ctrl+I斜体 | Ctrl+D复制行</span>
+						</h3>						<textarea
 							id="markdown-input"
-							placeholder="在这里输入Markdown内容...&#10;&#10;支持的格式：&#10;# 标题&#10;**粗体** *斜体*&#10;- 列表项&#10;[链接](https://example.com)&#10;```代码块```"
+							placeholder="在这里输入Markdown内容...&#10;&#10;支持的格式：&#10;# 标题&#10;**粗体** *斜体*&#10;- 列表项&#10;[链接](https://example.com)&#10;```代码块```&#10;&#10;快捷键提示：&#10;Ctrl+S: 保存 | Ctrl+A: 全选&#10;Ctrl+B: 粗体 | Ctrl+I: 斜体&#10;Ctrl+D: 复制当前行 | Ctrl+L: 选择当前行&#10;Ctrl+Shift+K: 删除当前行&#10;Ctrl+/: 切换注释 | Alt+↑/↓: 移动行&#10;Ctrl+Enter: 下方插入行 | Ctrl+Shift+Enter: 上方插入行"
 						></textarea>
 					</div>
 					<div class="markdown-output">
@@ -289,9 +370,7 @@ console.log("Hello, Markdown!");
 					document.getElementById("markdown-input").value = "";
 					document.getElementById("markdown-output").innerHTML = "";
 				}
-			}
-
-			function downloadMarkdown() {
+			}			function downloadMarkdown() {
 				const content = document.getElementById("markdown-input").value;
 				const blob = new Blob([content], { type: "text/markdown" });
 				const url = URL.createObjectURL(blob);
@@ -300,6 +379,345 @@ console.log("Hello, Markdown!");
 				a.download = "document.md";
 				a.click();
 				URL.revokeObjectURL(url);
+			}
+
+			// VSCode风格的编辑器快捷键功能
+			function duplicateCurrentLine() {
+				const textarea = document.getElementById("markdown-input");
+				const start = textarea.selectionStart;
+				const value = textarea.value;
+				const lines = value.split('\n');
+				
+				// 找到当前行
+				let currentPos = 0;
+				let lineIndex = 0;
+				for (let i = 0; i < lines.length; i++) {
+					if (currentPos + lines[i].length >= start) {
+						lineIndex = i;
+						break;
+					}
+					currentPos += lines[i].length + 1; // +1 for \n
+				}
+				
+				// 复制当前行
+				const currentLine = lines[lineIndex];
+				lines.splice(lineIndex + 1, 0, currentLine);
+				
+				textarea.value = lines.join('\n');
+				// 将光标移到复制行的末尾
+				const newPos = currentPos + currentLine.length + currentLine.length + 1;
+				textarea.selectionStart = textarea.selectionEnd = newPos;
+				textarea.dispatchEvent(new Event("input"));
+			}
+
+			function selectCurrentLine() {
+				const textarea = document.getElementById("markdown-input");
+				const start = textarea.selectionStart;
+				const value = textarea.value;
+				const lines = value.split('\n');
+				
+				let currentPos = 0;
+				let lineIndex = 0;
+				for (let i = 0; i < lines.length; i++) {
+					if (currentPos + lines[i].length >= start) {
+						lineIndex = i;
+						break;
+					}
+					currentPos += lines[i].length + 1;
+				}
+				
+				// 选择整行
+				const lineStart = currentPos;
+				const lineEnd = currentPos + lines[lineIndex].length;
+				textarea.selectionStart = lineStart;
+				textarea.selectionEnd = lineEnd;
+			}
+
+			function deleteCurrentLine() {
+				const textarea = document.getElementById("markdown-input");
+				const start = textarea.selectionStart;
+				const value = textarea.value;
+				const lines = value.split('\n');
+				
+				let currentPos = 0;
+				let lineIndex = 0;
+				for (let i = 0; i < lines.length; i++) {
+					if (currentPos + lines[i].length >= start) {
+						lineIndex = i;
+						break;
+					}
+					currentPos += lines[i].length + 1;
+				}
+				
+				// 删除当前行
+				lines.splice(lineIndex, 1);
+				textarea.value = lines.join('\n');
+				
+				// 将光标移到下一行开始
+				textarea.selectionStart = textarea.selectionEnd = currentPos;
+				textarea.dispatchEvent(new Event("input"));
+			}
+
+			function toggleLineComment() {
+				const textarea = document.getElementById("markdown-input");
+				const start = textarea.selectionStart;
+				const end = textarea.selectionEnd;
+				const value = textarea.value;
+				const lines = value.split('\n');
+				
+				// 找到选中的行范围
+				let startLine = 0, endLine = 0;
+				let currentPos = 0;
+				
+				for (let i = 0; i < lines.length; i++) {
+					if (currentPos + lines[i].length >= start && startLine === 0) {
+						startLine = i;
+					}
+					if (currentPos + lines[i].length >= end) {
+						endLine = i;
+						break;
+					}
+					currentPos += lines[i].length + 1;
+				}
+				
+				// 切换注释
+				for (let i = startLine; i <= endLine; i++) {
+					if (lines[i].startsWith('<!-- ') && lines[i].endsWith(' -->')) {
+						// 取消注释
+						lines[i] = lines[i].slice(5, -4);
+					} else {
+						// 添加注释
+						lines[i] = '<!-- ' + lines[i] + ' -->';
+					}
+				}
+				
+				textarea.value = lines.join('\n');
+				textarea.dispatchEvent(new Event("input"));
+			}
+
+			function moveLineUp() {
+				const textarea = document.getElementById("markdown-input");
+				const start = textarea.selectionStart;
+				const value = textarea.value;
+				const lines = value.split('\n');
+				
+				let currentPos = 0;
+				let lineIndex = 0;
+				for (let i = 0; i < lines.length; i++) {
+					if (currentPos + lines[i].length >= start) {
+						lineIndex = i;
+						break;
+					}
+					currentPos += lines[i].length + 1;
+				}
+				
+				// 如果不是第一行，与上一行交换
+				if (lineIndex > 0) {
+					const temp = lines[lineIndex];
+					lines[lineIndex] = lines[lineIndex - 1];
+					lines[lineIndex - 1] = temp;
+					
+					textarea.value = lines.join('\n');
+					// 重新计算光标位置
+					const newPos = start - lines[lineIndex].length - 1;
+					textarea.selectionStart = textarea.selectionEnd = newPos;
+					textarea.dispatchEvent(new Event("input"));
+				}
+			}
+
+			function moveLineDown() {
+				const textarea = document.getElementById("markdown-input");
+				const start = textarea.selectionStart;
+				const value = textarea.value;
+				const lines = value.split('\n');
+				
+				let currentPos = 0;
+				let lineIndex = 0;
+				for (let i = 0; i < lines.length; i++) {
+					if (currentPos + lines[i].length >= start) {
+						lineIndex = i;
+						break;
+					}
+					currentPos += lines[i].length + 1;
+				}
+				
+				// 如果不是最后一行，与下一行交换
+				if (lineIndex < lines.length - 1) {
+					const temp = lines[lineIndex];
+					lines[lineIndex] = lines[lineIndex + 1];
+					lines[lineIndex + 1] = temp;
+					
+					textarea.value = lines.join('\n');
+					// 重新计算光标位置
+					const newPos = start + lines[lineIndex].length + 1;
+					textarea.selectionStart = textarea.selectionEnd = newPos;
+					textarea.dispatchEvent(new Event("input"));
+				}
+			}
+
+			function insertNewLineBelow() {
+				const textarea = document.getElementById("markdown-input");
+				const start = textarea.selectionStart;
+				const value = textarea.value;
+				const lines = value.split('\n');
+				
+				let currentPos = 0;
+				let lineIndex = 0;
+				for (let i = 0; i < lines.length; i++) {
+					if (currentPos + lines[i].length >= start) {
+						lineIndex = i;
+						break;
+					}
+					currentPos += lines[i].length + 1;
+				}
+				
+				// 在当前行下方插入新行
+				lines.splice(lineIndex + 1, 0, '');
+				textarea.value = lines.join('\n');
+				
+				// 将光标移到新行
+				const newPos = currentPos + lines[lineIndex].length + 1;
+				textarea.selectionStart = textarea.selectionEnd = newPos;
+				textarea.dispatchEvent(new Event("input"));
+			}
+
+			function insertNewLineAbove() {
+				const textarea = document.getElementById("markdown-input");
+				const start = textarea.selectionStart;
+				const value = textarea.value;
+				const lines = value.split('\n');
+				
+				let currentPos = 0;
+				let lineIndex = 0;
+				for (let i = 0; i < lines.length; i++) {
+					if (currentPos + lines[i].length >= start) {
+						lineIndex = i;
+						break;
+					}
+					currentPos += lines[i].length + 1;
+				}
+				
+				// 在当前行上方插入新行
+				lines.splice(lineIndex, 0, '');
+				textarea.value = lines.join('\n');
+				
+				// 将光标移到新行
+				textarea.selectionStart = textarea.selectionEnd = currentPos;
+				textarea.dispatchEvent(new Event("input"));
+			}
+
+			function removeIndentation() {
+				const textarea = document.getElementById("markdown-input");
+				const start = textarea.selectionStart;
+				const end = textarea.selectionEnd;
+				const value = textarea.value;
+				
+				if (start === end) {
+					// 单行缩进处理
+					const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+					const line = value.substring(lineStart, value.indexOf('\n', start));
+					
+					if (line.startsWith('    ')) {
+						textarea.value = value.substring(0, lineStart) + 
+							line.substring(4) + 
+							value.substring(lineStart + line.length);
+						textarea.selectionStart = textarea.selectionEnd = start - 4;
+					} else if (line.startsWith('\t')) {
+						textarea.value = value.substring(0, lineStart) + 
+							line.substring(1) + 
+							value.substring(lineStart + line.length);
+						textarea.selectionStart = textarea.selectionEnd = start - 1;
+					}
+				} else {
+					// 多行缩进处理
+					const lines = value.split('\n');
+					let currentPos = 0;
+					let startLine = 0, endLine = 0;
+					
+					for (let i = 0; i < lines.length; i++) {
+						if (currentPos + lines[i].length >= start && startLine === 0) {
+							startLine = i;
+						}
+						if (currentPos + lines[i].length >= end) {
+							endLine = i;
+							break;
+						}
+						currentPos += lines[i].length + 1;
+					}
+					
+					for (let i = startLine; i <= endLine; i++) {
+						if (lines[i].startsWith('    ')) {
+							lines[i] = lines[i].substring(4);
+						} else if (lines[i].startsWith('\t')) {
+							lines[i] = lines[i].substring(1);
+						}
+					}
+					
+					textarea.value = lines.join('\n');
+				}
+				
+				textarea.dispatchEvent(new Event("input"));
+			}
+
+			function waitForSecondKey(firstEvent) {
+				const textarea = document.getElementById("markdown-input");
+				
+				function handleSecondKey(e) {
+					if (e.key === "c" && (e.ctrlKey || e.metaKey)) {
+						e.preventDefault();
+						toggleLineComment();
+					}
+					textarea.removeEventListener("keydown", handleSecondKey);
+				}
+				
+				// 临时监听下一个按键
+				setTimeout(() => {
+					textarea.addEventListener("keydown", handleSecondKey);
+				}, 0);
+						// 3秒后移除监听器
+				setTimeout(() => {
+					textarea.removeEventListener("keydown", handleSecondKey);
+				}, 3000);
+			}
+
+			// 显示快捷键帮助
+			function showShortcutHelp() {
+				const helpContent = `
+📝 Markdown编辑器快捷键帮助
+
+基本操作：
+• Ctrl+S - 保存到本地存储
+• Ctrl+A - 全选
+• Ctrl+Z - 撤销 (浏览器默认)
+• Ctrl+Y - 重做 (浏览器默认)
+
+格式化：
+• Ctrl+B - 粗体 (**)
+• Ctrl+I - 斜体 (*)
+• Ctrl+/ - 切换行注释
+
+行操作：
+• Ctrl+D - 复制当前行
+• Ctrl+L - 选择当前行
+• Ctrl+Shift+K - 删除当前行
+• Alt+↑ - 向上移动行
+• Alt+↓ - 向下移动行
+
+插入行：
+• Ctrl+Enter - 在下方插入新行
+• Ctrl+Shift+Enter - 在上方插入新行
+
+缩进：
+• Tab - 增加缩进 (4个空格)
+• Shift+Tab - 减少缩进
+
+高级：
+• Ctrl+K Ctrl+C - 切换行注释
+
+💡 提示：这些快捷键模仿了VSCode编辑器的行为！
+				`;
+				
+				alert(helpContent);
 			}
 		</script>
 	</body>
