@@ -9,42 +9,16 @@ setTimeout(function () {
 <div class="content">
 < !-- 在这里添加你想显示的其他内容 -->
 </div> */
+/* 加载器容器样式 */
 .loader {
     position: fixed;
-    width: 70px;
-    aspect-ratio: 1;
-    background:
-        radial-gradient(farthest-side, #ffa516 90%, #0000) center/16px 16px,
-        radial-gradient(farthest-side, green 90%, #0000) bottom/12px 12px;
-    background-repeat: no-repeat;
-    animation: l17 1s infinite linear;
-    position: fixed;
-    /* 修改为固定定位 */
     top: 50%;
-    /* 上边距设置为50% */
     left: 50%;
-    /* 左边距设置为50% */
-    z-index: 1;
-}
-
-.loader::before {
-    content: "";
-    position: absolute;
-    width: 8px;
-    aspect-ratio: 1;
-    inset: auto 0 16px;
-    margin: auto;
-    background: #ccc;
-    border-radius: 50%;
-    transform-origin: 50% calc(100% + 10px);
-    animation: inherit;
-    animation-duration: 0.5s;
-}
-
-@keyframes l17 {
-    100% {
-        transform: rotate(1turn)
-    }
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 /* 添加模糊效果的 div */
 .blur-effect {
@@ -134,8 +108,8 @@ footer {
     z-index: 1;
 }
 .gn {
-    color: rgba(0, 120, 249, 0.911);
-    font-size: 110%;
+    color: rgba(11, 115, 225, 0.851);
+    font-size: 150%;
     text-align: center;
     text-decoration: none;
 }

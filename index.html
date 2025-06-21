@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="ch">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>欢迎来到我的工具箱</title>
+    <link rel="icon" type="image/png" href="res/top.png">
     <!-- 
         设置网页样式
     -->
@@ -13,19 +14,33 @@
 </head>
 
 <body>
-    <div class="blur-effect"></div>
-    <div class="loader"></div> 
+    <div class="blur-effect"></div>    <div class="loader">
+        <img id="loading-gif" src="" alt="Loading...">
+    </div>
     <header>
         <h1>喵~~~？嗷~呜~~！</h1>
         <!-- <p>还在学习中，效果一般请见谅</p> -->
         <!-- <p>欢迎来到我的工具箱，这里有一些我常用的工具，欢迎大家提出宝贵意见。</p> -->
-    </header>
-    <script>
-        // 在3秒后隐藏 loader 并显示内容
+    </header>    <script>
+        // 随机选择加载GIF
+        const loadingGifs = [
+            { src: 'res/Loading.gif', width: '400px', height: '400px' },
+            { src: 'res/Loading1.gif', width: '400px', height: '400px' },
+            { src: 'res/Loading2.gif', width: '400px', height: '400px' },
+            { src: 'res/Loading3.gif', width: '549px', height: '297px' },
+            { src: 'res/Loading4.gif', width: '200px', height: '240px' }
+        ];
+        const randomGif = loadingGifs[Math.floor(Math.random() * loadingGifs.length)];
+        const loadingImg = document.getElementById('loading-gif');
+        loadingImg.src = randomGif.src;
+        loadingImg.style.width = randomGif.width;
+        loadingImg.style.height = randomGif.height;
+        
+        // 在500ms后隐藏 loader 并显示内容
         setTimeout(function () {
             document.querySelector('.loader').style.display = 'none';
             document.querySelector('.blur-effect').style.display = 'none';
-        }, 500);
+        }, 800);
     </script>
     <main class="container">
         <article>
@@ -49,7 +64,7 @@
     </main>
     <footer>
         <a style="padding-left: 0%;" href="https://github.com/chen6019" class="gn">关于chen6019</a>
-        <p>网页内容归chen6019所有 &copy; 2024</p>
+        <p>网页内容归chen6019所有 &copy; 2025</p>
     </footer>
 </body>
 <script src="./renderer.js">
