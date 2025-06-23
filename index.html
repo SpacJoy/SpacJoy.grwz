@@ -75,27 +75,26 @@
         setTimeout(function () {
             document.querySelector('.loader').style.display = 'none';
             document.querySelector('.blur-effect').style.display = 'none';
-            
-            // 延迟1秒后显示滑动提示通知
-            setTimeout(showScrollNotification, 600);
-        }, 3000);// 监听窗口大小变化
+              // 延迟显示滑动提示通知
+            setTimeout(showScrollNotification, 100);
+        }, 1500);// 监听窗口大小变化
         window.addEventListener('resize', function() {
             setTimeout(checkLayoutAndSwitchBackground, 20);
-        });
-
-        // 显示滑动提示通知
+        });        // 显示滑动提示通知
         function showScrollNotification() {
+            console.log('开始显示滑动提示通知');
             // 创建通知元素
             const notification = document.createElement('div');
             notification.className = 'scroll-notification';
             notification.textContent = '向下滑动查看更多';
-            
-            // 添加到页面
+              // 添加到页面
             document.body.appendChild(notification);
+            console.log('通知元素已添加到页面');
             
             // 显示动画
             setTimeout(() => {
                 notification.classList.add('show');
+                console.log('通知显示动画已启动');
             }, 100);
             
             // 5秒后自动隐藏
