@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>喵~呜~~！</title>
-    <link rel="icon" type="image/png" href="res/top.png">    <!-- 
-        设置网页样式
-    -->    <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="icon" type="image/png" href="res/top.png">    
+    <!-- 设置网页样式-->
+     <link rel="stylesheet" type="text/css" href="main.css">
     <link rel="stylesheet" type="text/css" href="index.css">
     <!-- 引入 marked.js 用于 Markdown 渲染 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -24,6 +24,7 @@
         </h1>
         <!-- <p>还在学习中，效果一般请见谅</p> -->
         <!-- <p>欢迎来到我的工具箱，这里有一些我常用的工具，欢迎大家提出宝贵意见。</p> -->
+        <!-- <p>对了！我主推天禄和辟邪哦~！</p> -->
     </header>
     <script>
         // 随机选择加载GIF
@@ -71,7 +72,8 @@
             }
         }
         // 检测初始布局
-        setTimeout(checkLayoutAndSwitchBackground, 20);          // 在800ms后隐藏 loader 并显示内容
+        setTimeout(checkLayoutAndSwitchBackground, 20);
+        // 在800ms后隐藏 loader 并显示内容
         setTimeout(function () {
             document.querySelector('.loader').style.display = 'none';
             document.querySelector('.blur-effect').style.display = 'none';
@@ -389,8 +391,8 @@
             }
         }
 
-        // ...existing code...
-    </script><main class="container">
+    </script>
+    <main class="container">
         <article>
             <h2>Openlist</h2>
             <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);">服务器维护中，暂不可用!</h2> -->
@@ -419,11 +421,12 @@
             <p>功能强大的在线Markdown编辑器，支持实时预览、快捷键操作、本地保存等功能。</p>
             <button class="btn" onclick="window.open('markdown-editor.html', '_blank')">前往编辑器</button>
         </article>
-            <article>
-                <h2>在线小游戏</h2>
-                <p>Poki (宝玩) - 免费在线小游戏 - 马上玩！</p>
-                <button class="btn" onclick="window.open('https://poki.com/zh#utm_source=redirect-en-zh', '_blank')">前往小游戏</button>
-            </article>            <!-- 个人简介和信息展示区域 -->
+        <article>
+            <h2>在线小游戏</h2>
+            <p>Poki (宝玩) - 免费在线小游戏 - 马上玩！</p>
+            <button class="btn" onclick="window.open('https://poki.com/zh#utm_source=redirect-en-zh', '_blank')">前往小游戏</button>
+        </article>
+            <!-- 个人简介和信息展示区域 -->
             <section class="markdown-display-section">
             <div class="markdown-content" id="markdown-content">
                 <div class="loading-readme">
@@ -431,9 +434,11 @@
                 </div>
             </div>
         </section>
-    </main><footer>
+    </main>
+    <footer>
         <a style="padding-left: 0%;" href="https://github.com/chen6019" class="gn" target="_blank">关于chen6019</a>
         <p>网站内容归chen6019所有 &copy; 2025</p>
+        <p>由 <a href="https://www.cloudflare.com/" target="_blank" style="color: #F6821E; text-decoration: none;">Cloudflare</a> 提供技术支持</p>
     </footer>
 </body>
 <script src="./renderer.js">
