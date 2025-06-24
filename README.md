@@ -3,7 +3,7 @@
 
 #### 纯内网：[内网](http://192.168.100.1:5244)
 
-<img src="https://www.146019.xyz/res/v_bright_back.png.jpg" alt="喵~" style="width:15%; height:auto;"><img src="https://www.146019.xyz/res/Loading1.gif" alt="喵~" style="width:20%; height:auto;"><img src="https://www.146019.xyz/res/Loading.gif" alt="喵~" style="width:20%; height:auto;"><img src="https://www.146019.xyz/res/Loading3.gif" alt="喵~" style="width:35%; height:auto;">
+<img src="https://www.146019.xyz/res/v_bright_back.png.jpg" alt="贴贴！喵~" style="width:15%; height:auto;"><img src="https://www.146019.xyz/res/Loading1.gif" alt="辟邪跑，喵~" style="width:20%; height:auto;"><img src="https://www.146019.xyz/res/Loading.gif" alt="天禄害怕，喵~" style="width:20%; height:auto;"><img src="https://www.146019.xyz/res/Loading3.gif" alt="咬尾巴，喵~" style="width:35%; height:auto;">
 
 # Hi there 👋 this is chen6019
 
@@ -23,7 +23,8 @@
 
 ![Xiaomi 13](https://img.shields.io/badge/Xiaomi%2013-OS2.2%20Unlock%20BL%20-FD4900?style=flat-square&logo=xiaomi&logoColor=ffffff)
 ![Xiaomi Pad 6 Pro](https://img.shields.io/badge/Xiaomi%20Pad%206%20Pro-OS2.2%20Unlock%20BL-FD4900?style=flat-square&logo=xiaomi&logoColor=ffffff)
-![HINLINK OPC-H68K Board](https://img.shields.io/badge/HINLINK%20OPC%20H68K%20Board-iStoreOS%20(Run%20Docker%20on%20This)-835BFF?style=flat-square&logo=openwrt&logoColor=ffffff)
+![X86 mini PC](https://img.shields.io/badge/X86%20mini%20PC-iStoreOS%20(Run%20PVE%20on%20This)-835BFF?style=flat-square&logo=openwrt&logoColor=ffffff)
+![HINLINK OPC-H68K Board (SP)](https://img.shields.io/badge/HINLINK%20OPC%20H68K%20Board%20(SP)-iStoreOS-835BFF?style=flat-square&logo=openwrt&logoColor=ffffff)
 
 ## 🔗 Services
 
