@@ -570,7 +570,7 @@
 
         // 页面加载后自动检测服务器状态
         window.addEventListener('load', (event) => {
-            setTimeout(checkAllServerStatus, 1000); // 延迟1秒开始检测
+            setTimeout(checkAllServerStatus, 2000); // 延迟2秒开始检测
         });        // 手动重新检测服务器状态
         function recheckServerStatus() {
             console.log('🔄 用户触发手动重新检测');
@@ -642,6 +642,11 @@
             <p>Poki (宝玩) - 免费在线小游戏 - 马上玩！</p>
             <button class="btn" onclick="window.open('https://poki.com/zh#utm_source=redirect-en-zh', '_blank')">前往小游戏</button>
         </article>
+        <article>
+            <h2>About Me</h2>
+            <p>My favorite character is 天禄 辟邪. Playing Mihoyo, Minecraft( ID:TLBX_ ). enjoys tinkering with servers, routers, PCs, and phones.</p>
+            <button class="btn" onclick="window.open('https://github.com/chen6019', '_blank')">Go to Github</button>
+        </article>
             <!-- 个人简介和信息展示区域 -->
             <section class="markdown-display-section">
             <div class="markdown-content" id="markdown-content">
@@ -652,7 +657,6 @@
         </section>
     </main>
     <footer>
-        <a style="padding-left: 0%;" href="https://github.com/chen6019" class="gn" target="_blank">关于chen6019</a>
         <p>网站内容归chen6019所有 &copy; 2025</p>
         <p>由 <a href="https://www.cloudflare.com/" target="_blank" style="color: #F6821E; text-decoration: none;">Cloudflare</a> 提供技术支持</p>
     </footer>
