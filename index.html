@@ -208,6 +208,108 @@
                 }, 1000); // 稍微延长动画时间确保完整播放
             }
         }
+        // 复制服务器地址到剪贴板
+        function copyServerAddress(address) {
+            navigator.clipboard.writeText(address).then(function() {
+                console.log('服务器地址已复制到剪贴板:', address);
+                
+                // 显示复制成功的临时通知
+                showCopySuccessNotification();
+            }).catch(function(err) {
+                console.error('复制失败:', err);
+                
+                // 备用方案：使用传统的复制方法
+                fallbackCopyTextToClipboard(address);
+            });
+        }
+        
+        // 备用复制方法（兼容老版本浏览器）
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // 避免在iOS上出现缩放
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    console.log('使用备用方法复制成功');
+                    showCopySuccessNotification();
+                } else {
+                    console.error('备用复制方法也失败了');
+                    showCopyErrorNotification();
+                }
+            } catch (err) {
+                console.error('备用复制方法出错:', err);
+                showCopyErrorNotification();
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        // 显示复制成功通知
+        function showCopySuccessNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'copy-notification success';
+            notification.innerHTML = '✅ 服务器地址已复制到剪贴板';
+            
+            document.body.appendChild(notification);
+            
+            // 显示动画
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                hideCopyNotification(notification);
+            }, 3000);
+        }
+        
+        // 显示复制失败通知
+        function showCopyErrorNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'copy-notification error';
+            notification.innerHTML = '❌ 复制失败，请手动复制地址';
+            
+            document.body.appendChild(notification);
+            
+            // 显示动画
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // 5秒后自动隐藏
+            setTimeout(() => {
+                hideCopyNotification(notification);
+            }, 5000);
+        }
+        
+        // 隐藏复制通知
+        function hideCopyNotification(notification) {
+            if (notification && notification.parentNode && !notification.classList.contains('hide')) {
+                notification.classList.remove('show');
+                notification.classList.add('hide');
+                
+                setTimeout(() => {
+                    if (notification && notification.parentNode) {
+                        try {
+                            notification.parentNode.removeChild(notification);
+                        } catch (e) {
+                            console.log('移除复制通知时出错:', e);
+                        }
+                    }
+                }, 500);
+            }
+        }
     </script><main class="container">
         <article>
             <h2>Openlist</h2>
@@ -217,16 +319,20 @@
             <button class="btn" onclick="window.open('https://openlist.2012521.xyz', '_blank')">备用链接</button>
         </article>
         <article>
-            <h2>将 Windows 设备接入智能家居</h2>
-            <p>通过小爱同学、天猫精灵等智能家具设备，实现对 Windows 电脑的远程控制，包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能。适合有远程自动化需求的用户。</p>
-            <button class="btn" onclick="window.open('https://github.com/chen6019/Remote-Controls', '_blank')">前往项目</button>
-        </article>
-        <article>
             <h2>2406寝室相册</h2>
             <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);">服务器维护中，暂不可用!</h2> -->
             <p>2406专用寝室用相册</p>
             <p>账号密码在寝室群公告</p>
             <button class="btn" onclick="window.open('https://photo.146019.xyz/', '_blank')">前往相册</button>
+            <button class="btn" onclick="copyServerAddress('https://photo.146019.xyz')">复制服务器地址</button>
+            <button class="btn" onclick="window.open('https://f-droid.org/F-Droid.apk', '_blank')">安装相册（安卓）</button>
+            <button class="btn" onclick="window.open('https://apps.apple.com/us/app/immich/id1613945652', '_blank')">安装相册（Apple）</button>
+            <button class="btn" onclick="window.open('https://github.com/immich-app/immich/releases', '_blank')">下载相册（github）</button>
+        </article>
+        <article>
+            <h2>将 Windows 设备接入智能家居</h2>
+            <p>通过小爱同学、天猫精灵等智能家具设备，实现对 Windows 电脑的远程控制，包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能。适合有远程自动化需求的用户。</p>
+            <button class="btn" onclick="window.open('https://github.com/chen6019/Remote-Controls', '_blank')">前往项目</button>
         </article>
         <article>
             <h2>在线小游戏</h2>
