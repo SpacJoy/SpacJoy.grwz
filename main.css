@@ -181,15 +181,14 @@ main {
         padding: 10px 0;
         z-index: 10; /* 提高z-index确保在最前面 */
     }            
-    
-    /* 设置移动端主要内容样式 */
+      /* 设置移动端主要内容样式 */
     main {
         padding: 10px; /* 四边统一padding */
-        padding-top: 130px !important; /* 为header留出足够空间 */
+        /* 移除padding-top设置，由index.css中的Grid布局控制 */
         margin: 10px; /* 减少外边距 */
         gap: 20px; /* 移动端增大gap防止重叠 */
         min-height: calc(100vh - 140px); /* 确保内容区域足够高 */
-    }            
+    }
     
     /* 设置移动端文章样式 */
     article {
@@ -314,9 +313,10 @@ h1 img:hover {
 /* 移动端图标大小调整 */
 @media (max-width: 800px) {
     h1 img {
-        width: 128px;
-        height: 128px;
-        margin-right: 8px;
+        width: 100px; /* 从128px减小到100px */
+        height: 100px; /* 从128px减小到100px */
+        margin-right: 5px; /* 从8px减小到5px，向左移动 */
+        margin-left: -5px; /* 添加负的左边距，进一步向左移动 */
     }
 }
 
@@ -472,7 +472,7 @@ h1 img:hover {
     margin: 30px 0;
     padding: 25px;
     background-color: rgba(255, 255, 255, 0.389);
-    border-radius: 20px;    backdrop-filter: blur(16px);
+    border-radius: 20px;    backdrop-filter: blur(20px); /* 从16px增加到20px，进一步提高模糊度 */
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.15),
         0 4px 16px rgba(0, 0, 0, 0.1),
@@ -720,13 +720,13 @@ h1 img:hover {
 
 /* 移动端网格布局优化 */
 @media (max-width: 800px) {
-    @supports (display: grid) {        
+    @supports (display: grid) {
         main {
             grid-template-columns: 1fr; /* 移动端强制单列 */
             gap: 20px; /* 移动端适中间距 */
             margin: 10px;
             padding: 10px; /* 四边统一padding */
-            padding-top: 130px !important; /* 为header留出足够空间 */
+            /* 移除padding-top设置，由index.css中的Grid布局控制 */
             min-height: calc(100vh - 140px); /* 确保内容区域足够高 */
         }
         
@@ -752,7 +752,7 @@ h1 img:hover {
             flex-direction: column; /* 移动端强制单列 */
             align-items: stretch; /* 拉伸所有子元素 */
             padding: 10px;
-            padding-top: 130px !important;
+            /* 移除padding-top设置，由index.css中的Grid布局控制 */
             margin: 10px;
             gap: 20px;
             min-height: calc(100vh - 140px);

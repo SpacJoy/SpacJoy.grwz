@@ -103,7 +103,7 @@
         const loadingImg = document.getElementById('loading-gif');
         loadingImg.src = randomGif.src;
         loadingImg.style.width = randomGif.width;
-        loadingImg.style.height = randomGif.height;        // 检测主容器布局变化并切换背景 - 增强版支持随机背景
+        loadingImg.style.height = randomGif.height;        // 检测主容器布局变化并切换背景 - 修复横竖屏判断逻辑
         function checkLayoutAndSwitchBackground(forceNewBackground = false, forceLayoutCheck = false) {
             const main = document.querySelector('main.container');
             
@@ -113,14 +113,27 @@
                 const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
                 const marginTop = parseFloat(computedStyle.marginTop) || 0;
                 
-                // 判断逻辑优化：
-                // 1. 检查是否匹配移动端媒体查询（宽度 <= 800px）
-                // 2. 或者检查是否有显著的padding-top（移动端特征）
-                const isMobileWidth = window.innerWidth <= 800;
-                const hasSignificantPadding = paddingTop > window.innerHeight * 0.5; // padding-top > 50%视口高度
+                // 改进的布局判断逻辑：
+                // 1. 首先检查屏幕方向（最可靠的方式）
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const isScreenPortrait = screenHeight > screenWidth; // 屏幕高度大于宽度为竖屏
                 
-                // 移动端或有显著padding-top时使用竖屏背景
-                const isVerticalLayout = isMobileWidth || hasSignificantPadding;
+                // 2. 检查是否为移动端设备宽度
+                const isMobileWidth = screenWidth <= 800;
+                
+                // 3. 检查CSS媒体查询匹配情况
+                const isMobileMediaQuery = window.matchMedia('(max-width: 800px)').matches;
+                
+                // 4. 检查是否有移动端特有的超大padding-top（移动端设置了250%）
+                const hasMobilePadding = paddingTop > screenHeight * 1.5; // padding-top > 150%视口高度才认为是移动端
+                
+                // 综合判断是否使用竖屏背景：
+                // - 移动端宽度 或
+                // - 屏幕本身是竖屏方向 或  
+                // - 匹配移动端媒体查询 或
+                // - 有移动端特有的超大padding
+                const isVerticalLayout = isMobileWidth || isScreenPortrait || isMobileMediaQuery || hasMobilePadding;
                 
                 // 检测当前布局是否发生了变化
                 const currentLayoutClass = document.body.classList.contains('vertical-layout') ? 'vertical' : 'horizontal';
@@ -146,21 +159,27 @@
                 if (forceNewBackground || layoutChanged || forceLayoutCheck) {
                     const layout = isVerticalLayout ? 'vertical' : 'horizontal';
                     const randomBackground = getRandomBackground(layout, theme);
-                    
-                    // 设置随机背景图
+                      // 设置随机背景图
                     if (randomBackground) {
                         setBackgroundImage(randomBackground);
                     }
                     
-                    // 调试信息
-                    console.log(`Width: ${window.innerWidth}px, Padding-top: ${paddingTop}px, Margin-top: ${marginTop}px`);
-                    console.log(`Layout: ${isVerticalLayout ? 'Vertical' : 'Horizontal'}, Theme: ${theme}, Background: ${randomBackground}`);
+                    // 详细调试信息
+                    console.log(`=== 布局检测详情 ===`);
+                    console.log(`屏幕尺寸: ${screenWidth}x${screenHeight}px`);
+                    console.log(`屏幕方向: ${isScreenPortrait ? '竖屏' : '横屏'} (${isScreenPortrait ? 'Portrait' : 'Landscape'})`);
+                    console.log(`移动端宽度: ${isMobileWidth} (≤800px)`);
+                    console.log(`移动端媒体查询: ${isMobileMediaQuery}`);
+                    console.log(`移动端Padding: ${hasMobilePadding} (${paddingTop}px > ${screenHeight * 1.5}px)`);
+                    console.log(`最终布局: ${isVerticalLayout ? 'Vertical (竖屏背景)' : 'Horizontal (横屏背景)'}`);
+                    console.log(`主题: ${theme}, 背景: ${randomBackground}`);
                     if (layoutChanged) {
-                        console.log(`Layout changed from ${currentLayoutClass} to ${newLayoutClass}, switching background`);
+                        console.log(`🔄 布局变化: ${currentLayoutClass} → ${newLayoutClass}`);
                     }
+                    console.log(`==================`);
                 } else {
                     // 仅调整布局类，不更换背景图
-                    console.log(`Layout adjusted: ${isVerticalLayout ? 'Vertical' : 'Horizontal'}, Theme: ${theme} (background unchanged)`);
+                    console.log(`布局调整: ${isVerticalLayout ? 'Vertical' : 'Horizontal'}, 主题: ${theme} (背景未更换)`);
                 }
             }
         }// 检测初始布局并设置随机背景
@@ -187,12 +206,31 @@
             
             // 优化布局
             setTimeout(optimizeArticleLayout, 600);
-        }, 1500);// 监听窗口大小变化
+        }, 1500);        // 监听窗口大小变化
         window.addEventListener('resize', function() {
             setTimeout(() => {
                 checkLayoutAndSwitchBackground(false); // 窗口大小变化时不更换背景图，只调整布局
                 optimizeArticleLayout();
             }, 20);
+        });
+
+        // 监听设备方向变化（用于移动设备旋转）
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                console.log('📱 设备方向已变化，重新检测背景');
+                checkLayoutAndSwitchBackground(true); // 方向变化时强制更换背景图
+                optimizeArticleLayout();
+            }, 100); // 稍微延迟以确保新方向已生效
+        });
+
+        // 监听媒体查询变化（更精确的响应式检测）
+        const mobileMediaQuery = window.matchMedia('(max-width: 800px)');
+        mobileMediaQuery.addListener(function(e) {
+            setTimeout(() => {
+                console.log(`📱 媒体查询变化: ${e.matches ? '移动端' : '桌面端'}`);
+                checkLayoutAndSwitchBackground(true); // 媒体查询变化时强制更换背景图
+                optimizeArticleLayout();
+            }, 50);
         });// 显示滑动提示通知
         function showScrollNotification() {
             console.log('开始显示滑动提示通知');
@@ -220,17 +258,35 @@
                 console.log('通知被点击，开始滚动到内容区域');
                 
                 hideScrollNotification(notification);
-                
-                // 平滑滚动到内容区域 - 修复竖屏状态下的滚动问题
+                  // 平滑滚动到内容区域 - 修复滚动距离和竖屏状态问题
                 const main = document.querySelector('main.container') || document.querySelector('main');
                 
                 if (main) {
                     console.log('找到main元素，尝试滚动');
+                    
+                    // 检测当前布局模式来调整滚动参数
+                    const isMobile = window.innerWidth <= 800;
+                    const isPortrait = window.innerHeight > window.innerWidth;
+                    
+                    // 根据布局模式调整偏移量
+                    let offsetAdjustment;
+                    if (isMobile || isPortrait) {
+                        // 移动端/竖屏模式：考虑到250% padding-top，需要更大的偏移
+                        offsetAdjustment = -150; // 增加偏移到150px
+                    } else {
+                        // 桌面端横屏：考虑到70-80% padding-top
+                        offsetAdjustment = -100; // 增加偏移到100px
+                    }
+                    
                     // 使用多种滚动方式确保兼容性
                     try {
                         // 首先尝试使用getBoundingClientRect计算精确位置
                         const mainRect = main.getBoundingClientRect();
-                        const scrollTop = window.pageYOffset + mainRect.top - 60; // 减去60px的偏移（考虑header）
+                        let scrollTop = window.pageYOffset + mainRect.top + offsetAdjustment;
+                        
+                        // 确保滚动位置不会太小（至少滚动到视口高度的50%）
+                        const minScrollTarget = window.innerHeight * 0.6;
+                        scrollTop = Math.max(scrollTop, minScrollTarget);
                         
                         if (scrollTop > 0) {
                             window.scrollTo({ 
@@ -238,38 +294,54 @@
                                 behavior: 'smooth',
                                 block: 'start' 
                             });
-                            console.log(`滚动到位置: ${scrollTop}px`);
+                            console.log(`滚动到位置: ${scrollTop}px (布局: ${isMobile || isPortrait ? '移动端/竖屏' : '桌面端横屏'})`);
                         } else {
                             // 备用方案：使用scrollIntoView
                             main.scrollIntoView({ 
                                 behavior: 'smooth', 
-                                block: 'start',
+                                block: 'center', // 改为center以确保更好的显示
                                 inline: 'nearest'
                             });
-                            console.log('使用scrollIntoView滚动');
+                            console.log('使用scrollIntoView滚动 (center)');
                         }
                     } catch (e) {
                         console.log('滚动出错，使用备用方案:', e);
                         // 备用方案：直接滚动到计算位置
                         const mainRect = main.getBoundingClientRect();
-                        const scrollTop = window.pageYOffset + mainRect.top - 60;
+                        let scrollTop = window.pageYOffset + mainRect.top + offsetAdjustment;
+                        const minScrollTarget = window.innerHeight * 0.6;
+                        scrollTop = Math.max(scrollTop, minScrollTarget);
                         window.scrollTo({ top: Math.max(0, scrollTop), behavior: 'smooth' });
                     }                } else {
                     console.log('未找到main元素，尝试其他方式');
+                    
+                    // 检测当前布局模式
+                    const isMobile = window.innerWidth <= 800;
+                    const isPortrait = window.innerHeight > window.innerWidth;
+                    
                     // 如果找不到main元素，尝试其他方式
                     const articles = document.querySelectorAll('main article');
                     if (articles.length > 0) {
                         console.log('滚动到第一个article');
                         articles[0].scrollIntoView({ 
                             behavior: 'smooth', 
-                            block: 'start',
+                            block: 'center', // 改为center以确保更好的显示
                             inline: 'nearest'
                         });
                     } else {
                         console.log('使用最后的备用方案');
-                        // 最后的备用方案：滚动一个屏幕高度
-                        const scrollTarget = Math.min(window.innerHeight * 0.8, document.body.scrollHeight * 0.3);
+                        // 最后的备用方案：根据布局模式调整滚动距离
+                        let scrollTarget;
+                        if (isMobile || isPortrait) {
+                            // 移动端/竖屏：滚动更多距离以跳过大的padding
+                            scrollTarget = Math.min(window.innerHeight * 1.2, document.body.scrollHeight * 0.5);
+                        } else {
+                            // 桌面端横屏：滚动适中距离
+                            scrollTarget = Math.min(window.innerHeight * 0.9, document.body.scrollHeight * 0.4);
+                        }
+                        
                         window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+                        console.log(`备用滚动到: ${scrollTarget}px (布局: ${isMobile || isPortrait ? '移动端/竖屏' : '桌面端横屏'})`);
                     }
                 }
             };
