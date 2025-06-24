@@ -7,9 +7,10 @@
     <title>喵~呜~~！</title>
     <link rel="icon" type="image/png" href="res/top.png">    <!-- 
         设置网页样式
-    -->
-    <link rel="stylesheet" type="text/css" href="main.css">
+    -->    <link rel="stylesheet" type="text/css" href="main.css">
     <link rel="stylesheet" type="text/css" href="index.css">
+    <!-- 引入 marked.js 用于 Markdown 渲染 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
@@ -70,13 +71,15 @@
             }
         }
         // 检测初始布局
-        setTimeout(checkLayoutAndSwitchBackground, 20);
-          // 在800ms后隐藏 loader 并显示内容
+        setTimeout(checkLayoutAndSwitchBackground, 20);          // 在800ms后隐藏 loader 并显示内容
         setTimeout(function () {
             document.querySelector('.loader').style.display = 'none';
             document.querySelector('.blur-effect').style.display = 'none';
               // 延迟显示滑动提示通知
             setTimeout(showScrollNotification, 100);
+            
+            // 加载 README.md 文件内容
+            setTimeout(loadReadmeContent, 200);
         }, 1500);// 监听窗口大小变化
         window.addEventListener('resize', function() {
             setTimeout(checkLayoutAndSwitchBackground, 20);
@@ -309,7 +312,84 @@
                     }
                 }, 500);
             }
+        }        // 加载并显示 README.md 文件内容
+        function loadReadmeContent() {
+            console.log('开始加载 README.md 文件');
+            
+            fetch('./README.md')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(markdownText => {
+                    console.log('README.md 文件加载成功');
+                    
+                    // 按行分割内容并去掉前4行
+                    const lines = markdownText.split('\n');
+                    const contentWithoutHeader = lines.slice(4).join('\n');
+                    console.log('已去掉前4行内容，剩余行数:', lines.length - 4);
+                    
+                    // 配置 marked 选项
+                    marked.setOptions({
+                        breaks: true,
+                        gfm: true,
+                        headerIds: false,
+                        mangle: false
+                    });
+                    
+                    // 使用去掉前4行后的内容进行 marked 渲染
+                    const htmlContent = marked.parse(contentWithoutHeader);
+                    
+                    const markdownContent = document.getElementById('markdown-content');
+                    if (markdownContent) {
+                        markdownContent.innerHTML = htmlContent;
+                        console.log('README.md 内容已渲染到页面');
+                        
+                        // 为所有链接添加 target="_blank"
+                        const links = markdownContent.querySelectorAll('a');
+                        links.forEach(link => {
+                            if (!link.hasAttribute('target')) {
+                                link.setAttribute('target', '_blank');
+                            }
+                        });
+                        
+                        // 为所有图片添加样式
+                        const images = markdownContent.querySelectorAll('img');
+                        images.forEach(img => {
+                            if (!img.style.maxWidth) {
+                                img.style.maxWidth = '100%';
+                                img.style.height = 'auto';
+                                img.style.borderRadius = '8px';
+                                img.style.margin = '10px 5px';
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('加载 README.md 失败:', error);
+                    showReadmeError();
+                });
         }
+        // 显示 README 加载错误信息
+        function showReadmeError() {
+            const markdownContent = document.getElementById('markdown-content');
+            if (markdownContent) {
+                markdownContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.7);">
+                        <h2 style="color: #ff6b6b;">😿 加载失败</h2>
+                        <p>无法加载 README.md 文件，请检查文件是否存在。</p>
+                        <p>您可以在项目根目录创建一个 README.md 文件来显示个人简介。</p>
+                        <button class="btn" onclick="loadReadmeContent()" style="margin-top: 20px; display: inline-block; width: auto;">
+                            🔄 重试加载
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // ...existing code...
     </script><main class="container">
         <article>
             <h2>Openlist</h2>
@@ -343,68 +423,17 @@
                 <h2>在线小游戏</h2>
                 <p>Poki (宝玩) - 免费在线小游戏 - 马上玩！</p>
                 <button class="btn" onclick="window.open('https://poki.com/zh#utm_source=redirect-en-zh', '_blank')">前往小游戏</button>
-            </article>
-            <!-- 个人简介和信息展示区域 -->
+            </article>            <!-- 个人简介和信息展示区域 -->
             <section class="markdown-display-section">
             <div class="markdown-content" id="markdown-content">
-                <!-- 可爱的图片展示 -->
-                <div style="text-align: center; margin: 20px 0;">
-                    <img src="res/mobile.png" alt="猫羽雫，喵~" style="width:14%; height:auto; margin: 5px;">
-                    <img src="res/Loading1.gif" alt="辟邪跑，喵~" style="width:20%; height:auto; margin: 5px;">
-                    <img src="res/Loading.gif" alt="天禄害怕，喵~" style="width:20%; height:auto; margin: 5px;">
-                    <img src="res/Loading3.gif" alt="咬尾巴，喵~" style="width:35%; height:auto; margin: 5px;">
-                </div>
-
-                <!-- 个人介绍 -->
-                <h1>Hi there 👋 this is chen6019</h1>
-                
-                <!-- GitHub 统计 -->
-                <div style="text-align: center; margin: 20px 0;">
-                    <img src="https://github-readme-stats.vercel.app/api?username=chen6019&show_icons=true&hide_border=False&theme=ambient_gradient&include_all_commits=true" alt="GitHub Stats" style="margin: 10px;">
-                    <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=chen6019&langs_count=10&layout=compact&exclude_repo=Cemiuiler,action-tmate,Aquarius223-s-sdm845-kernel" alt="Top Languages" style="margin: 10px;">
-                </div>                <!-- 技术环境 -->
-                <h1>💻 Environment</h1>
-                <div style="margin: 15px 0; text-align: center;">
-                    <img src="https://img.shields.io/badge/Windows%2011%20Pro%20for%20Workstations%20-24H2%20Beta-00BBFF?style=flat-square&logo=gnometerminal&logoColor=ffffff" alt="Windows" style="margin: 6px;">
-                    <img src="https://img.shields.io/badge/WSL2%20Ubuntu%20-24%2e10%20LTS-DD4814?style=flat-square&logo=ubuntu&logoColor=ffffff" alt="WSL2" style="margin: 6px;">
-                    
-                    <img src="https://img.shields.io/badge/Android%20Vanilla%20Ice%20Cream%20-15-3DDC84?style=flat-square&logo=android&logoColor=ffffff" alt="Android" style="margin: 6px;">
-                    
-                    <img src="https://img.shields.io/badge/iStoreOS-24.10%20(DN%20but%20No%20public%20IP)-835BFF?style=flat-square&logo=openwrt&logoColor=ffffff" alt="iStoreOS" style="margin: 6px;">
-                </div>                <!-- 设备信息 -->
-                <h1>📱 Devices in Use</h1>
-                <h3 style="text-align: center;">Phone / Pad / Server</h3>
-                <div style="margin: 15px 0; text-align: center;">
-                    <img src="https://img.shields.io/badge/Xiaomi%2013-OS2.2%20Unlock%20BL%20-FD4900?style=flat-square&logo=xiaomi&logoColor=ffffff" alt="Xiaomi 13" style="margin: 6px;">
-                    
-                    <img src="https://img.shields.io/badge/Xiaomi%20Pad%206%20Pro-OS2.2%20Unlock%20BL-FD4900?style=flat-square&logo=xiaomi&logoColor=ffffff" alt="Xiaomi Pad 6 Pro" style="margin: 6px;">
-                    
-                    <img src="https://img.shields.io/badge/HINLINK%20OPC%20H68K%20Board-iStoreOS%20(Run%20Docker%20on%20This)-835BFF?style=flat-square&logo=openwrt&logoColor=ffffff" alt="HINLINK Board" style="margin: 6px;">
-                </div>                
-                <!-- 联系方式 -->
-                <h1>
-                    <img src="https://raw.githubusercontent.com/alexnaiman/alexnaiman/master/resources/bongocat.gif"  style="vertical-align: middle;" alt="Bongo Cat"> 
-                    How to reach me: ...
-                </h1>
-                <div style="margin: 15px 0; text-align: center;">
-                    <a href="https://github.com/chen6019" target="_blank" style="text-decoration: none;">
-                        <img src="https://img.shields.io/badge/github-chen6019-pink?logo=github" title="github" alt="GitHub" style="margin: 6px;">
-                    </a>
-                    
-                    <a href="https://space.bilibili.com/494337416" target="_blank" style="text-decoration: none;">
-                        <img src="https://img.shields.io/badge/哔哩哔哩-TLBX_chen6019-pink?logo=bilibili" title="哔哩哔哩" alt="Bilibili" style="margin: 6px;">
-                    </a>
-                    
-                    
-                    <a href="mailto:mc_chen6019@qq.com" style="text-decoration: none;">
-                        <img src="https://img.shields.io/badge/QQ邮箱-mc_chen6019@qq.com-pink?logo=qq" title="QQ邮箱" alt="QQ Email" style="margin: 6px;">
-                    </a>
+                <div class="loading-readme">
+                    <p>正在加载个人简介...</p>
                 </div>
             </div>
         </section>
     </main><footer>
         <a style="padding-left: 0%;" href="https://github.com/chen6019" class="gn" target="_blank">关于chen6019</a>
-        <p>网页内容归chen6019所有 &copy; 2025</p>
+        <p>网站内容归chen6019所有 &copy; 2025</p>
     </footer>
 </body>
 <script src="./renderer.js">
