@@ -25,7 +25,8 @@
         <!-- <p>还在学习中，效果一般请见谅</p> -->
         <!-- <p>欢迎来到我的工具箱，这里有一些我常用的工具，欢迎大家提出宝贵意见。</p> -->
         <!-- <p>对了！我主推天禄和辟邪哦~！</p> -->
-    </header>    <script>        
+    </header>
+    <script>        
         // 随机背景图数据配置
         const backgroundImages = {
             horizontal: {
@@ -185,13 +186,14 @@
         }// 检测初始布局并设置随机背景
         setTimeout(() => {
             checkLayoutAndSwitchBackground(true); // 初始化时设置背景图
-            optimizeArticleLayout();
-        }, 20);        
+            optimizeArticleLayout();        }, 20);        
         
         // 在页面加载完成后也设置一次随机背景
         window.addEventListener('load', function() {
             setTimeout(() => checkLayoutAndSwitchBackground(true), 100); // 页面加载完成时设置背景图
-        });// 在800ms后隐藏 loader 并显示内容
+        });
+        
+        // 在2秒后隐藏 loader 并显示内容
         setTimeout(function () {
             document.querySelector('.loader').style.display = 'none';
             document.querySelector('.blur-effect').style.display = 'none';
@@ -206,7 +208,7 @@
             
             // 优化布局
             setTimeout(optimizeArticleLayout, 600);
-        }, 1500);        // 监听窗口大小变化
+        }, 1700);// 监听窗口大小变化
         window.addEventListener('resize', function() {
             setTimeout(() => {
                 checkLayoutAndSwitchBackground(false); // 窗口大小变化时不更换背景图，只调整布局
@@ -852,13 +854,14 @@
                 console.log(`分布：${rowsWithNormal}行各有${itemsPerRowOptimal - 1}个，${rowsWithExtra}行各有${itemsPerRowOptimal}个`);
             } else {
                 console.log(`均匀分布：每行${itemsPerRowOptimal}个article`);
-            }
-        }
+            }        }
         
         // 布局变化时调用优化函数
         function optimizeLayoutOnResize() {
             optimizeArticleLayout();
-        }        // 手动更换背景图功能
+        }
+        
+        // 手动更换背景图功能
         function changeRandomBackground() {
             console.log('🎨 用户手动更换背景图');
             checkLayoutAndSwitchBackground(true); // 手动更换时强制选择新背景
@@ -963,11 +966,8 @@
             <button class="btn" onclick="changeRandomBackground()" style="font-size: 12px; padding: 8px 16px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.9);" title="快捷键: Ctrl+B 或 Cmd+B">
                 🎨 更换背景图
             </button>
-        </div>
-    </footer>
+        </div>    </footer>
 </body>
-<script src="./renderer.js">
-    
-</script>
+<script src="./renderer.js"></script>
 
 </html>
