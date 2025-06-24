@@ -26,14 +26,13 @@
         <!-- <p>欢迎来到我的工具箱，这里有一些我常用的工具，欢迎大家提出宝贵意见。</p> -->
         <!-- <p>对了！我主推天禄和辟邪哦~！</p> -->
     </header>
-    <script>
-        // 随机选择加载GIF
+    <script>        // 随机选择加载GIF
         const loadingGifs = [
-            { src: 'res/Loading.gif', width: '400px', height: '400px' },
-            { src: 'res/Loading1.gif', width: '400px', height: '400px' },
-            { src: 'res/Loading2.gif', width: '400px', height: '400px' },
-            { src: 'res/Loading3.gif', width: '549px', height: '297px' },
-            { src: 'res/Loading4.gif', width: '200px', height: '240px' }
+            { src: 'res/loading/Loading.gif', width: '400px', height: '400px' },
+            { src: 'res/loading/Loading1.gif', width: '400px', height: '400px' },
+            { src: 'res/loading/Loading2.gif', width: '400px', height: '400px' },
+            { src: 'res/loading/Loading3.gif', width: '549px', height: '297px' },
+            { src: 'res/loading/Loading4.gif', width: '200px', height: '240px' }
         ];
         const randomGif = loadingGifs[Math.floor(Math.random() * loadingGifs.length)];
         const loadingImg = document.getElementById('loading-gif');
@@ -614,7 +613,13 @@
         <article>
             <h2>Openlist <span id="openlist-status" style="font-size: 0.8em; margin-left: 10px;">🔄 检测中...</span></h2>
             <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);">服务器维护中，暂不可用!</h2> -->
-            <p>Openlist网盘，有各种资源影视、应用、游戏等资源（本人上传和网络），默认可在共享目录上传文件，网盘文件夹有其他openlist网盘链接，</p>            <button class="btn" onclick="window.open('https://openlist.146019.xyz', '_blank')">前往Openlist</button>
+            <p>Openlist网盘</p>
+            <p>影视、应用、游戏等资源</p>
+            <p>默认可在共享目录上传文件</p>
+            <p>网盘里有其他网盘链接</p>
+            <p> </p>
+            <button class="btn" onclick="window.open('https://openlist.146019.xyz', '_blank')">前往Openlist</button>
+            <p> </p>
             <button class="btn" onclick="window.open('https://openlist.2012521.xyz', '_blank')">备用链接</button>
         </article>
         <article>
@@ -624,27 +629,33 @@
             <p>账号密码在寝室群公告</p>
             <button class="btn" onclick="window.open('https://photo.146019.xyz/', '_blank')">前往相册</button>
             <button class="btn" onclick="copyServerAddress('https://photo.146019.xyz')">复制服务器地址</button>
-            <button class="btn" onclick="window.open('https://play.google.com/store/apps/details?id=app.alextran.immich', '_blank')">安装相册（谷歌）</button>
-            <button class="btn" onclick="window.open('https://apps.apple.com/us/app/immich/id1613945652', '_blank')">安装相册（Apple）</button>            <button class="btn" onclick="window.open('https://github.com/immich-app/immich/releases', '_blank')">安装相册（Github）</button>
+            <button class="btn" onclick="window.open('res/apk/immich-app-release.apk', '_blank')">安装相册（apk）</button>
+            <button class="btn" onclick="window.open('https://play.google.com/store/apps/details?id=app.alextran.immich', '_blank')">安装相册（Google）</button>
+            <button class="btn" onclick="window.open('https://github.com/immich-app/immich/releases', '_blank')">安装相册（Github）</button>
+            <button class="btn" onclick="window.open('https://apps.apple.com/us/app/immich/id1613945652', '_blank')">安装相册（Apple）</button>
         </article>
         <article>
             <h2>将 Windows 设备接入智能家居</h2>
             <p>通过小爱同学、天猫精灵等智能家具设备，实现对 Windows 电脑的远程控制，包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能。适合有远程自动化需求的用户。</p>
+            <p> </p>
             <button class="btn" onclick="window.open('https://github.com/chen6019/Remote-Controls', '_blank')">前往项目</button>
         </article>
         <article>
             <h2>Markdown编辑器</h2>
             <p>功能强大的在线Markdown编辑器，支持实时预览、快捷键操作、本地保存等功能。</p>
+            <p> </p>
             <button class="btn" onclick="window.open('markdown-editor.html', '_blank')">前往编辑器</button>
         </article>
         <article>
             <h2>在线小游戏</h2>
             <p>Poki (宝玩) - 免费在线小游戏 - 马上玩！</p>
+            <p> </p>
             <button class="btn" onclick="window.open('https://poki.com/zh#utm_source=redirect-en-zh', '_blank')">前往小游戏</button>
         </article>
         <article>
             <h2>About Me</h2>
             <p>My favorite character is 天禄 辟邪. Playing Mihoyo, Minecraft( ID:TLBX_ ). enjoys tinkering with servers, routers, PCs, and phones.</p>
+            <p> </p>
             <button class="btn" onclick="window.open('https://github.com/chen6019', '_blank')">Go to Github</button>
         </article>
             <!-- 个人简介和信息展示区域 -->

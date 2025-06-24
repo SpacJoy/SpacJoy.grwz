@@ -84,7 +84,7 @@ h2 {
 
 /* 默认浅色模式横屏背景 */
 body {
-    background-image: url('res/bright_back.png');
+    background-image: url('res/bright_back/bright_back.png');
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
@@ -93,7 +93,7 @@ body {
 /* 深色模式横屏背景 */
 @media (prefers-color-scheme: dark) {
     body {
-        background-image: url('res/dark_back.png');
+        background-image: url('res/dark_back/dark_back.png');
         background-position: left bottom !important;
     }
 }
@@ -101,14 +101,14 @@ body {
 /* 浅色模式竖屏背景 - 当容器宽度不足以并排显示2个以上文章时 */
 @media (max-width: 1020px) {
     body {
-        background-image: url('res/v_bright_back.png.jpg');
+        background-image: url('res/mobile_bright_back/mobile_bright_back.png.jpg');
     }
 }
 
 /* 深色模式竖屏背景 - 当容器宽度不足以并排显示2个以上文章时 */
 @media (prefers-color-scheme: dark) and (max-width: 1020px) {
     body {
-        background-image: url('res/v_dark_back.png.jpg');
+        background-image: url('res/mobile_dark_back/mobile_dark_back.jpg');
         background-position: right center !important;
     }
 }
@@ -170,10 +170,9 @@ main {
     display: flex;
     justify-content: space-around;
     z-index: 2;
-}        /* 设置移动端样式 */
-        @media (max-width: 800px) {            /* 设置移动端浅色模式背景图样式 */
+}        /* 设置移动端样式 */        @media (max-width: 800px) {            /* 设置移动端浅色模式背景图样式 */
             body {
-                background-image: url('res/v_bright_back.png.jpg');
+                background-image: url('res/mobile_bright_back/mobile_bright_back.png.jpg');
                 background-size: cover;
                 background-attachment: fixed;
                 background-position: center;
@@ -286,31 +285,31 @@ main {
 /* 移动端深色模式背景 - 单独的媒体查询确保兼容性 */
 @media (max-width: 800px) and (prefers-color-scheme: dark) {
     body {
-        background-image: url('res/v_dark_back.png.jpg') !important;
+        background-image: url('res/mobile_dark_back/mobile_dark_back.jpg') !important;
         background-position: right center !important;
     }
 }
 
 /* JavaScript动态布局检测背景切换 - 优先级最高 */
 body.horizontal-layout {
-    background-image: url('res/bright_back.png') !important;
+    background-image: url('res/bright_back/bright_back.png') !important;
     background-position: center !important;
 }
 
 body.vertical-layout {
-    background-image: url('res/v_bright_back.png.jpg') !important;
+    background-image: url('res/mobile_bright_back/mobile_bright_back.png.jpg') !important;
     background-position: center !important;
 }
 
 /* 深色模式检测 */
 @media (prefers-color-scheme: dark) {    body.horizontal-layout {
-        background-image: url('res/dark_back.png') !important;
+        background-image: url('res/dark_back/dark_back.png') !important;
         background-position: left bottom !important;
 
     }
     
     body.vertical-layout {
-        background-image: url('res/v_dark_back.png.jpg') !important;
+        background-image: url('res/mobile_dark_back/mobile_dark_back.jpg') !important;
         background-position: right center !important;
     }
 }
