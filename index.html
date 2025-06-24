@@ -72,8 +72,7 @@
             }
         }
         // 检测初始布局
-        setTimeout(checkLayoutAndSwitchBackground, 20);
-        // 在800ms后隐藏 loader 并显示内容
+        setTimeout(checkLayoutAndSwitchBackground, 20);        // 在800ms后隐藏 loader 并显示内容
         setTimeout(function () {
             document.querySelector('.loader').style.display = 'none';
             document.querySelector('.blur-effect').style.display = 'none';
@@ -82,6 +81,9 @@
             
             // 加载 README.md 文件内容
             setTimeout(loadReadmeContent, 200);
+            
+            // 检测服务器状态
+            setTimeout(checkAllServerStatus, 500);
         }, 1500);// 监听窗口大小变化
         window.addEventListener('resize', function() {
             setTimeout(checkLayoutAndSwitchBackground, 20);
@@ -389,27 +391,241 @@
                     </div>
                 `;
             }
+        }        // 服务器状态检测功能 - 改进版本
+        async function checkServerStatus(url, timeout = 8000) {
+            console.log(`开始检测服务器: ${url}`);
+            
+            // 方法1: 尝试使用图片加载检测（最可靠的跨域检测方法）
+            const imageTest = await checkServerWithImage(url, timeout);
+            if (imageTest.reliable) {
+                console.log(`图片检测结果: ${url} - ${imageTest.online ? '在线' : '离线'}`);
+                return imageTest;
+            }
+            
+            // 方法2: 如果图片检测不可靠，尝试 fetch 检测
+            const fetchTest = await checkServerWithFetch(url, timeout);
+            console.log(`Fetch检测结果: ${url} - ${fetchTest.online ? '在线' : '离线'}`);
+            return fetchTest;
+        }
+        
+        // 使用图片加载检测服务器状态
+        function checkServerWithImage(url, timeout) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                const startTime = Date.now();
+                
+                // 设置超时
+                const timeoutId = setTimeout(() => {
+                    img.onload = null;
+                    img.onerror = null;
+                    resolve({ online: false, status: 'timeout', reliable: true });
+                }, timeout);
+                
+                img.onload = () => {
+                    clearTimeout(timeoutId);
+                    const loadTime = Date.now() - startTime;
+                    console.log(`图片加载成功: ${url}, 用时: ${loadTime}ms`);
+                    resolve({ online: true, status: 'online', reliable: true, loadTime });
+                };
+                
+                img.onerror = () => {
+                    clearTimeout(timeoutId);
+                    const loadTime = Date.now() - startTime;
+                    console.log(`图片加载失败: ${url}, 用时: ${loadTime}ms`);
+                    
+                    // 如果是很快就失败（< 100ms），可能是网络问题，不够可靠
+                    if (loadTime < 100) {
+                        resolve({ online: false, status: 'network_error', reliable: false });
+                    } else {
+                        // 加载时间较长后失败，通常是服务器问题，比较可靠
+                        resolve({ online: false, status: 'server_error', reliable: true });
+                    }
+                };
+                
+                // 尝试加载网站的 favicon 或生成一个带时间戳的测试图片URL
+                const testUrls = [
+                    `${url}/favicon.ico?t=${Date.now()}`,
+                    `${url}/apple-touch-icon.png?t=${Date.now()}`,
+                    `${url}/robots.txt?t=${Date.now()}` // 虽然不是图片，但可以测试
+                ];
+                
+                // 选择第一个测试URL
+                img.src = testUrls[0];
+            });
+        }
+        
+        // 使用 Fetch 检测服务器状态（备用方法）
+        async function checkServerWithFetch(url, timeout) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), timeout);
+                
+                // 尝试获取网站图标
+                const testUrl = `${url}/favicon.ico?t=${Date.now()}`;
+                
+                const response = await fetch(testUrl, {
+                    method: 'GET',
+                    mode: 'no-cors',
+                    signal: controller.signal,
+                    cache: 'no-cache'
+                });
+                
+                clearTimeout(timeoutId);
+                
+                // 在 no-cors 模式下，我们无法确定真实状态，只能说请求完成了
+                return { online: true, status: 'unknown', reliable: false };
+                
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    return { online: false, status: 'timeout', reliable: true };
+                }
+                return { online: false, status: 'fetch_error', reliable: false };
+            }
+        }// 更新服务状态显示
+        function updateServerStatusDisplay(serviceId, status) {
+            const statusElement = document.getElementById(`${serviceId}-status`);
+            if (statusElement) {
+                let statusIcon, statusText, statusColor, tooltipText;
+                
+                switch (status.status) {
+                    case 'online':
+                        statusIcon = '🟢';
+                        statusText = '在线';
+                        statusColor = '#4CAF50';
+                        tooltipText = `服务器正常运行${status.loadTime ? ` (响应时间: ${status.loadTime}ms)` : ''} - 点击重新检测`;
+                        break;
+                    case 'server_error':
+                        statusIcon = '🔴';
+                        statusText = '离线';
+                        statusColor = '#F44336';
+                        tooltipText = '服务器错误或Cloudflare Tunnel问题 - 点击重新检测';
+                        break;
+                    case 'timeout':
+                        statusIcon = '🟡';
+                        statusText = '超时';
+                        statusColor = '#FF9800';
+                        tooltipText = '连接超时，服务器可能过载 - 点击重新检测';
+                        break;
+                    case 'network_error':
+                        statusIcon = '🟠';
+                        statusText = '网络错误';
+                        statusColor = '#FF5722';
+                        tooltipText = '网络连接问题 - 点击重新检测';
+                        break;
+                    case 'unknown':
+                        statusIcon = '🟡';
+                        statusText = '状态未知';
+                        statusColor = '#FFC107';
+                        tooltipText = '无法确定准确状态，可能正常 - 点击重新检测';
+                        break;
+                    default:
+                        statusIcon = '🔴';
+                        statusText = '离线';
+                        statusColor = '#F44336';
+                        tooltipText = '服务器不可达 - 点击重新检测';
+                }
+                
+                statusElement.innerHTML = `<span style="color: ${statusColor}; cursor: pointer;" onclick="recheckServerStatus()" title="${tooltipText}">${statusIcon} ${statusText}</span>`;
+            }
+        }        // 检测所有服务器状态
+        async function checkAllServerStatus() {
+            console.log('🔍 开始检测服务器状态...');
+            
+            // 定义要检测的服务器列表
+            const servers = [
+                { id: 'openlist', url: 'https://openlist.146019.xyz', name: 'Openlist' },
+                { id: 'photo', url: 'https://photo.146019.xyz', name: '相册服务' }
+            ];
+            
+            // 并行检测所有服务器
+            const promises = servers.map(async (server) => {
+                console.log(`🔗 检测 ${server.name}: ${server.url}`);
+                try {
+                    const status = await checkServerStatus(server.url);
+                    updateServerStatusDisplay(server.id, status);
+                    
+                    const statusDesc = status.online ? '✅ 在线' : '❌ 离线';
+                    console.log(`📊 ${server.name} 状态: ${statusDesc} (${status.status})`);
+                    
+                    return { id: server.id, name: server.name, ...status };
+                } catch (error) {
+                    console.error(`❌ 检测 ${server.name} 时出错:`, error);
+                    const errorStatus = { online: false, status: 'error', error: error.message };
+                    updateServerStatusDisplay(server.id, errorStatus);
+                    return { id: server.id, name: server.name, ...errorStatus };
+                }
+            });
+            
+            try {
+                const results = await Promise.all(promises);
+                const onlineCount = results.filter(r => r.online).length;
+                console.log(`🏁 服务器状态检测完成: ${onlineCount}/${results.length} 个服务在线`);
+                results.forEach(result => {
+                    console.log(`   ${result.name}: ${result.online ? '在线' : '离线'} (${result.status})`);
+                });
+            } catch (error) {
+                console.error('❌ 批量检测服务器状态时出错:', error);
+            }
+        }
+
+        // 页面加载后自动检测服务器状态
+        window.addEventListener('load', (event) => {
+            setTimeout(checkAllServerStatus, 1000); // 延迟1秒开始检测
+        });        // 手动重新检测服务器状态
+        function recheckServerStatus() {
+            console.log('🔄 用户触发手动重新检测');
+            
+            // 重置状态显示
+            const openlistStatus = document.getElementById('openlist-status');
+            const photoStatus = document.getElementById('photo-status');
+            
+            if (openlistStatus) openlistStatus.innerHTML = '🔄 检测中...';
+            if (photoStatus) photoStatus.innerHTML = '🔄 检测中...';
+            
+            // 显示检测通知
+            showServerCheckNotification();
+            
+            // 重新检测
+            setTimeout(checkAllServerStatus, 200);
+        }
+        
+        // 显示服务器检测通知
+        function showServerCheckNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'copy-notification success';
+            notification.innerHTML = '🔍 正在重新检测服务器状态...';
+            notification.style.background = 'rgba(76, 175, 80, 0.9)';
+            
+            document.body.appendChild(notification);
+            
+            // 显示动画
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                hideCopyNotification(notification);
+            }, 3000);
         }
 
     </script>
     <main class="container">
         <article>
-            <h2>Openlist</h2>
+            <h2>Openlist <span id="openlist-status" style="font-size: 0.8em; margin-left: 10px;">🔄 检测中...</span></h2>
             <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);">服务器维护中，暂不可用!</h2> -->
-            <p>Openlist网盘，有各种资源影视、应用、游戏等资源（本人上传和网络），默认可在共享目录上传文件，网盘文件夹有其他openlist网盘链接，</p>
-            <button class="btn" onclick="window.open('https://openlist.146019.xyz', '_blank')">前往Openlist</button>
+            <p>Openlist网盘，有各种资源影视、应用、游戏等资源（本人上传和网络），默认可在共享目录上传文件，网盘文件夹有其他openlist网盘链接，</p>            <button class="btn" onclick="window.open('https://openlist.146019.xyz', '_blank')">前往Openlist</button>
             <button class="btn" onclick="window.open('https://openlist.2012521.xyz', '_blank')">备用链接</button>
         </article>
         <article>
-            <h2>2406寝室相册</h2>
+            <h2>2406寝室相册 <span id="photo-status" style="font-size: 0.8em; margin-left: 10px;">🔄 检测中...</span></h2>
             <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);">服务器维护中，暂不可用!</h2> -->
             <p>2406专用寝室用相册</p>
             <p>账号密码在寝室群公告</p>
             <button class="btn" onclick="window.open('https://photo.146019.xyz/', '_blank')">前往相册</button>
             <button class="btn" onclick="copyServerAddress('https://photo.146019.xyz')">复制服务器地址</button>
             <button class="btn" onclick="window.open('https://f-droid.org/F-Droid.apk', '_blank')">安装相册（安卓）</button>
-            <button class="btn" onclick="window.open('https://apps.apple.com/us/app/immich/id1613945652', '_blank')">安装相册（Apple）</button>
-            <button class="btn" onclick="window.open('https://github.com/immich-app/immich/releases', '_blank')">下载相册（github）</button>
+            <button class="btn" onclick="window.open('https://apps.apple.com/us/app/immich/id1613945652', '_blank')">安装相册（Apple）</button>            <button class="btn" onclick="window.open('https://github.com/immich-app/immich/releases', '_blank')">下载相册（github）</button>
         </article>
         <article>
             <h2>将 Windows 设备接入智能家居</h2>
