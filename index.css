@@ -120,7 +120,7 @@
  article {
      flex: 1 0 300px;
      margin: 20px;
-     background-color: rgba(255, 255, 255, 0.389);
+     background-color: rgba(255, 255, 255, 0.55);
      border-radius: 20px;
      backdrop-filter: blur(8px);
      box-shadow: 
@@ -133,7 +133,7 @@
      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
      cursor: pointer;
      /* 玻璃效果增强 - 移除边框，使用阴影效果 */
-     border: 1px solid rgba(255, 255, 255, 0.1);
+     border: 1px solid rgba(255, 255, 255, 0.2);
      position: relative;
      /* 垂直居中内容 */
      display: flex;
@@ -166,8 +166,8 @@
  } /* 设置文章悬浮效果 - 和通知一样的效果 */
  article:hover {
      background: linear-gradient(135deg, 
-         rgba(0, 136, 255, 0.9) 0%, 
-         rgba(0, 102, 204, 0.9) 100%);
+         rgba(0, 136, 255, 0.75) 0%, 
+         rgba(0, 102, 204, 0.75) 100%);
      backdrop-filter: blur(10px);
      box-shadow: 
          0 16px 48px rgba(0, 136, 255, 0.3),
@@ -210,13 +210,25 @@
      transform: translateY(-2px);
      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
  }
-
  /* 设置h2标题样式 */
  h2 {
      color: rgb(0, 136, 255);
      font-size: 160%;
      text-align: center;
-     text-shadow: 0 0 10px rgba(0, 136, 255, 0.5);
+     text-shadow: 
+         0 0 10px rgba(0, 136, 255, 0.5),
+         0 2px 4px rgba(255, 255, 255, 0.8);
+     font-weight: 600;
+     margin: 15px 0;
+ }
+
+ /* 设置段落文字样式 - 增强可读性 */
+ article p {
+     color: rgba(0, 0, 0, 0.85);
+     font-size: 16px;
+     line-height: 1.6;
+     text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+     margin: 10px 0;
  }
 
  /* 设置链接样式 */
@@ -266,6 +278,7 @@
      article {
          flex: 1 0 250px;
          margin: 10px;
+         background-color: rgba(255, 255, 255, 0.55);
          border-radius: 20px;
          backdrop-filter: blur(6px);
          box-shadow: 
@@ -276,7 +289,7 @@
          /* 移动端悬浮效果 */
          transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
          cursor: pointer;         /* 移动端玻璃效果 */
-         border: 2px solid rgba(255, 255, 255, 0.1);
+         border: 2px solid rgba(255, 255, 255, 0.2);
          border-radius: 20px;
          position: relative;
          /* 移动端垂直居中内容 */
@@ -306,8 +319,8 @@
      }     /* 移动端文章悬浮效果 */
      article:hover {
          background: linear-gradient(135deg, 
-             rgba(0, 136, 255, 0.9) 0%, 
-             rgba(0, 102, 204, 0.9) 100%);
+             rgba(0, 136, 255, 0.7) 0%, 
+             rgba(0, 102, 204, 0.7) 100%);
          backdrop-filter: blur(10px);         box-shadow: 
              0 8px 25px rgba(0, 136, 255, 0.4),
              0 2px 8px rgba(0, 0, 0, 0.15),
@@ -431,7 +444,7 @@
  .loading-readme {
      text-align: center;
      padding: 40px;
-     color: rgba(255, 255, 255, 0.7);
+     color: rgba(0, 0, 0, 0.7);
  }
 
  .loading-readme p {
@@ -468,12 +481,12 @@
      margin: 18px 0 8px 0;
      font-size: 1.2em;
  }
-
  .markdown-content p {
      line-height: 1.8 !important;
      margin: 15px 0 !important;
-     color: rgba(255, 255, 255, 0.9) !important;
+     color: rgba(0, 0, 0, 0.85) !important;
      text-align: left;
+     text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
  }
 
  .markdown-content a {
@@ -565,4 +578,34 @@
      height: 2px;
      background: linear-gradient(90deg, transparent, rgba(0, 136, 255, 0.5), transparent);
      margin: 30px 0;
+ } /* Markdown 显示区域样式 */
+ .markdown-display-section {
+     margin: 20px;
+     padding: 30px;
+     background-color: rgba(255, 255, 255, 0.55);
+     border-radius: 20px;
+     backdrop-filter: blur(8px);
+     box-shadow: 
+         0 8px 32px rgba(0, 0, 0, 0.1),
+         0 4px 16px rgba(0, 0, 0, 0.1),
+         inset 0 1px 0 rgba(255, 255, 255, 0.3),
+         inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+     border: 1px solid rgba(255, 255, 255, 0.2);
+     position: relative;
+ }
+
+ /* Markdown 显示区域光泽效果 */
+ .markdown-display-section::after {
+     content: '';
+     position: absolute;
+     top: 1px;
+     left: 1px;
+     right: 1px;
+     height: 40%;
+     background: linear-gradient(180deg, 
+         rgba(255, 255, 255, 0.2) 0%,
+         rgba(255, 255, 255, 0.05) 50%,
+         transparent 100%);
+     border-radius: 19px 19px 8px 8px;
+     pointer-events: none;
  }
