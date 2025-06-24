@@ -76,42 +76,21 @@ h1 {
 
 h2 {
     color: rgba(0, 136, 255, 0.628);
-    text-shadow: 0 0 8px rgba(0, 136, 255, 0.628);
-    font-size: 300%;
+    text-shadow: 0 0 8px rgba(0, 136, 255, 0.628);    font-size: 300%;
     text-align: left;
     padding-left: 2%;
 }
 
-/* 默认浅色模式横屏背景 */
+/* 基础背景样式 - 由JavaScript动态设置背景图 */
 body {
-    background-image: url('res/bright_back/bright_back.png');
+    /* background-image 将由JavaScript动态设置 */
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
+    background-repeat: no-repeat;
 }
 
-/* 深色模式横屏背景 */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-image: url('res/dark_back/dark_back.png');
-        background-position: left bottom !important;
-    }
-}
-
-/* 浅色模式竖屏背景 - 当容器宽度不足以并排显示2个以上文章时 */
-@media (max-width: 1020px) {
-    body {
-        background-image: url('res/mobile_bright_back/mobile_bright_back.png.jpg');
-    }
-}
-
-/* 深色模式竖屏背景 - 当容器宽度不足以并排显示2个以上文章时 */
-@media (prefers-color-scheme: dark) and (max-width: 1020px) {
-    body {
-        background-image: url('res/mobile_dark_back/mobile_dark_back.jpg');
-        background-position: right center !important;
-    }
-}
+/* 注释掉固定背景设置，改用JavaScript随机背景功能 */
 
 /* 设置页面底部样式 */
 footer {
@@ -191,16 +170,10 @@ main {
         justify-content: space-evenly; /* 宽屏幕下使用space-evenly分布 */
         gap: 30px; /* 宽屏幕下更大的间距 */
     }
-}/* 设置移动端样式 */        
-@media (max-width: 800px) {            
-    /* 设置移动端浅色模式背景图样式 */
-    body {
-        background-image: url('res/mobile_bright_back/mobile_bright_back.png.jpg');
-        background-size: cover;
-        background-attachment: fixed;
-        background-position: center;
-    }
-    
+}/* 移除固定背景设置，改用JavaScript随机背景 */
+
+/* 设置移动端样式 */        
+@media (max-width: 800px) {
     /* 移动端header高度优化 */
     header {
         height: auto;
@@ -321,37 +294,7 @@ main {
                 margin-left: -2%;
             }
         }
-/* 移动端深色模式背景 - 单独的媒体查询确保兼容性 */
-@media (max-width: 800px) and (prefers-color-scheme: dark) {
-    body {
-        background-image: url('res/mobile_dark_back/mobile_dark_back.jpg') !important;
-        background-position: right center !important;
-    }
-}
-
-/* JavaScript动态布局检测背景切换 - 优先级最高 */
-body.horizontal-layout {
-    background-image: url('res/bright_back/bright_back.png') !important;
-    background-position: center !important;
-}
-
-body.vertical-layout {
-    background-image: url('res/mobile_bright_back/mobile_bright_back.png.jpg') !important;
-    background-position: center !important;
-}
-
-/* 深色模式检测 */
-@media (prefers-color-scheme: dark) {    body.horizontal-layout {
-        background-image: url('res/dark_back/dark_back.png') !important;
-        background-position: left bottom !important;
-
-    }
-    
-    body.vertical-layout {
-        background-image: url('res/mobile_dark_back/mobile_dark_back.jpg') !important;
-        background-position: right center !important;
-    }
-}
+/* 移除所有固定背景设置，改用JavaScript随机背景功能 */
 
 /* 标题图标样式 */
 h1 img {

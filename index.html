@@ -25,8 +25,73 @@
         <!-- <p>还在学习中，效果一般请见谅</p> -->
         <!-- <p>欢迎来到我的工具箱，这里有一些我常用的工具，欢迎大家提出宝贵意见。</p> -->
         <!-- <p>对了！我主推天禄和辟邪哦~！</p> -->
-    </header>
-    <script>        // 随机选择加载GIF
+    </header>    <script>        
+        // 随机背景图数据配置
+        const backgroundImages = {
+            horizontal: {
+                bright: [
+                    'res/bright_back/bright_back.png',
+                    'res/bright_back/bright_back1.jpg',
+                    'res/bright_back/bright_back2.png',
+                    'res/bright_back/bright_back3.jpg',
+                    'res/bright_back/bright_back4.jpg',
+                    'res/bright_back/bright_back5.jpg',
+                    'res/bright_back/bright_back6.png'
+                ],
+                dark: [
+                    'res/dark_back/dark_back.png',
+                    'res/dark_back/dark_back1.jpg',
+                    'res/dark_back/dark_back2.jpg',
+                    'res/dark_back/dark_back3.jpg',
+                    'res/dark_back/dark_back4.png',
+                    'res/dark_back/dark_back5.jpg'
+                ]
+            },
+            vertical: {
+                bright: [
+                    'res/mobile_bright_back/mobile_bright_back.png.jpg',
+                    'res/mobile_bright_back/mobile_bright_back.png2.png',
+                    'res/mobile_bright_back/mobile_bright_back.png3.png',
+                    'res/mobile_bright_back/mobile_bright_back.png4.jpg',
+                    'res/mobile_bright_back/mobile_bright_back.png5.jpg',
+                    'res/mobile_bright_back/mobile_bright_back.png6.jpeg',
+                    'res/mobile_bright_back/mobile_bright_back.png7.jpg',
+                    'res/mobile_bright_back/mobile_bright_back.png8.png',
+                    'res/mobile_bright_back/mobile_bright_back.png10.jpg',
+                    'res/mobile_bright_back/mobile_bright_back.png12.png'
+                ],
+                dark: [
+                    'res/mobile_dark_back/mobile_dark_back.jpg',
+                    'res/mobile_dark_back/mobile_dark_back1.jpg',
+                    'res/mobile_dark_back/mobile_dark_back2.jpg',
+                    'res/mobile_dark_back/mobile_dark_back3.jpg',
+                    'res/mobile_dark_back/mobile_dark_back4.jpg',
+                    'res/mobile_dark_back/mobile_dark_back5.png',
+                    'res/mobile_dark_back/mobile_dark_back6.jpeg'
+                ]
+            }
+        };
+
+        // 获取随机背景图
+        function getRandomBackground(layout, theme) {
+            const images = backgroundImages[layout] && backgroundImages[layout][theme];
+            if (!images || images.length === 0) {
+                console.warn(`没有找到 ${layout}-${theme} 主题的背景图`);
+                return null;
+            }
+            const randomIndex = Math.floor(Math.random() * images.length);
+            return images[randomIndex];
+        }
+
+        // 设置背景图
+        function setBackgroundImage(imageUrl) {
+            if (imageUrl) {
+                document.body.style.backgroundImage = `url('${imageUrl}')`;
+                console.log(`背景图已设置为: ${imageUrl}`);
+            }
+        }
+
+        // 随机选择加载GIF
         const loadingGifs = [
             { src: 'res/loading/Loading.gif', width: '400px', height: '400px' },
             { src: 'res/loading/Loading1.gif', width: '400px', height: '400px' },
@@ -38,8 +103,8 @@
         const loadingImg = document.getElementById('loading-gif');
         loadingImg.src = randomGif.src;
         loadingImg.style.width = randomGif.width;
-        loadingImg.style.height = randomGif.height;        // 检测主容器布局变化并切换背景
-        function checkLayoutAndSwitchBackground() {
+        loadingImg.style.height = randomGif.height;        // 检测主容器布局变化并切换背景 - 增强版支持随机背景
+        function checkLayoutAndSwitchBackground(forceNewBackground = false, forceLayoutCheck = false) {
             const main = document.querySelector('main.container');
             
             if (main) {
@@ -57,7 +122,16 @@
                 // 移动端或有显著padding-top时使用竖屏背景
                 const isVerticalLayout = isMobileWidth || hasSignificantPadding;
                 
-                // 切换背景类
+                // 检测当前布局是否发生了变化
+                const currentLayoutClass = document.body.classList.contains('vertical-layout') ? 'vertical' : 'horizontal';
+                const newLayoutClass = isVerticalLayout ? 'vertical' : 'horizontal';
+                const layoutChanged = currentLayoutClass !== newLayoutClass;
+                
+                // 检测主题偏好（亮色/暗色）
+                const prefersDarkScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const theme = prefersDarkScheme ? 'dark' : 'bright';
+                
+                // 切换背景类（保留原有逻辑）
                 if (isVerticalLayout) {
                     document.body.classList.add('vertical-layout');
                     document.body.classList.remove('horizontal-layout');
@@ -66,14 +140,39 @@
                     document.body.classList.remove('vertical-layout');
                 }
                 
-                // 调试信息
-                console.log(`Width: ${window.innerWidth}px, Padding-top: ${paddingTop}px, Margin-top: ${marginTop}px, Layout: ${isVerticalLayout ? 'Vertical' : 'Horizontal'}`);
+                // 设置背景图的条件：
+                // 1. 强制要求新背景 (手动更换、初始化)
+                // 2. 或者布局类型发生了变化 (横竖屏切换)
+                if (forceNewBackground || layoutChanged || forceLayoutCheck) {
+                    const layout = isVerticalLayout ? 'vertical' : 'horizontal';
+                    const randomBackground = getRandomBackground(layout, theme);
+                    
+                    // 设置随机背景图
+                    if (randomBackground) {
+                        setBackgroundImage(randomBackground);
+                    }
+                    
+                    // 调试信息
+                    console.log(`Width: ${window.innerWidth}px, Padding-top: ${paddingTop}px, Margin-top: ${marginTop}px`);
+                    console.log(`Layout: ${isVerticalLayout ? 'Vertical' : 'Horizontal'}, Theme: ${theme}, Background: ${randomBackground}`);
+                    if (layoutChanged) {
+                        console.log(`Layout changed from ${currentLayoutClass} to ${newLayoutClass}, switching background`);
+                    }
+                } else {
+                    // 仅调整布局类，不更换背景图
+                    console.log(`Layout adjusted: ${isVerticalLayout ? 'Vertical' : 'Horizontal'}, Theme: ${theme} (background unchanged)`);
+                }
             }
-        }        // 检测初始布局
+        }// 检测初始布局并设置随机背景
         setTimeout(() => {
-            checkLayoutAndSwitchBackground();
+            checkLayoutAndSwitchBackground(true); // 初始化时设置背景图
             optimizeArticleLayout();
-        }, 20);        // 在800ms后隐藏 loader 并显示内容
+        }, 20);        
+        
+        // 在页面加载完成后也设置一次随机背景
+        window.addEventListener('load', function() {
+            setTimeout(() => checkLayoutAndSwitchBackground(true), 100); // 页面加载完成时设置背景图
+        });// 在800ms后隐藏 loader 并显示内容
         setTimeout(function () {
             document.querySelector('.loader').style.display = 'none';
             document.querySelector('.blur-effect').style.display = 'none';
@@ -91,7 +190,7 @@
         }, 1500);// 监听窗口大小变化
         window.addEventListener('resize', function() {
             setTimeout(() => {
-                checkLayoutAndSwitchBackground();
+                checkLayoutAndSwitchBackground(false); // 窗口大小变化时不更换背景图，只调整布局
                 optimizeArticleLayout();
             }, 20);
         });// 显示滑动提示通知
@@ -687,9 +786,42 @@
         // 布局变化时调用优化函数
         function optimizeLayoutOnResize() {
             optimizeArticleLayout();
+        }        // 手动更换背景图功能
+        function changeRandomBackground() {
+            console.log('🎨 用户手动更换背景图');
+            checkLayoutAndSwitchBackground(true); // 手动更换时强制选择新背景
+            
+            // 显示更换成功通知
+            showBackgroundChangeNotification();
         }
-
-        // ...existing code...
+        
+        // 显示背景更换成功通知
+        function showBackgroundChangeNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'copy-notification success';
+            notification.innerHTML = '🎨 背景图已更换！';
+            notification.style.background = 'rgba(76, 175, 80, 0.9)';
+            
+            document.body.appendChild(notification);
+            
+            // 显示动画
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // 2秒后自动隐藏
+            setTimeout(() => {
+                hideCopyNotification(notification);
+            }, 2000);
+        }
+        
+        // 添加键盘快捷键支持（Ctrl+B 或 Cmd+B）
+        window.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                e.preventDefault();
+                changeRandomBackground();
+            }
+        });
     </script>
     <main class="container">
         <article>
@@ -752,10 +884,14 @@
                 </div>
             </div>
         </section>
-    </main>
-    <footer>
+    </main>    <footer>
         <!-- <p>网站内容归chen6019所有 &copy; 2025</p> -->
         <p>由 <a href="https://www.cloudflare.com/" target="_blank" style="color: #F6821E; text-decoration: none;">Cloudflare</a> 提供技术支持</p>
+        <div style="margin-top: 10px;">
+            <button class="btn" onclick="changeRandomBackground()" style="font-size: 12px; padding: 8px 16px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.9);" title="快捷键: Ctrl+B 或 Cmd+B">
+                🎨 更换背景图
+            </button>
+        </div>
     </footer>
 </body>
 <script src="./renderer.js">

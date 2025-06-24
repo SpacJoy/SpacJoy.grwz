@@ -284,13 +284,7 @@
      .scroll-notification::before {
          font-size: 16px;
          margin-right: 6px;
-     }     /* 设置移动端浅色模式背景图样式 */
-     body {
-         background-image: url('res/mobile_bright_back/mobile_bright_back.png.jpg');
-         background-size: cover;
-         background-attachment: fixed;
-         background-position: center;
-     }     /* 设置移动端主要内容样式 */
+     }     /* 移除固定背景设置，改用JavaScript随机背景 *//* 设置移动端主要内容样式 */
      main {
          padding-top: 190%;
          margin: 10px; /* 减少外边距 */
@@ -393,14 +387,7 @@
          width: 101%;
          margin-left: -2%;
      }
- }
- /* 移动端深色模式背景 - 单独的媒体查询确保兼容性 */
- @media (max-width: 800px) and (prefers-color-scheme: dark) {
-     body {
-         background-image: url('res/mobile_dark_back/mobile_dark_back.jpg') !important;
-         background-position: right center !important;
-     }
- }/* 复制通知样式 */
+ }/* 移除所有固定背景设置，改用JavaScript随机背景功能 *//* 复制通知样式 */
  .copy-notification {
      position: fixed;
      top: 80px;
