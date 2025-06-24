@@ -16,10 +16,10 @@
 # 📱 Devices in Use
 
 ## ![Xiaomi 13](https://img.shields.io/badge/Xiaomi%2013-OS2.2%20Unlock%20BL%20-FD4900?style=flat-square&logo=xiaomi&logoColor=ffffff) ![Xiaomi Pad 6 Pro](https://img.shields.io/badge/Xiaomi%20Pad%206%20Pro-OS2.2%20Unlock%20BL-FD4900?style=flat-square&logo=xiaomi&logoColor=ffffff) ![X86 mini PC](https://img.shields.io/badge/X86%20mini%20PC-iStoreOS%20(Run%20PVE%20on%20This)-835BFF?style=flat-square&logo=openwrt&logoColor=ffffff) ![HINLINK OPC-H68K Board (SP)](https://img.shields.io/badge/HINLINK%20OPC%20H68K%20Board%20(SP)-iStoreOS-835BFF?style=flat-square&logo=openwrt&logoColor=ffffff)
-
+<!-- 
 ## 🔗 Services
 
-## <a href=""><img src="https://img.shields.io/badge/Openlist-暂不公开(not public)~喵~~!-70C6BE?logo=Openlist" title="Openlist" /></a>
+## <a href=""><img src="https://img.shields.io/badge/Openlist-暂不公开(not public)~喵~~!-70C6BE?logo=Openlist" title="Openlist" /></a> -->
 
 ## <img src="https://raw.githubusercontent.com/alexnaiman/alexnaiman/master/resources/bongocat.gif" width="50px" /> How to reach me: ...
 

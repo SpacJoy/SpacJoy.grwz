@@ -69,9 +69,11 @@
                 // 调试信息
                 console.log(`Width: ${window.innerWidth}px, Padding-top: ${paddingTop}px, Margin-top: ${marginTop}px, Layout: ${isVerticalLayout ? 'Vertical' : 'Horizontal'}`);
             }
-        }
-        // 检测初始布局
-        setTimeout(checkLayoutAndSwitchBackground, 20);        // 在800ms后隐藏 loader 并显示内容
+        }        // 检测初始布局
+        setTimeout(() => {
+            checkLayoutAndSwitchBackground();
+            optimizeArticleLayout();
+        }, 20);        // 在800ms后隐藏 loader 并显示内容
         setTimeout(function () {
             document.querySelector('.loader').style.display = 'none';
             document.querySelector('.blur-effect').style.display = 'none';
@@ -83,10 +85,16 @@
             
             // 检测服务器状态
             setTimeout(checkAllServerStatus, 500);
+            
+            // 优化布局
+            setTimeout(optimizeArticleLayout, 600);
         }, 1500);// 监听窗口大小变化
         window.addEventListener('resize', function() {
-            setTimeout(checkLayoutAndSwitchBackground, 20);
-        });        // 显示滑动提示通知
+            setTimeout(() => {
+                checkLayoutAndSwitchBackground();
+                optimizeArticleLayout();
+            }, 20);
+        });// 显示滑动提示通知
         function showScrollNotification() {
             console.log('开始显示滑动提示通知');
             // 创建通知元素
@@ -147,11 +155,10 @@
                         const mainRect = main.getBoundingClientRect();
                         const scrollTop = window.pageYOffset + mainRect.top - 60;
                         window.scrollTo({ top: Math.max(0, scrollTop), behavior: 'smooth' });
-                    }
-                } else {
+                    }                } else {
                     console.log('未找到main元素，尝试其他方式');
                     // 如果找不到main元素，尝试其他方式
-                    const articles = document.querySelectorAll('article');
+                    const articles = document.querySelectorAll('main article');
                     if (articles.length > 0) {
                         console.log('滚动到第一个article');
                         articles[0].scrollIntoView({ 
@@ -606,8 +613,83 @@
             setTimeout(() => {
                 hideCopyNotification(notification);
             }, 3000);
+        }        // 智能布局优化 - 实现article的均匀分布
+        function optimizeArticleLayout() {
+            const main = document.querySelector('main.container');
+            // 只选择真正的article元素，排除markdown区域
+            const articles = Array.from(document.querySelectorAll('main article'));
+            
+            if (!main || articles.length === 0) return;
+            
+            // 获取容器宽度和article基本尺寸
+            const containerWidth = main.offsetWidth;
+            const screenWidth = window.innerWidth;
+              // 根据屏幕尺寸动态调整参数
+            let articleMinWidth, gap;
+            
+            if (screenWidth <= 800) {
+                // 移动端
+                articleMinWidth = 280;
+                gap = 20; // 与CSS保持一致
+            } else if (screenWidth <= 1024 && window.screen && window.screen.orientation && window.screen.orientation.angle !== 0) {
+                // 小宽度横屏设备（如小平板横屏）
+                articleMinWidth = 320;
+                gap = 20;
+            } else if (screenWidth <= 1199) {
+                // 中等屏幕
+                articleMinWidth = 350; // 与CSS调整后的值保持一致
+                gap = 25;
+            } else {
+                // 宽屏幕
+                articleMinWidth = 380;
+                gap = 30;
+            }
+            
+            const articleMaxWidth = 400; // 对应CSS中的max-width
+            
+            // 计算每行能放多少个article
+            let itemsPerRow = Math.floor((containerWidth + gap) / (articleMinWidth + gap));
+            itemsPerRow = Math.max(1, itemsPerRow); // 至少1个
+            
+            // 宽屏幕特殊处理：如果宽度 >= 1200px，强制使用3列布局
+            if (screenWidth >= 1200) {
+                itemsPerRow = 3;
+                console.log('宽屏幕模式：强制使用3列布局');
+            }
+            
+            // 如果所有article都能放在一行，直接返回
+            if (articles.length <= itemsPerRow) {
+                console.log(`布局正常：${articles.length}个article可以在一行显示（每行最多${itemsPerRow}个）`);
+                return;
+            }
+            
+            // 计算最优的行数分布
+            const totalArticles = articles.length;
+            const rows = Math.ceil(totalArticles / itemsPerRow);
+            
+            // 尝试优化分布：让各行article数量尽量平均
+            const itemsPerRowOptimal = Math.ceil(totalArticles / rows);
+            const remainder = totalArticles % itemsPerRowOptimal;
+            
+            // 提供布局分析信息
+            console.log(`布局分析: 总共${totalArticles}个article，容器宽度${containerWidth}px，屏幕宽度${screenWidth}px`);
+            console.log(`最小宽度${articleMinWidth}px，gap=${gap}px，当前可容纳每行${itemsPerRow}个，将分${rows}行显示`);
+            
+            if (remainder !== 0) {
+                const rowsWithExtra = remainder;
+                const rowsWithNormal = rows - rowsWithExtra;
+                console.log(`分布：${rowsWithNormal}行各有${itemsPerRowOptimal - 1}个，${rowsWithExtra}行各有${itemsPerRowOptimal}个`);
+            } else {
+                console.log(`均匀分布：每行${itemsPerRowOptimal}个article`);
+            }
+        }
+        
+        // 布局变化时调用优化函数
+        function optimizeLayoutOnResize() {
+            optimizeArticleLayout();
         }
 
+        // ...existing code...
     </script>
     <main class="container">
         <article>
@@ -635,7 +717,10 @@
         </article>
         <article>
             <h2>将 Windows 设备接入智能家居</h2>
-            <p>通过小爱同学、天猫精灵等智能家具设备，实现对 Windows 电脑的远程控制，包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能。适合有远程自动化需求的用户。</p>
+            <p>通过小爱同学、天猫精灵等智能家具设备</p>
+            <p>实现对 Windows 电脑的远程控制</p>
+            <p>包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能</p>
+            <p>适合有远程自动化需求的用户。</p>
             <p> </p>
             <button class="btn" onclick="window.open('https://github.com/chen6019/Remote-Controls', '_blank')">前往项目</button>
         </article>
@@ -646,16 +731,18 @@
             <button class="btn" onclick="window.open('markdown-editor.html', '_blank')">前往编辑器</button>
         </article>
         <article>
+            <h2>About Me</h2>
+            <p>My favorite character is 天禄 辟邪.</p>
+            <p>Playing Mihoyo,Minecraft(ID:TLBX_).</p>
+            <p>enjoys tinkering with servers,routers,PCs,and phones.</p>
+            <p> </p>
+            <button class="btn" onclick="window.open('https://github.com/chen6019', '_blank')">Go to Github</button>
+        </article>
+        <article>
             <h2>在线小游戏</h2>
             <p>Poki (宝玩) - 免费在线小游戏 - 马上玩！</p>
             <p> </p>
             <button class="btn" onclick="window.open('https://poki.com/zh#utm_source=redirect-en-zh', '_blank')">前往小游戏</button>
-        </article>
-        <article>
-            <h2>About Me</h2>
-            <p>My favorite character is 天禄 辟邪. Playing Mihoyo, Minecraft( ID:TLBX_ ). enjoys tinkering with servers, routers, PCs, and phones.</p>
-            <p> </p>
-            <button class="btn" onclick="window.open('https://github.com/chen6019', '_blank')">Go to Github</button>
         </article>
             <!-- 个人简介和信息展示区域 -->
             <section class="markdown-display-section">

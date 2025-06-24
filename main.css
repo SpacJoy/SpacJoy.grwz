@@ -165,27 +165,66 @@ footer::before {
      transition: 0.3s;
      margin-bottom: 10px;
     }
-/* 设置主要内容样式 */
+/* 设置主要内容样式 - 默认Flexbox布局 */
 main {
     display: flex;
-    justify-content: space-around;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    gap: 20px; /* 基础间距 */
     z-index: 2;
-}        /* 设置移动端样式 */        @media (max-width: 800px) {            /* 设置移动端浅色模式背景图样式 */
-            body {
-                background-image: url('res/mobile_bright_back/mobile_bright_back.png.jpg');
-                background-size: cover;
-                background-attachment: fixed;
-                background-position: center;
-            }
+    max-width: 1400px; /* 限制最大宽度 */
+    margin: 0 auto; /* 居中显示 */
+    padding: 20px; /* 增加内边距 */
+}
+
+/* 中等屏幕下的Flexbox处理 */
+@media (min-width: 801px) and (max-width: 1199px) {
+    main {
+        gap: 25px; /* 中等屏幕适中间距 */
+    }
+}
+
+/* 宽屏幕下的Flexbox特殊处理 */
+@media (min-width: 1200px) {
+    main {
+        justify-content: space-evenly; /* 宽屏幕下使用space-evenly分布 */
+        gap: 30px; /* 宽屏幕下更大的间距 */
+    }
+}/* 设置移动端样式 */        
+@media (max-width: 800px) {            
+    /* 设置移动端浅色模式背景图样式 */
+    body {
+        background-image: url('res/mobile_bright_back/mobile_bright_back.png.jpg');
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+    }
     
-            /* 设置移动端主要内容样式 */
-            main {
-                padding-top: 100%;
-                margin: 20px;
-            }            /* 设置移动端文章样式 */
-            article {
-                flex: 1 0 250px;
-                margin: 10px;
+    /* 移动端header高度优化 */
+    header {
+        height: auto;
+        min-height: 80px; /* 确保header有足够高度 */
+        padding: 10px 0;
+        z-index: 10; /* 提高z-index确保在最前面 */
+    }            
+    
+    /* 设置移动端主要内容样式 */
+    main {
+        padding: 10px; /* 四边统一padding */
+        padding-top: 130px !important; /* 为header留出足够空间 */
+        margin: 10px; /* 减少外边距 */
+        gap: 20px; /* 移动端增大gap防止重叠 */
+        min-height: calc(100vh - 140px); /* 确保内容区域足够高 */
+    }            
+    
+    /* 设置移动端文章样式 */
+    article {
+        flex: 1 0 280px; /* 增加最小宽度 */
+        max-width: 100%; /* 移动端最大宽度为100% */
+        margin: 0; /* 移除margin，使用gap代替 */
+        min-width: 280px; /* 确保最小宽度 */
+        box-sizing: border-box; /* 确保边距计算正确 */
                 border-radius: 20px;
                 backdrop-filter: blur(6px);
                 box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -218,7 +257,7 @@ main {
                     transparent 100%);
                 border-radius: 18px 18px 6px 6px;
                 pointer-events: none;
-            }            /* 移动端文章悬浮效果 */
+            }            /* 移动端文章悬浮效果 - 减小放大避免重叠 */
             article:hover {
                 background: linear-gradient(135deg, 
                     rgba(0, 136, 255, 0.9) 0%, 
@@ -228,7 +267,7 @@ main {
                     0 8px 25px rgba(0, 136, 255, 0.4),
                     0 2px 8px rgba(0, 0, 0, 0.15),
                     inset 0 1px 0 rgba(255, 255, 255, 0.3);
-                transform: scale(1.03);
+                transform: scale(1.01); /* 移动端减小放大比例避免重叠 */
                 /* 移动端悬浮时增强玻璃边框效果 */
                 border-image: linear-gradient(135deg, 
                     rgba(255, 255, 255, 0.4) 0%,
@@ -660,49 +699,162 @@ h1 img:hover {
     accent-color: rgba(0, 136, 255, 0.8);
 }
 
-/* 移动端适配 */
-@media (max-width: 800px) {    .markdown-display-section {
-        margin: 20px 0;
-        padding: 20px;        backdrop-filter: blur(16px);
-        box-shadow: 
-            0 6px 24px rgba(0, 0, 0, 0.2),
-            0 2px 8px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15),
-            inset 0 -1px 0 rgba(255, 255, 255, 0.1);
-        border-radius: 20px;        /* 移动端玻璃效果 */
-        border: 2px solid rgba(255, 255, 255, 0.12);
-        border-radius: 20px;
-        position: relative;
+/* 更智能的响应式布局 - 使用CSS Grid实现均匀分布 */
+@supports (display: grid) {
+    main {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        justify-content: center;
+        gap: 20px; /* 基础间距 */
+        z-index: 2;
+        max-width: 1400px; /* 限制最大宽度 */
+        margin: 0 auto; /* 居中显示 */
+        padding: 20px; /* 增加内边距 */
+    }
+      /* 中等屏幕尺寸处理 - 避免重叠 */
+    @media (min-width: 801px) and (max-width: 1199px) {
+        main {
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); /* 略减小最小宽度 */
+            gap: 25px; /* 中等屏幕适中间距 */
+        }
+        
+        /* 中等屏幕markdown区域优化 */
+        .markdown-display-section {
+            grid-column: 1 / -1; /* 跨越所有列 */
+            margin: 20px 0; /* 调整上下间距 */
+            width: 100%; /* 确保全宽 */
+            max-width: none; /* 移除最大宽度限制 */
+            box-sizing: border-box;
+        }
+        
+        .markdown-content {
+            padding: 25px; /* 适中的内边距 */
+            font-size: 15px; /* 适中的字体大小 */
+            line-height: 1.6;
+        }
+    }
+    
+    /* 针对宽屏幕的特殊处理 - 强制3列布局 */
+    @media (min-width: 1200px) {
+        main {
+            grid-template-columns: repeat(3, minmax(380px, 400px));
+            justify-content: center;
+            gap: 30px; /* 宽屏幕下更大的间距 */
+        }
+    }
+    
+    /* 确保grid布局下article正确设置 */
+    main article {
+        flex: none;
+        margin: 0;
+        width: 100%;
+        max-width: 400px;
+        min-width: 320px; /* 确保最小宽度 */
+        justify-self: center;
+        box-sizing: border-box; /* 确保边距计算正确 */
     }
 
-    /* 移动端 Markdown 显示区域光泽效果 */
-    .markdown-display-section::after {
-        height: 25%;
-        border-radius: 18px 18px 6px 6px;
-        background: linear-gradient(180deg, 
-            rgba(255, 255, 255, 0.15) 0%,
-            rgba(255, 255, 255, 0.04) 50%,
-            transparent 100%);
+    /* 确保Markdown区域在Grid布局中正确显示 */
+    .markdown-display-section {
+        grid-column: 1 / -1; /* 跨越所有列 */
+        margin: 20px 0; /* 调整上下间距 */
+    }
+}
+
+/* 移动端网格布局优化 */
+@media (max-width: 800px) {
+    @supports (display: grid) {        
+        main {
+            grid-template-columns: 1fr; /* 移动端强制单列 */
+            gap: 20px; /* 移动端适中间距 */
+            margin: 10px;
+            padding: 10px; /* 四边统一padding */
+            padding-top: 130px !important; /* 为header留出足够空间 */
+            min-height: calc(100vh - 140px); /* 确保内容区域足够高 */
+        }
+        
+        main article {
+            min-width: 280px;
+            width: 100%;
+            justify-self: stretch; /* 拉伸到全宽 */
+        }
+        
+        /* 确保移动端markdown区域正确显示 */
+        .markdown-display-section {
+            grid-column: 1; /* 移动端单列时不需要跨列 */
+            margin: 20px 0; /* 调整上下间距 */
+            width: 100%; /* 确保全宽 */
+            box-sizing: border-box;
+        }
+    }
+    
+    /* 移动端非Grid布局的备用方案 */
+    @supports not (display: grid) {
+        main {
+            display: flex;
+            flex-direction: column; /* 移动端强制单列 */
+            align-items: stretch; /* 拉伸所有子元素 */
+            padding: 10px;
+            padding-top: 130px !important;
+            margin: 10px;
+            gap: 20px;
+            min-height: calc(100vh - 140px);
+        }
+        
+        article {
+            width: 100%;
+            flex: none; /* 不要flex伸缩 */
+        }
+        
+        .markdown-display-section {
+            width: 100%;
+            margin: 20px 0;
+            flex: none;
+        }
+    }
+}
+
+/* 小宽度横屏设备特殊处理（如小平板横屏）*/
+@media (min-width: 801px) and (max-width: 1024px) and (orientation: landscape) {
+    main {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important; /* 强制更灵活的布局 */
+        gap: 20px !important; /* 减小间距 */
+        padding: 15px !important; /* 减小内边距 */
+        max-width: 100% !important; /* 充分利用宽度 */
+    }
+    
+    .markdown-display-section {
+        margin: 10px 5px !important; /* 最小外边距 */
+        padding: 20px !important; /* 最小内边距 */
+        grid-column: 1 / -1 !important; /* 确保跨列 */
     }
     
     .markdown-content {
-        font-size: 14px;
+        font-size: 14px !important; /* 更小的字体 */
+        line-height: 1.5 !important;
     }
-    
-    .markdown-content h2 {
-        font-size: 1.4em;
-    }
-    
-    .markdown-content h3 {
-        font-size: 1.2em;
-    }
-    
-    .markdown-content ul, .markdown-content ol {
-        padding-left: 20px;
-    }
-    
-    .markdown-content pre {
-        padding: 15px;
-        font-size: 12px;
+}
+
+/* 中等屏幕下的Flexbox备用布局 */
+@media (min-width: 801px) and (max-width: 1199px) {
+    @supports not (display: grid) {
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            padding: 20px;
+        }
+        
+        article {
+            flex: 1 0 350px; /* 与Grid布局保持一致 */
+            max-width: 400px;
+        }
+        
+        .markdown-display-section {
+            flex: 1 0 100%; /* 强制占满一行 */
+            width: 100%;
+            order: 999; /* 确保在最后显示 */
+        }
     }
 }
