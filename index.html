@@ -208,7 +208,7 @@
             
             // 优化布局
             setTimeout(optimizeArticleLayout, 600);
-        }, 1700);// 监听窗口大小变化
+        }, 2000);// 监听窗口大小变化
         window.addEventListener('resize', function() {
             setTimeout(() => {
                 checkLayoutAndSwitchBackground(false); // 窗口大小变化时不更换背景图，只调整布局
@@ -621,12 +621,23 @@
                     }
                 };
                 
+                // 提取根域名用于检测静态资源
+                let baseUrl;
+                try {
+                    const urlObj = new URL(url);
+                    baseUrl = `${urlObj.protocol}//${urlObj.hostname}${urlObj.port ? ':' + urlObj.port : ''}`;
+                } catch (e) {
+                    baseUrl = url; // 如果URL解析失败，使用原URL
+                }
+                
                 // 尝试加载网站的 favicon 或生成一个带时间戳的测试图片URL
                 const testUrls = [
-                    `${url}/favicon.ico?t=${Date.now()}`,
-                    `${url}/apple-touch-icon.png?t=${Date.now()}`,
-                    `${url}/robots.txt?t=${Date.now()}` // 虽然不是图片，但可以测试
+                    `${baseUrl}/favicon.ico?t=${Date.now()}`,
+                    `${baseUrl}/apple-touch-icon.png?t=${Date.now()}`,
+                    `${url}?t=${Date.now()}` // 作为备用，直接访问原URL
                 ];
+                
+                console.log(`检测 ${url} 时使用基础URL: ${baseUrl}`);
                 
                 // 选择第一个测试URL
                 img.src = testUrls[0];
@@ -639,8 +650,18 @@
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), timeout);
                 
+                // 提取根域名用于检测静态资源
+                let baseUrl;
+                try {
+                    const urlObj = new URL(url);
+                    baseUrl = `${urlObj.protocol}//${urlObj.hostname}${urlObj.port ? ':' + urlObj.port : ''}`;
+                } catch (e) {
+                    baseUrl = url; // 如果URL解析失败，使用原URL
+                }
+                
                 // 尝试获取网站图标
-                const testUrl = `${url}/favicon.ico?t=${Date.now()}`;
+                const testUrl = `${baseUrl}/favicon.ico?t=${Date.now()}`;
+                console.log(`Fetch检测 ${url} 时使用测试URL: ${testUrl}`);
                 
                 const response = await fetch(testUrl, {
                     method: 'GET',
