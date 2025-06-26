@@ -29,7 +29,7 @@
     <script>        
         // 随机背景图数据配置
         const backgroundImages = {
-            horizontal: {
+            desktop: {
                 bright: [
                     'res/bright_back/bright_back.png',
                     'res/bright_back/bright_back1.jpg',
@@ -48,7 +48,30 @@
                     'res/dark_back/dark_back5.jpg'
                 ]
             },
-            vertical: {
+            tablet: {
+                bright: [
+                    'res/mobile_bright_back/mobile_bright_back.png.jpg',
+                    'res/mobile_bright_back/mobile_bright_back.png2.png',
+                    'res/mobile_bright_back/mobile_bright_back.png3.png',
+                    'res/mobile_bright_back/mobile_bright_back.png4.jpg',
+                    'res/mobile_bright_back/mobile_bright_back.png5.jpg',
+                    'res/mobile_bright_back/mobile_bright_back.png6.jpeg',
+                    'res/mobile_bright_back/mobile_bright_back.png7.jpg',
+                    'res/mobile_bright_back/mobile_bright_back.png8.png',
+                    'res/mobile_bright_back/mobile_bright_back.png10.jpg',
+                    'res/mobile_bright_back/mobile_bright_back.png12.png'
+                ],
+                dark: [
+                    'res/mobile_dark_back/mobile_dark_back.jpg',
+                    'res/mobile_dark_back/mobile_dark_back1.jpg',
+                    'res/mobile_dark_back/mobile_dark_back2.jpg',
+                    'res/mobile_dark_back/mobile_dark_back3.jpg',
+                    'res/mobile_dark_back/mobile_dark_back4.jpg',
+                    'res/mobile_dark_back/mobile_dark_back5.png',
+                    'res/mobile_dark_back/mobile_dark_back6.jpeg'
+                ]
+            },
+            mobile: {
                 bright: [
                     'res/mobile_bright_back/mobile_bright_back.png.jpg',
                     'res/mobile_bright_back/mobile_bright_back.png2.png',
@@ -104,137 +127,189 @@
         const loadingImg = document.getElementById('loading-gif');
         loadingImg.src = randomGif.src;
         loadingImg.style.width = randomGif.width;
-        loadingImg.style.height = randomGif.height;        // 检测主容器布局变化并切换背景 - 修复横竖屏判断逻辑
+        loadingImg.style.height = randomGif.height;        // 检测主容器布局变化并切换背景 - 三种布局：移动端、平板端、桌面端
         function checkLayoutAndSwitchBackground(forceNewBackground = false, forceLayoutCheck = false) {
-            const main = document.querySelector('main.container');
-            
-            if (main) {
-                // 获取main容器的计算样式
-                const computedStyle = window.getComputedStyle(main);
-                const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
-                const marginTop = parseFloat(computedStyle.marginTop) || 0;
-                
-                // 改进的布局判断逻辑：
-                // 1. 首先检查屏幕方向（最可靠的方式）
-                const screenWidth = window.innerWidth;
-                const screenHeight = window.innerHeight;
-                const isScreenPortrait = screenHeight > screenWidth; // 屏幕高度大于宽度为竖屏
-                
-                // 2. 检查是否为移动端设备宽度
-                const isMobileWidth = screenWidth <= 800;
-                
-                // 3. 检查CSS媒体查询匹配情况
-                const isMobileMediaQuery = window.matchMedia('(max-width: 800px)').matches;
-                
-                // 4. 检查是否有移动端特有的超大padding-top（移动端设置了250%）
-                const hasMobilePadding = paddingTop > screenHeight * 1.5; // padding-top > 150%视口高度才认为是移动端
-                
-                // 综合判断是否使用竖屏背景：
-                // - 移动端宽度 或
-                // - 屏幕本身是竖屏方向 或  
-                // - 匹配移动端媒体查询 或
-                // - 有移动端特有的超大padding
-                const isVerticalLayout = isMobileWidth || isScreenPortrait || isMobileMediaQuery || hasMobilePadding;
-                
-                // 检测当前布局是否发生了变化
-                const currentLayoutClass = document.body.classList.contains('vertical-layout') ? 'vertical' : 'horizontal';
-                const newLayoutClass = isVerticalLayout ? 'vertical' : 'horizontal';
-                const layoutChanged = currentLayoutClass !== newLayoutClass;
-                
-                // 检测主题偏好（亮色/暗色）
-                const prefersDarkScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                const theme = prefersDarkScheme ? 'dark' : 'bright';
-                
-                // 切换背景类（保留原有逻辑）
-                if (isVerticalLayout) {
-                    document.body.classList.add('vertical-layout');
-                    document.body.classList.remove('horizontal-layout');
-                } else {
-                    document.body.classList.add('horizontal-layout');
-                    document.body.classList.remove('vertical-layout');
-                }
-                
-                // 设置背景图的条件：
-                // 1. 强制要求新背景 (手动更换、初始化)
-                // 2. 或者布局类型发生了变化 (横竖屏切换)
-                if (forceNewBackground || layoutChanged || forceLayoutCheck) {
-                    const layout = isVerticalLayout ? 'vertical' : 'horizontal';
-                    const randomBackground = getRandomBackground(layout, theme);
-                      // 设置随机背景图
-                    if (randomBackground) {
-                        setBackgroundImage(randomBackground);
-                    }
-                    
-                    // 详细调试信息
-                    console.log(`=== 布局检测详情 ===`);
-                    console.log(`屏幕尺寸: ${screenWidth}x${screenHeight}px`);
-                    console.log(`屏幕方向: ${isScreenPortrait ? '竖屏' : '横屏'} (${isScreenPortrait ? 'Portrait' : 'Landscape'})`);
-                    console.log(`移动端宽度: ${isMobileWidth} (≤800px)`);
-                    console.log(`移动端媒体查询: ${isMobileMediaQuery}`);
-                    console.log(`移动端Padding: ${hasMobilePadding} (${paddingTop}px > ${screenHeight * 1.5}px)`);
-                    console.log(`最终布局: ${isVerticalLayout ? 'Vertical (竖屏背景)' : 'Horizontal (横屏背景)'}`);
-                    console.log(`主题: ${theme}, 背景: ${randomBackground}`);
-                    if (layoutChanged) {
-                        console.log(`🔄 布局变化: ${currentLayoutClass} → ${newLayoutClass}`);
-                    }
-                    console.log(`==================`);
-                } else {
-                    // 仅调整布局类，不更换背景图
-                    console.log(`布局调整: ${isVerticalLayout ? 'Vertical' : 'Horizontal'}, 主题: ${theme} (背景未更换)`);
-                }
+            // 防止重复执行
+            if (isBackgroundSwitching && !forceLayoutCheck) {
+                console.log('⏸️ 背景切换正在执行中，跳过此次调用');
+                return;
             }
-        }// 检测初始布局并设置随机背景
-        setTimeout(() => {
+            
+            if (forceNewBackground || forceLayoutCheck) {
+                isBackgroundSwitching = true;
+            }
+            
+            // 检测设备类型和布局
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            // 三种布局判断
+            let layoutType, layoutClass;
+            if (screenWidth <= 700) {
+                layoutType = 'mobile';
+                layoutClass = 'mobile-layout';
+            } else if (screenWidth <= 1040) {
+                layoutType = 'tablet';
+                layoutClass = 'tablet-layout';
+            } else {
+                layoutType = 'desktop';
+                layoutClass = 'desktop-layout';
+            }
+            
+            // 检测当前布局是否发生了变化
+            const currentLayoutClass = document.body.classList.contains('mobile-layout') ? 'mobile' :
+                                     document.body.classList.contains('tablet-layout') ? 'tablet' : 'desktop';
+            const layoutChanged = currentLayoutClass !== layoutType;
+            
+            // 检测主题偏好（亮色/暗色）
+            const prefersDarkScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = prefersDarkScheme ? 'dark' : 'bright';
+            
+            // 切换背景类
+            document.body.classList.remove('mobile-layout', 'tablet-layout', 'desktop-layout');
+            document.body.classList.add(layoutClass);
+            
+            // 设置背景图的条件：
+            // 1. 强制要求新背景 (手动更换、初始化)
+            // 2. 或者布局类型发生了变化 (移动端/平板端/桌面端切换)
+            if (forceNewBackground || layoutChanged || forceLayoutCheck) {
+                const randomBackground = getRandomBackground(layoutType, theme);
+                  // 设置随机背景图
+                if (randomBackground) {
+                    setBackgroundImage(randomBackground);
+                }
+                
+                // 详细调试信息
+                console.log(`=== 布局检测详情 ===`);
+                console.log(`屏幕尺寸: ${screenWidth}x${screenHeight}px`);
+                console.log(`最终布局: ${layoutType.charAt(0).toUpperCase() + layoutType.slice(1)} (${layoutType === 'mobile' ? '移动端' : layoutType === 'tablet' ? '平板端' : '桌面端'}背景)`);
+                console.log(`主题: ${theme}, 背景: ${randomBackground}`);
+                if (layoutChanged) {
+                    console.log(`🔄 布局变化: ${currentLayoutClass} → ${layoutType}`);
+                }
+                console.log(`==================`);
+            } else {
+                // 仅调整布局类，不更换背景图
+                console.log(`布局调整: ${layoutType.charAt(0).toUpperCase() + layoutType.slice(1)}, 主题: ${theme} (背景未更换)`);
+            }
+            
+            // 重置标志
+            isBackgroundSwitching = false;
+        }
+
+        // 防重复执行标志
+        let isInitialized = false;
+        let isLayoutOptimizing = false;
+        let isBackgroundSwitching = false;
+        let eventListenersAdded = false;
+        let scrollNotificationShown = false;
+
+        // 统一的页面初始化函数，确保只执行一次
+        function initializePageComplete() {
+            if (isInitialized) {
+                console.log('⏸️ 页面已初始化，跳过重复执行');
+                return;
+            }
+            isInitialized = true;
+            
+            console.log('🚀 开始统一页面初始化');
+            
+            // 1. 初始化背景和布局
             checkLayoutAndSwitchBackground(true); // 初始化时设置背景图
-            optimizeArticleLayout();        }, 20);        
-        
-        // 在页面加载完成后也设置一次随机背景
-        window.addEventListener('load', function() {
-            setTimeout(() => checkLayoutAndSwitchBackground(true), 100); // 页面加载完成时设置背景图
-        });
-        
-        // 在2秒后隐藏 loader 并显示内容
-        setTimeout(function () {
-            document.querySelector('.loader').style.display = 'none';
-            document.querySelector('.blur-effect').style.display = 'none';
-              // 延迟显示滑动提示通知
-            setTimeout(showScrollNotification, 100);
+            optimizeArticleLayout();
             
-            // 加载 README.md 文件内容
-            setTimeout(loadReadmeContent, 200);
+            // 2. 添加事件监听器（只添加一次）
+            if (!eventListenersAdded) {
+                addEventListeners();
+                eventListenersAdded = true;
+            }
             
-            // 检测服务器状态
-            setTimeout(checkAllServerStatus, 500);
+            // 3. 在2秒后隐藏 loader 并显示内容，启动其他功能
+            setTimeout(function () {
+                document.querySelector('.loader').style.display = 'none';
+                document.querySelector('.blur-effect').style.display = 'none';
+                  
+                // 延迟显示滑动提示通知
+                setTimeout(showScrollNotification, 100);
+                
+                // 加载 README.md 文件内容
+                setTimeout(loadReadmeContent, 200);
+                
+                // 检测服务器状态
+                setTimeout(checkAllServerStatus, 500);
+                
+                console.log('✅ 页面初始化完成');
+            }, 2000);
+        }
+
+        // 添加所有事件监听器的函数
+        function addEventListeners() {
+            console.log('🎧 添加事件监听器');
             
-            // 优化布局
-            setTimeout(optimizeArticleLayout, 600);
-        }, 2000);// 监听窗口大小变化
-        window.addEventListener('resize', function() {
-            setTimeout(() => {
+            // 防抖的布局调整函数
+            const debouncedLayoutAdjust = debounce(() => {
                 checkLayoutAndSwitchBackground(false); // 窗口大小变化时不更换背景图，只调整布局
                 optimizeArticleLayout();
-            }, 20);
-        });
+            }, 100);
 
-        // 监听设备方向变化（用于移动设备旋转）
-        window.addEventListener('orientationchange', function() {
-            setTimeout(() => {
+            // 防抖的方向变化处理函数
+            const debouncedOrientationChange = debounce(() => {
                 console.log('📱 设备方向已变化，重新检测背景');
                 checkLayoutAndSwitchBackground(true); // 方向变化时强制更换背景图
                 optimizeArticleLayout();
-            }, 100); // 稍微延迟以确保新方向已生效
-        });
+            }, 200);
 
-        // 监听媒体查询变化（更精确的响应式检测）
-        const mobileMediaQuery = window.matchMedia('(max-width: 800px)');
-        mobileMediaQuery.addListener(function(e) {
-            setTimeout(() => {
+            // 防抖的媒体查询变化处理函数
+            const debouncedMediaQueryChange = debounce((e) => {
                 console.log(`📱 媒体查询变化: ${e.matches ? '移动端' : '桌面端'}`);
                 checkLayoutAndSwitchBackground(true); // 媒体查询变化时强制更换背景图
                 optimizeArticleLayout();
-            }, 50);
-        });// 显示滑动提示通知
+            }, 150);
+
+            // 监听窗口大小变化
+            window.addEventListener('resize', debouncedLayoutAdjust);
+
+            // 监听设备方向变化（用于移动设备旋转）
+            window.addEventListener('orientationchange', debouncedOrientationChange);
+
+            // 监听媒体查询变化（更精确的响应式检测）
+            const mobileMediaQuery = window.matchMedia('(max-width: 700px)');
+            const tabletMediaQuery = window.matchMedia('(max-width: 1040px)');
+            mobileMediaQuery.addListener(debouncedMediaQueryChange);
+            tabletMediaQuery.addListener(debouncedMediaQueryChange);
+            
+            // 添加键盘快捷键支持（Ctrl+B 或 Cmd+B）
+            window.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                    e.preventDefault();
+                    changeRandomBackground();
+                }
+            });
+        }
+
+        // 页面加载后启动初始化（只有一个入口）
+        window.addEventListener('load', initializePageComplete);
+
+        // 防抖函数 - 避免事件频繁触发
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }        // 显示滑动提示通知
         function showScrollNotification() {
+            // 防止重复显示
+            if (scrollNotificationShown) {
+                console.log('⏸️ 滑动提示通知已显示过，跳过重复显示');
+                return;
+            }
+            scrollNotificationShown = true;
+            
             console.log('开始显示滑动提示通知');
             // 创建通知元素
             const notification = document.createElement('div');
@@ -267,17 +342,27 @@
                     console.log('找到main元素，尝试滚动');
                     
                     // 检测当前布局模式来调整滚动参数
-                    const isMobile = window.innerWidth <= 800;
-                    const isPortrait = window.innerHeight > window.innerWidth;
+                    const screenWidth = window.innerWidth;
+                    let layoutType;
+                    if (screenWidth <= 700) {
+                        layoutType = 'mobile';
+                    } else if (screenWidth <= 1040) {
+                        layoutType = 'tablet';
+                    } else {
+                        layoutType = 'desktop';
+                    }
                     
                     // 根据布局模式调整偏移量
                     let offsetAdjustment;
-                    if (isMobile || isPortrait) {
-                        // 移动端/竖屏模式：考虑到250% padding-top，需要更大的偏移
-                        offsetAdjustment = -150; // 增加偏移到150px
+                    if (layoutType === 'mobile') {
+                        // 移动端模式：考虑到250% padding-top，需要更大的偏移，增加滚动距离
+                        offsetAdjustment = -250; // 移动端滚动距离最长
+                    } else if (layoutType === 'tablet') {
+                        // 平板端模式：增加滚动距离，让滚动更长
+                        offsetAdjustment = -200; // 平板端滚动距离增加
                     } else {
-                        // 桌面端横屏：考虑到70-80% padding-top
-                        offsetAdjustment = -100; // 增加偏移到100px
+                        // 桌面端：考虑到70-80% padding-top
+                        offsetAdjustment = -100; // 桌面端保持原有偏移
                     }
                     
                     // 使用多种滚动方式确保兼容性
@@ -286,8 +371,18 @@
                         const mainRect = main.getBoundingClientRect();
                         let scrollTop = window.pageYOffset + mainRect.top + offsetAdjustment;
                         
-                        // 确保滚动位置不会太小（至少滚动到视口高度的50%）
-                        const minScrollTarget = window.innerHeight * 0.6;
+                        // 确保滚动位置不会太小（不同布局使用不同的最小滚动距离）
+                        let minScrollTarget;
+                        if (layoutType === 'mobile') {
+                            // 移动端需要最大的最小滚动距离
+                            minScrollTarget = window.innerHeight * 1.0;
+                        } else if (layoutType === 'tablet') {
+                            // 平板端使用中等的最小滚动距离
+                            minScrollTarget = window.innerHeight * 1.55;
+                        } else {
+                            // 桌面端保持原有设置
+                            minScrollTarget = window.innerHeight * 0.8;
+                        }
                         scrollTop = Math.max(scrollTop, minScrollTarget);
                         
                         if (scrollTop > 0) {
@@ -296,7 +391,7 @@
                                 behavior: 'smooth',
                                 block: 'start' 
                             });
-                            console.log(`滚动到位置: ${scrollTop}px (布局: ${isMobile || isPortrait ? '移动端/竖屏' : '桌面端横屏'})`);
+                            console.log(`滚动到位置: ${scrollTop}px (布局: ${layoutType === 'mobile' ? '移动端' : layoutType === 'tablet' ? '平板端' : '桌面端'})`);
                         } else {
                             // 备用方案：使用scrollIntoView
                             main.scrollIntoView({ 
@@ -311,15 +406,29 @@
                         // 备用方案：直接滚动到计算位置
                         const mainRect = main.getBoundingClientRect();
                         let scrollTop = window.pageYOffset + mainRect.top + offsetAdjustment;
-                        const minScrollTarget = window.innerHeight * 0.6;
+                        let minScrollTarget;
+                        if (layoutType === 'mobile') {
+                            minScrollTarget = window.innerHeight * 1.4;
+                        } else if (layoutType === 'tablet') {
+                            minScrollTarget = window.innerHeight * 1.3;
+                        } else {
+                            minScrollTarget = window.innerHeight * 0.6;
+                        }
                         scrollTop = Math.max(scrollTop, minScrollTarget);
                         window.scrollTo({ top: Math.max(0, scrollTop), behavior: 'smooth' });
                     }                } else {
                     console.log('未找到main元素，尝试其他方式');
                     
                     // 检测当前布局模式
-                    const isMobile = window.innerWidth <= 800;
-                    const isPortrait = window.innerHeight > window.innerWidth;
+                    const screenWidth = window.innerWidth;
+                    let layoutType;
+                    if (screenWidth <= 700) {
+                        layoutType = 'mobile';
+                    } else if (screenWidth <= 1040) {
+                        layoutType = 'tablet';
+                    } else {
+                        layoutType = 'desktop';
+                    }
                     
                     // 如果找不到main元素，尝试其他方式
                     const articles = document.querySelectorAll('main article');
@@ -334,16 +443,19 @@
                         console.log('使用最后的备用方案');
                         // 最后的备用方案：根据布局模式调整滚动距离
                         let scrollTarget;
-                        if (isMobile || isPortrait) {
-                            // 移动端/竖屏：滚动更多距离以跳过大的padding
-                            scrollTarget = Math.min(window.innerHeight * 1.2, document.body.scrollHeight * 0.5);
+                        if (layoutType === 'mobile') {
+                            // 移动端：滚动更多距离以跳过大的padding
+                            scrollTarget = Math.min(window.innerHeight * 1.5, document.body.scrollHeight * 0.6);
+                        } else if (layoutType === 'tablet') {
+                            // 平板端：增加滚动距离，让滚动更长
+                            scrollTarget = Math.min(window.innerHeight * 1.4, document.body.scrollHeight * 0.6);
                         } else {
-                            // 桌面端横屏：滚动适中距离
+                            // 桌面端：滚动适中距离
                             scrollTarget = Math.min(window.innerHeight * 0.9, document.body.scrollHeight * 0.4);
                         }
                         
                         window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
-                        console.log(`备用滚动到: ${scrollTarget}px (布局: ${isMobile || isPortrait ? '移动端/竖屏' : '桌面端横屏'})`);
+                        console.log(`备用滚动到: ${scrollTarget}px (布局: ${layoutType === 'mobile' ? '移动端' : layoutType === 'tablet' ? '平板端' : '桌面端'})`);
                     }
                 }
             };
@@ -393,6 +505,12 @@
                     }
                 }, 1000); // 稍微延长动画时间确保完整播放
             }
+        }
+        
+        // 重置滑动通知显示状态（调试用）
+        function resetScrollNotification() {
+            scrollNotificationShown = false;
+            console.log('滑动提示通知状态已重置，可以重新显示');
         }
         // 复制服务器地址到剪贴板
         function copyServerAddress(address) {
@@ -570,23 +688,14 @@
                     </div>
                 `;
             }
-        }        // 服务器状态检测功能 - 改进版本
+        }
+
+        // 服务器状态检测功能 - 简化版本（仅图片检测）
         async function checkServerStatus(url, timeout = 8000) {
             console.log(`开始检测服务器: ${url}`);
-            
-            // 方法1: 尝试使用图片加载检测（最可靠的跨域检测方法）
-            const imageTest = await checkServerWithImage(url, timeout);
-            if (imageTest.reliable) {
-                console.log(`图片检测结果: ${url} - ${imageTest.online ? '在线' : '离线'}`);
-                return imageTest;
-            }
-            
-            // 方法2: 如果图片检测不可靠，尝试 fetch 检测
-            const fetchTest = await checkServerWithFetch(url, timeout);
-            console.log(`Fetch检测结果: ${url} - ${fetchTest.online ? '在线' : '离线'}`);
-            return fetchTest;
+            return await checkServerWithImage(url, timeout);
         }
-        
+
         // 使用图片加载检测服务器状态
         function checkServerWithImage(url, timeout) {
             return new Promise((resolve) => {
@@ -612,76 +721,22 @@
                     const loadTime = Date.now() - startTime;
                     console.log(`图片加载失败: ${url}, 用时: ${loadTime}ms`);
                     
-                    // 如果是很快就失败（< 100ms），可能是网络问题，不够可靠
+                    // 根据加载时间判断是网络问题还是服务器问题
                     if (loadTime < 100) {
                         resolve({ online: false, status: 'network_error', reliable: false });
                     } else {
-                        // 加载时间较长后失败，通常是服务器问题，比较可靠
                         resolve({ online: false, status: 'server_error', reliable: true });
                     }
                 };
                 
-                // 提取根域名用于检测静态资源
-                let baseUrl;
-                try {
-                    const urlObj = new URL(url);
-                    baseUrl = `${urlObj.protocol}//${urlObj.hostname}${urlObj.port ? ':' + urlObj.port : ''}`;
-                } catch (e) {
-                    baseUrl = url; // 如果URL解析失败，使用原URL
-                }
-                
-                // 尝试加载网站的 favicon 或生成一个带时间戳的测试图片URL
-                const testUrls = [
-                    `${baseUrl}/favicon.ico?t=${Date.now()}`,
-                    `${baseUrl}/apple-touch-icon.png?t=${Date.now()}`,
-                    `${url}?t=${Date.now()}` // 作为备用，直接访问原URL
-                ];
-                
-                console.log(`检测 ${url} 时使用基础URL: ${baseUrl}`);
-                
-                // 选择第一个测试URL
-                img.src = testUrls[0];
+                // 尝试加载网站的 favicon
+                const urlObj = new URL(url);
+                const baseUrl = `${urlObj.protocol}//${urlObj.hostname}${urlObj.port ? ':' + urlObj.port : ''}`;
+                img.src = `${baseUrl}/favicon.ico?t=${Date.now()}`;
             });
         }
-        
-        // 使用 Fetch 检测服务器状态（备用方法）
-        async function checkServerWithFetch(url, timeout) {
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeout);
-                
-                // 提取根域名用于检测静态资源
-                let baseUrl;
-                try {
-                    const urlObj = new URL(url);
-                    baseUrl = `${urlObj.protocol}//${urlObj.hostname}${urlObj.port ? ':' + urlObj.port : ''}`;
-                } catch (e) {
-                    baseUrl = url; // 如果URL解析失败，使用原URL
-                }
-                
-                // 尝试获取网站图标
-                const testUrl = `${baseUrl}/favicon.ico?t=${Date.now()}`;
-                console.log(`Fetch检测 ${url} 时使用测试URL: ${testUrl}`);
-                
-                const response = await fetch(testUrl, {
-                    method: 'GET',
-                    mode: 'no-cors',
-                    signal: controller.signal,
-                    cache: 'no-cache'
-                });
-                
-                clearTimeout(timeoutId);
-                
-                // 在 no-cors 模式下，我们无法确定真实状态，只能说请求完成了
-                return { online: true, status: 'unknown', reliable: false };
-                
-            } catch (error) {
-                if (error.name === 'AbortError') {
-                    return { online: false, status: 'timeout', reliable: true };
-                }
-                return { online: false, status: 'fetch_error', reliable: false };
-            }
-        }// 更新服务状态显示
+
+        // 更新服务状态显示
         function updateServerStatusDisplay(serviceId, status) {
             const statusElement = document.getElementById(`${serviceId}-status`);
             if (statusElement) {
@@ -696,9 +751,9 @@
                         break;
                     case 'server_error':
                         statusIcon = '🔴';
-                        statusText = '离线';
+                        statusText = '服务器错误';
                         statusColor = '#F44336';
-                        tooltipText = '服务器错误或Cloudflare Tunnel问题 - 点击重新检测';
+                        tooltipText = '服务器错误 - 点击重新检测';
                         break;
                     case 'timeout':
                         statusIcon = '🟡';
@@ -712,12 +767,6 @@
                         statusColor = '#FF5722';
                         tooltipText = '网络连接问题 - 点击重新检测';
                         break;
-                    case 'unknown':
-                        statusIcon = '🟡';
-                        statusText = '状态未知';
-                        statusColor = '#FFC107';
-                        tooltipText = '无法确定准确状态，可能正常 - 点击重新检测';
-                        break;
                     default:
                         statusIcon = '🔴';
                         statusText = '离线';
@@ -727,15 +776,24 @@
                 
                 statusElement.innerHTML = `<span style="color: ${statusColor}; cursor: pointer;" onclick="recheckServerStatus()" title="${tooltipText}">${statusIcon} ${statusText}</span>`;
             }
-        }        // 检测所有服务器状态
+        }
+
+        // 检测所有服务器状态
+        let isCheckingServers = false; // 防止重复检测的标志
         async function checkAllServerStatus() {
+            if (isCheckingServers) {
+                console.log('🔄 服务器状态检测已在进行中，跳过重复检测');
+                return;
+            }
+            
+            isCheckingServers = true;
             console.log('🔍 开始检测服务器状态...');
             
             // 定义要检测的服务器列表
             const servers = [
                 { id: 'openlist', url: 'https://openlist.146019.xyz', name: 'Openlist' },
                 { id: 'photo', url: 'https://photo.146019.xyz', name: '相册服务' },
-                { id: 'fnos', url: 'https://fn.146019.xyz/v', name: '飞牛服务' }
+                { id: 'fnos', url: 'https://fn.146019.xyz', name: '飞牛服务' }
             ];
             
             // 并行检测所有服务器
@@ -766,13 +824,12 @@
                 });
             } catch (error) {
                 console.error('❌ 批量检测服务器状态时出错:', error);
+            } finally {
+                isCheckingServers = false; // 重置标志
             }
         }
 
-        // 页面加载后自动检测服务器状态
-        window.addEventListener('load', (event) => {
-            setTimeout(checkAllServerStatus, 2000); // 延迟2秒开始检测
-        });        // 手动重新检测服务器状态
+        // 手动重新检测服务器状态
         function recheckServerStatus() {
             console.log('🔄 用户触发手动重新检测');
             
@@ -791,7 +848,7 @@
             // 重新检测
             setTimeout(checkAllServerStatus, 200);
         }
-        
+
         // 显示服务器检测通知
         function showServerCheckNotification() {
             const notification = document.createElement('div');
@@ -810,8 +867,17 @@
             setTimeout(() => {
                 hideCopyNotification(notification);
             }, 3000);
-        }        // 智能布局优化 - 实现article的均匀分布
+        }
+
+        // 智能布局优化 - 实现article的均匀分布
         function optimizeArticleLayout() {
+            // 防止重复执行
+            if (isLayoutOptimizing) {
+                console.log('⏸️ 布局优化正在执行中，跳过此次调用');
+                return;
+            }
+            isLayoutOptimizing = true;
+            
             const main = document.querySelector('main.container');
             // 只选择真正的article元素，排除markdown区域
             const articles = Array.from(document.querySelectorAll('main article'));
@@ -878,7 +944,11 @@
                 console.log(`分布：${rowsWithNormal}行各有${itemsPerRowOptimal - 1}个，${rowsWithExtra}行各有${itemsPerRowOptimal}个`);
             } else {
                 console.log(`均匀分布：每行${itemsPerRowOptimal}个article`);
-            }        }
+            }
+            
+            // 重置标志
+            isLayoutOptimizing = false;
+        }
         
         // 布局变化时调用优化函数
         function optimizeLayoutOnResize() {
@@ -914,13 +984,9 @@
             }, 2000);
         }
         
-        // 添加键盘快捷键支持（Ctrl+B 或 Cmd+B）
-        window.addEventListener('keydown', function(e) {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
-                e.preventDefault();
-                changeRandomBackground();
-            }
-        });
+        // 将必要函数添加到全局作用域
+        window.recheckServerStatus = recheckServerStatus;
+        window.resetScrollNotification = resetScrollNotification;
     </script>
     <main class="container">
         <article>

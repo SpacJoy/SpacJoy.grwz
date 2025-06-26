@@ -165,7 +165,7 @@
  }
 
 /* 中等屏幕下的article样式优化 */
-@media (min-width: 801px) and (max-width: 1199px) {
+@media (min-width: 1041px) and (max-width: 1199px) {
     article {
         flex: 1 0 350px; /* 中等屏幕增加最小宽度 */
         max-width: 380px; /* 稍微调整最大宽度 */
@@ -265,7 +265,7 @@
      font-size: 120%;
      text-align: center;
      padding-left: 5%;
-     text-decoration: none; } /* 设置移动端样式 */ @media (max-width: 800px) {     /* 移动端滑动提示通知样式调整 */
+     text-decoration: none; } /* 设置移动端样式 */ @media (max-width: 1040px) {     /* 移动端滑动提示通知样式调整 */
      .scroll-notification {
          top: 15px;
          right: 15px;
@@ -438,7 +438,7 @@
  }
 
  /* 移动端复制通知样式 */
- @media (max-width: 800px) {
+ @media (max-width: 1040px) {
      .copy-notification {
          top: 70px;
          right: 15px;
@@ -643,7 +643,7 @@
         }
     }
       /* 移动端Grid布局特殊处理 */
-    @media (max-width: 800px) {
+    @media (max-width: 1040px) {
         main {
             margin-top: 0 !important; /* 重置margin-top */
             padding-top: 250% !important; /* 使用padding-top代替，添加!important确保优先级 */
@@ -670,7 +670,7 @@
 }
 
 /* 移动端Markdown区域特殊优化 */
-@media (max-width: 800px) {
+@media (max-width: 1040px) {
     .markdown-display-section {
         margin: 15px 5px; /* 移动端减少外边距 */
         padding: 20px; /* 移动端减少内边距 */
@@ -684,7 +684,7 @@
 }
 
 /* 中等屏幕下的markdown区域优化 */
-@media (min-width: 801px) and (max-width: 1199px) {
+@media (min-width: 1041px) and (max-width: 1199px) {
     .markdown-display-section {
         margin: 15px 10px; /* 减少外边距 */
         padding: 25px; /* 减少内边距 */
