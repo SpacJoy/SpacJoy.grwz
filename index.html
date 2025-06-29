@@ -696,43 +696,86 @@
             return await checkServerWithImage(url, timeout);
         }
 
-        // 使用图片加载检测服务器状态
+        // 使用图片加载检测服务器状态 - 增强版本
         function checkServerWithImage(url, timeout) {
             return new Promise((resolve) => {
                 const img = new Image();
                 const startTime = Date.now();
+                let resolved = false;
                 
                 // 设置超时
                 const timeoutId = setTimeout(() => {
-                    img.onload = null;
-                    img.onerror = null;
-                    resolve({ online: false, status: 'timeout', reliable: true });
+                    if (!resolved) {
+                        resolved = true;
+                        img.onload = null;
+                        img.onerror = null;
+                        resolve({ online: false, status: 'timeout', reliable: true });
+                    }
                 }, timeout);
                 
                 img.onload = () => {
-                    clearTimeout(timeoutId);
-                    const loadTime = Date.now() - startTime;
-                    console.log(`图片加载成功: ${url}, 用时: ${loadTime}ms`);
-                    resolve({ online: true, status: 'online', reliable: true, loadTime });
-                };
-                
-                img.onerror = () => {
-                    clearTimeout(timeoutId);
-                    const loadTime = Date.now() - startTime;
-                    console.log(`图片加载失败: ${url}, 用时: ${loadTime}ms`);
-                    
-                    // 根据加载时间判断是网络问题还是服务器问题
-                    if (loadTime < 100) {
-                        resolve({ online: false, status: 'network_error', reliable: false });
-                    } else {
-                        resolve({ online: false, status: 'server_error', reliable: true });
+                    if (!resolved) {
+                        resolved = true;
+                        clearTimeout(timeoutId);
+                        const loadTime = Date.now() - startTime;
+                        console.log(`网站图标加载成功: ${url}, 用时: ${loadTime}ms`);
+                        resolve({ online: true, status: 'online', reliable: true, loadTime });
                     }
                 };
                 
-                // 尝试加载网站的 favicon
+                img.onerror = () => {
+                    if (!resolved) {
+                        resolved = true;
+                        clearTimeout(timeoutId);
+                        const loadTime = Date.now() - startTime;
+                        console.log(`网站图标加载失败: ${url}, 用时: ${loadTime}ms`);
+                        
+                        // 根据加载时间判断是网络问题还是服务器问题
+                        if (loadTime < 100) {
+                            resolve({ online: false, status: 'network_error', reliable: false });
+                        } else {
+                            resolve({ online: false, status: 'server_error', reliable: true });
+                        }
+                    }
+                };
+                
+                // 尝试多种图标路径，提高检测成功率
                 const urlObj = new URL(url);
                 const baseUrl = `${urlObj.protocol}//${urlObj.hostname}${urlObj.port ? ':' + urlObj.port : ''}`;
-                img.src = `${baseUrl}/favicon.ico?t=${Date.now()}`;
+                
+                // 常见的网站图标路径，按优先级排序
+                const iconPaths = [
+                    '/favicon.ico',
+                    '/favicon.png', 
+                    '/apple-touch-icon.png',
+                    '/android-chrome-192x192.png',
+                    '/logo.png'
+                ];
+                
+                let currentPathIndex = 0;
+                
+                function tryNextIcon() {
+                    if (currentPathIndex < iconPaths.length && !resolved) {
+                        const iconUrl = `${baseUrl}${iconPaths[currentPathIndex]}?t=${Date.now()}`;
+                        console.log(`尝试加载图标: ${iconUrl}`);
+                        img.src = iconUrl;
+                        currentPathIndex++;
+                    }
+                }
+                
+                // 如果当前图标加载失败，尝试下一个
+                const originalOnError = img.onerror;
+                img.onerror = () => {
+                    if (!resolved && currentPathIndex < iconPaths.length) {
+                        console.log(`图标路径 ${iconPaths[currentPathIndex - 1]} 失败，尝试下一个...`);
+                        setTimeout(tryNextIcon, 100); // 短暂延迟后尝试下一个
+                    } else {
+                        originalOnError();
+                    }
+                };
+                
+                // 开始尝试第一个图标
+                tryNextIcon();
             });
         }
 
@@ -793,7 +836,7 @@
             const servers = [
                 { id: 'openlist', url: 'https://openlist.146019.xyz', name: 'Openlist' },
                 { id: 'photo', url: 'https://photo.146019.xyz', name: '相册服务' },
-                { id: 'fnos', url: 'https://fn.146019.xyz', name: '飞牛服务' }
+                { id: 'fnos', url: 'https://fn.146019.xyz/v', name: '飞牛服务' }
             ];
             
             // 并行检测所有服务器
