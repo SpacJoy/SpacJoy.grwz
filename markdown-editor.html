@@ -299,6 +299,21 @@
 				showBackgroundChangeNotification();
 			}
 			
+			// 显示当前布局信息（调试用）
+			function showLayoutInfo() {
+				const screenWidth = window.innerWidth;
+				const screenHeight = window.innerHeight;
+				const container = document.querySelector('.markdown-container');
+				const containerHeight = container ? container.offsetHeight : 0;
+				const info = `
+屏幕尺寸: ${screenWidth}x${screenHeight}px
+容器高度: ${containerHeight}px
+设备像素比: ${window.devicePixelRatio}
+用户代理: ${navigator.userAgent.substring(0, 50)}...`;
+				
+				alert(info);
+			}
+			
 			// 显示背景更换成功通知
 			function showBackgroundChangeNotification() {
 				const notification = document.createElement('div');
@@ -530,25 +545,6 @@ console.log("Hello, Markdown!");
 				const notification = document.createElement("div");
 				notification.className = "notification";
 				notification.textContent = message;
-				document.body.appendChild(notification);
-
-				setTimeout(() => {
-					notification.classList.add("show");
-				}, 100);
-
-				setTimeout(() => {
-					notification.classList.remove("show");
-					setTimeout(() => {
-						document.body.removeChild(notification);
-					}, 300);
-				}, 2000);
-			}
-
-			// 显示通知
-			function showNotification(message) {
-				const notification = document.createElement("div");
-				notification.className = "notification";
-				notification.textContent = message;
 				notification.style.cssText = `
 					position: fixed;
 					top: 50%;
@@ -652,6 +648,14 @@ console.log("Hello, Markdown!");
 								title="切换背景图 (Ctrl+B)"
 							>
 								🎨
+							</button>
+							<button
+								class="tool-btn"
+								onclick="showLayoutInfo()"
+								title="显示布局信息 (调试用)"
+								style="background: rgba(255, 165, 0, 0.3);"
+							>
+								🔍
 							</button>
 							<button
 								class="tool-btn"

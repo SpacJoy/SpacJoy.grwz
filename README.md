@@ -7,6 +7,8 @@
 
 # Hi there 👋 this is chen6019
 
+## Memory Shapes the Soul, and the Soul Affects Memory
+
 ## ![](https://github-readme-stats.vercel.app/api?username=chen6019&show_icons=true&hide_border=False&theme=ambient_gradient&include_all_commits=true) ![](https://github-readme-stats.vercel.app/api/top-langs/?username=chen6019&langs_count=10&layout=compact&exclude_repo=Cemiuiler,action-tmate,Aquarius223-s-sdm845-kernel)
 
 # 💻 Environment
