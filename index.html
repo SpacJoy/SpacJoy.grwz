@@ -613,8 +613,18 @@
                     }
                 }, 500);
             }
-        }        // 加载并显示 README.md 文件内容
+        }
+        
+        // 加载并显示 README.md 文件内容
+        let isLoadingReadme = false; // 防止重复加载的标志
         function loadReadmeContent() {
+            // 防止重复加载
+            if (isLoadingReadme) {
+                console.log('⏸️ README正在加载中，跳过重复请求');
+                return;
+            }
+            
+            isLoadingReadme = true;
             console.log('开始加载 README.md 文件');
             
             fetch('./README.md')
@@ -671,6 +681,11 @@
                 .catch(error => {
                     console.error('加载 README.md 失败:', error);
                     showReadmeError();
+                })
+                .finally(() => {
+                    // 无论成功还是失败，都重置加载标志
+                    isLoadingReadme = false;
+                    console.log('README加载流程结束，重置加载标志');
                 });
         }
         // 显示 README 加载错误信息
@@ -682,11 +697,37 @@
                         <h2 style="color: #ff6b6b;">😿 加载失败</h2>
                         <p>无法加载 README.md 文件，请检查文件是否存在。</p>
                         <p>您可以在项目根目录创建一个 README.md 文件来显示个人简介。</p>
-                        <button class="btn" onclick="loadReadmeContent()" style="margin-top: 20px; display: inline-block; width: auto;">
+                        <button id="retry-readme-btn" class="btn" style="margin-top: 20px; display: inline-block; width: auto;">
                             🔄 重试加载
                         </button>
                     </div>
                 `;
+                
+                // 使用事件监听器而不是内联事件处理器，确保按钮功能正常
+                setTimeout(() => {
+                    const retryBtn = document.getElementById('retry-readme-btn');
+                    if (retryBtn) {
+                        retryBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            console.log('用户点击重试按钮，重新加载README');
+                            
+                            // 显示加载状态
+                            markdownContent.innerHTML = `
+                                <div class="loading-readme" style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.7);">
+                                    <p>🔄 正在重新加载个人简介...</p>
+                                </div>
+                            `;
+                            
+                            // 延迟一下再加载，让用户看到加载状态
+                            setTimeout(() => {
+                                loadReadmeContent();
+                            }, 500);
+                        });
+                        console.log('重试按钮事件监听器已绑定');
+                    } else {
+                        console.error('找不到重试按钮元素');
+                    }
+                }, 100); // 确保DOM更新完成后再绑定事件
             }
         }
 
@@ -1105,7 +1146,8 @@
             <button class="btn" onclick="changeRandomBackground()" style="font-size: 12px; padding: 8px 16px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.9);" title="快捷键: Ctrl+B 或 Cmd+B">
                 🎨 更换背景图
             </button>
-        </div>    </footer>
+        </div>
+    </footer>
 </body>
 <script src="./renderer.js"></script>
 
