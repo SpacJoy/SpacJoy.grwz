@@ -29,6 +29,94 @@
 			</nav>
 		</header>
 		<script>
+			// 随机背景图数据配置
+			const backgroundImages = {
+				desktop: {
+					bright: [
+						'res/bright_back/bright_back.png',
+						'res/bright_back/bright_back1.jpg',
+						'res/bright_back/bright_back2.png',
+						'res/bright_back/bright_back3.jpg',
+						'res/bright_back/bright_back4.jpg',
+						'res/bright_back/bright_back5.jpg',
+						'res/bright_back/bright_back6.png'
+					],
+					dark: [
+						'res/dark_back/dark_back.png',
+						'res/dark_back/dark_back1.jpg',
+						'res/dark_back/dark_back2.jpg',
+						'res/dark_back/dark_back3.jpg',
+						'res/dark_back/dark_back4.png',
+						'res/dark_back/dark_back5.jpg'
+					]
+				},
+				tablet: {
+					bright: [
+						'res/mobile_bright_back/mobile_bright_back.png.jpg',
+						'res/mobile_bright_back/mobile_bright_back.png2.png',
+						'res/mobile_bright_back/mobile_bright_back.png3.png',
+						'res/mobile_bright_back/mobile_bright_back.png4.jpg',
+						'res/mobile_bright_back/mobile_bright_back.png5.jpg',
+						'res/mobile_bright_back/mobile_bright_back.png6.jpeg',
+						'res/mobile_bright_back/mobile_bright_back.png7.jpg',
+						'res/mobile_bright_back/mobile_bright_back.png8.png',
+						'res/mobile_bright_back/mobile_bright_back.png10.jpg',
+						'res/mobile_bright_back/mobile_bright_back.png12.png'
+					],
+					dark: [
+						'res/mobile_dark_back/mobile_dark_back.jpg',
+						'res/mobile_dark_back/mobile_dark_back1.jpg',
+						'res/mobile_dark_back/mobile_dark_back2.jpg',
+						'res/mobile_dark_back/mobile_dark_back3.jpg',
+						'res/mobile_dark_back/mobile_dark_back4.jpg',
+						'res/mobile_dark_back/mobile_dark_back5.png',
+						'res/mobile_dark_back/mobile_dark_back6.jpeg'
+					]
+				},
+				mobile: {
+					bright: [
+						'res/mobile_bright_back/mobile_bright_back.png.jpg',
+						'res/mobile_bright_back/mobile_bright_back.png2.png',
+						'res/mobile_bright_back/mobile_bright_back.png3.png',
+						'res/mobile_bright_back/mobile_bright_back.png4.jpg',
+						'res/mobile_bright_back/mobile_bright_back.png5.jpg',
+						'res/mobile_bright_back/mobile_bright_back.png6.jpeg',
+						'res/mobile_bright_back/mobile_bright_back.png7.jpg',
+						'res/mobile_bright_back/mobile_bright_back.png8.png',
+						'res/mobile_bright_back/mobile_bright_back.png10.jpg',
+						'res/mobile_bright_back/mobile_bright_back.png12.png'
+					],
+					dark: [
+						'res/mobile_dark_back/mobile_dark_back.jpg',
+						'res/mobile_dark_back/mobile_dark_back1.jpg',
+						'res/mobile_dark_back/mobile_dark_back2.jpg',
+						'res/mobile_dark_back/mobile_dark_back3.jpg',
+						'res/mobile_dark_back/mobile_dark_back4.jpg',
+						'res/mobile_dark_back/mobile_dark_back5.png',
+						'res/mobile_dark_back/mobile_dark_back6.jpeg'
+					]
+				}
+			};
+
+			// 获取随机背景图
+			function getRandomBackground(layout, theme) {
+				const images = backgroundImages[layout] && backgroundImages[layout][theme];
+				if (!images || images.length === 0) {
+					console.warn(`没有找到 ${layout}-${theme} 主题的背景图`);
+					return null;
+				}
+				const randomIndex = Math.floor(Math.random() * images.length);
+				return images[randomIndex];
+			}
+
+			// 设置背景图
+			function setBackgroundImage(imageUrl) {
+				if (imageUrl) {
+					document.body.style.backgroundImage = `url('${imageUrl}')`;
+					console.log(`背景图已设置为: ${imageUrl}`);
+				}
+			}
+
 			// 随机选择加载GIF
 			const loadingGifs = [
 				{ src: "res/loading/Loading.gif", width: "400px", height: "400px" },
@@ -44,11 +132,213 @@
 			loadingImg.style.width = randomGif.width;
 			loadingImg.style.height = randomGif.height;
 
-			// 在800ms后隐藏 loader 并显示内容
-			setTimeout(function () {
-				document.querySelector(".loader").style.display = "none";
-				document.querySelector(".blur-effect").style.display = "none";
-			}, 800);
+			// 检测主容器布局变化并切换背景
+			function checkLayoutAndSwitchBackground(forceNewBackground = false, forceLayoutCheck = false) {
+				// 防止重复执行
+				if (isBackgroundSwitching && !forceLayoutCheck) {
+					console.log('⏸️ 背景切换正在执行中，跳过此次调用');
+					return;
+				}
+				
+				if (forceNewBackground || forceLayoutCheck) {
+					isBackgroundSwitching = true;
+				}
+				
+				// 检测设备类型和布局
+				const screenWidth = window.innerWidth;
+				const screenHeight = window.innerHeight;
+				
+				// 三种布局判断
+				let layoutType, layoutClass;
+				if (screenWidth <= 700) {
+					layoutType = 'mobile';
+					layoutClass = 'mobile-layout';
+				} else if (screenWidth <= 1040) {
+					layoutType = 'tablet';
+					layoutClass = 'tablet-layout';
+				} else {
+					layoutType = 'desktop';
+					layoutClass = 'desktop-layout';
+				}
+				
+				// 检测当前布局是否发生了变化
+				const currentLayoutClass = document.body.classList.contains('mobile-layout') ? 'mobile' :
+										 document.body.classList.contains('tablet-layout') ? 'tablet' : 'desktop';
+				const layoutChanged = currentLayoutClass !== layoutType;
+				
+				// 检测主题偏好（亮色/暗色）
+				const prefersDarkScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+				const theme = prefersDarkScheme ? 'dark' : 'bright';
+				
+				// 切换背景类
+				document.body.classList.remove('mobile-layout', 'tablet-layout', 'desktop-layout');
+				document.body.classList.add(layoutClass);
+				
+				// 设置背景图的条件：
+				// 1. 强制要求新背景 (手动更换、初始化)
+				// 2. 或者布局类型发生了变化 (移动端/平板端/桌面端切换)
+				if (forceNewBackground || layoutChanged || forceLayoutCheck) {
+					const randomBackground = getRandomBackground(layoutType, theme);
+					// 设置随机背景图
+					if (randomBackground) {
+						setBackgroundImage(randomBackground);
+					}
+					
+					// 详细调试信息
+					console.log(`=== 布局检测详情 ===`);
+					console.log(`屏幕尺寸: ${screenWidth}x${screenHeight}px`);
+					console.log(`最终布局: ${layoutType.charAt(0).toUpperCase() + layoutType.slice(1)} (${layoutType === 'mobile' ? '移动端' : layoutType === 'tablet' ? '平板端' : '桌面端'}背景)`);
+					console.log(`主题: ${theme}, 背景: ${randomBackground}`);
+					if (layoutChanged) {
+						console.log(`🔄 布局变化: ${currentLayoutClass} → ${layoutType}`);
+					}
+					console.log(`==================`);
+				} else {
+					// 仅调整布局类，不更换背景图
+					console.log(`布局调整: ${layoutType.charAt(0).toUpperCase() + layoutType.slice(1)}, 主题: ${theme} (背景未更换)`);
+				}
+				
+				// 重置标志
+				isBackgroundSwitching = false;
+			}
+
+			// 防重复执行标志
+			let isInitialized = false;
+			let isBackgroundSwitching = false;
+			let eventListenersAdded = false;
+
+			// 统一的页面初始化函数，确保只执行一次
+			function initializePageComplete() {
+				if (isInitialized) {
+					console.log('⏸️ 页面已初始化，跳过重复执行');
+					return;
+				}
+				isInitialized = true;
+				
+				console.log('🚀 开始统一页面初始化');
+				
+				// 1. 初始化背景和布局
+				checkLayoutAndSwitchBackground(true); // 初始化时设置背景图
+				
+				// 2. 添加事件监听器（只添加一次）
+				if (!eventListenersAdded) {
+					addEventListeners();
+					eventListenersAdded = true;
+				}
+				
+				// 3. 在800ms后隐藏 loader 并显示内容，启动其他功能
+				setTimeout(function () {
+					document.querySelector(".loader").style.display = "none";
+					document.querySelector(".blur-effect").style.display = "none";
+					
+					console.log('✅ 页面初始化完成');
+				}, 800);
+			}
+
+			// 添加所有事件监听器的函数
+			function addEventListeners() {
+				console.log('🎧 添加事件监听器');
+				
+				// 防抖的布局调整函数
+				const debouncedLayoutAdjust = debounce(() => {
+					checkLayoutAndSwitchBackground(false); // 窗口大小变化时不更换背景图，只调整布局
+				}, 100);
+
+				// 防抖的方向变化处理函数
+				const debouncedOrientationChange = debounce(() => {
+					console.log('📱 设备方向已变化，重新检测背景');
+					checkLayoutAndSwitchBackground(true); // 方向变化时强制更换背景图
+				}, 200);
+
+				// 防抖的媒体查询变化处理函数
+				const debouncedMediaQueryChange = debounce((e) => {
+					console.log(`📱 媒体查询变化: ${e.matches ? '移动端' : '桌面端'}`);
+					checkLayoutAndSwitchBackground(true); // 媒体查询变化时强制更换背景图
+				}, 150);
+
+				// 监听窗口大小变化
+				window.addEventListener('resize', debouncedLayoutAdjust);
+
+				// 监听设备方向变化（用于移动设备旋转）
+				window.addEventListener('orientationchange', debouncedOrientationChange);
+
+				// 监听媒体查询变化（更精确的响应式检测）
+				const mobileMediaQuery = window.matchMedia('(max-width: 700px)');
+				const tabletMediaQuery = window.matchMedia('(max-width: 1040px)');
+				mobileMediaQuery.addListener(debouncedMediaQueryChange);
+				tabletMediaQuery.addListener(debouncedMediaQueryChange);
+				
+				// 添加键盘快捷键支持（Ctrl+B 或 Cmd+B）
+				window.addEventListener('keydown', function(e) {
+					if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+						e.preventDefault();
+						changeRandomBackground();
+					}
+				});
+			}
+
+			// 防抖函数 - 避免事件频繁触发
+			function debounce(func, wait) {
+				let timeout;
+				return function executedFunction(...args) {
+					const later = () => {
+						clearTimeout(timeout);
+						func(...args);
+					};
+					clearTimeout(timeout);
+					timeout = setTimeout(later, wait);
+				};
+			}
+
+			// 手动更换背景图功能
+			function changeRandomBackground() {
+				console.log('🎨 用户手动更换背景图');
+				checkLayoutAndSwitchBackground(true); // 手动更换时强制选择新背景
+				
+				// 显示更换成功通知
+				showBackgroundChangeNotification();
+			}
+			
+			// 显示背景更换成功通知
+			function showBackgroundChangeNotification() {
+				const notification = document.createElement('div');
+				notification.className = 'copy-notification success';
+				notification.innerHTML = '🎨 背景图已更换！';
+				notification.style.cssText = `
+					position: fixed;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					background: rgba(76, 175, 80, 0.9);
+					color: white;
+					padding: 12px 24px;
+					border-radius: 8px;
+					font-size: 16px;
+					z-index: 10000;
+					opacity: 0;
+					transition: opacity 0.3s ease;
+				`;
+				
+				document.body.appendChild(notification);
+				
+				// 显示动画
+				setTimeout(() => {
+					notification.style.opacity = '1';
+				}, 100);
+				
+				// 2秒后自动隐藏
+				setTimeout(() => {
+					notification.style.opacity = '0';
+					setTimeout(() => {
+						if (notification.parentNode) {
+							document.body.removeChild(notification);
+						}
+					}, 300);
+				}, 2000);
+			}
+
+			// 页面加载后启动初始化（只有一个入口）
+			window.addEventListener('load', initializePageComplete);
 
 			// Markdown功能初始化
 			function initMarkdown() {
@@ -106,10 +396,14 @@ console.log("Hello, Markdown!");
 
 ---
 
-**提示：** 在左侧输入框中编辑Markdown，右侧会实时显示渲染效果！`;
+**提示：** 在左侧输入框中编辑Markdown，右侧会实时显示渲染效果！
+
+**快捷键：** Ctrl+B 切换背景图 | Ctrl+S 保存 | Ctrl+B 粗体 | Ctrl+I 斜体`;
 
 					// 初始化预览
-					updatePreview();					// 添加键盘快捷键
+					updatePreview();
+
+					// 添加键盘快捷键
 					markdownInput.addEventListener("keydown", function (e) {
 						// Ctrl+S 或 Cmd+S 保存到本地存储
 						if ((e.ctrlKey || e.metaKey) && e.key === "s") {
@@ -154,10 +448,14 @@ console.log("Hello, Markdown!");
 							toggleLineComment();
 						}
 
-						// Ctrl+B 粗体
+						// Ctrl+B 粗体 (但需要避免与背景切换冲突，所以在这里不处理背景切换)
 						if ((e.ctrlKey || e.metaKey) && e.key === "b") {
-							e.preventDefault();
-							insertMarkdown("**", "**");
+							// 检查焦点是否在文本框内
+							if (document.activeElement === markdownInput) {
+								e.preventDefault();
+								insertMarkdown("**", "**");
+							}
+							// 如果不在文本框内，让全局事件处理器处理背景切换
 						}
 
 						// Ctrl+I 斜体
@@ -246,8 +544,49 @@ console.log("Hello, Markdown!");
 				}, 2000);
 			}
 
-			// 页面加载完成后初始化Markdown
-			window.addEventListener("load", initMarkdown);		</script>
+			// 显示通知
+			function showNotification(message) {
+				const notification = document.createElement("div");
+				notification.className = "notification";
+				notification.textContent = message;
+				notification.style.cssText = `
+					position: fixed;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					background: rgba(0, 123, 255, 0.9);
+					color: white;
+					padding: 12px 24px;
+					border-radius: 8px;
+					font-size: 16px;
+					z-index: 10000;
+					opacity: 0;
+					transition: opacity 0.3s ease;
+				`;
+				document.body.appendChild(notification);
+
+				setTimeout(() => {
+					notification.style.opacity = '1';
+				}, 100);
+
+				setTimeout(() => {
+					notification.style.opacity = '0';
+					setTimeout(() => {
+						if (notification.parentNode) {
+							document.body.removeChild(notification);
+						}
+					}, 300);
+				}, 2000);
+			}
+
+			// 页面加载完成后启动统一初始化
+			window.addEventListener("load", function() {
+				// 启动统一初始化
+				initializePageComplete();
+				
+				// 延迟初始化Markdown功能，等待库加载完成
+				setTimeout(initMarkdown, 100);
+			});		</script>
 		<main class="markdown-editor-main">
 			<!-- Markdown编辑区域 -->
 			<section class="markdown-section">
@@ -299,12 +638,20 @@ console.log("Hello, Markdown!");
 							</button>
 							<button class="tool-btn" onclick="clearEditor()" title="清空">
 								🗑️
-							</button>							<button
+							</button>
+							<button
 								class="tool-btn"
 								onclick="downloadMarkdown()"
 								title="下载"
 							>
 								💾
+							</button>
+							<button
+								class="tool-btn"
+								onclick="changeRandomBackground()"
+								title="切换背景图 (Ctrl+B)"
+							>
+								🎨
 							</button>
 							<button
 								class="tool-btn"
@@ -315,10 +662,10 @@ console.log("Hello, Markdown!");
 							</button>
 						</div>						<h3>
 							输入区域
-							<span class="shortcut-hint">快捷键: Ctrl+S保存 | Ctrl+B粗体 | Ctrl+I斜体 | Ctrl+D复制行</span>
+							<span class="shortcut-hint">快捷键: Ctrl+S保存 | Ctrl+B背景/粗体 | Ctrl+I斜体 | Ctrl+D复制行</span>
 						</h3>						<textarea
 							id="markdown-input"
-							placeholder="在这里输入Markdown内容...&#10;&#10;支持的格式：&#10;# 标题&#10;**粗体** *斜体*&#10;- 列表项&#10;[链接](https://example.com)&#10;```代码块```&#10;&#10;快捷键提示：&#10;Ctrl+S: 保存 | Ctrl+A: 全选&#10;Ctrl+B: 粗体 | Ctrl+I: 斜体&#10;Ctrl+D: 复制当前行 | Ctrl+L: 选择当前行&#10;Ctrl+Shift+K: 删除当前行&#10;Ctrl+/: 切换注释 | Alt+↑/↓: 移动行&#10;Ctrl+Enter: 下方插入行 | Ctrl+Shift+Enter: 上方插入行"
+							placeholder="在这里输入Markdown内容...&#10;&#10;支持的格式：&#10;# 标题&#10;**粗体** *斜体*&#10;- 列表项&#10;[链接](https://example.com)&#10;```代码块```&#10;&#10;快捷键提示：&#10;Ctrl+B: 切换背景/粗体 | Ctrl+S: 保存 | Ctrl+A: 全选&#10;Ctrl+I: 斜体 | Ctrl+D: 复制当前行 | Ctrl+L: 选择当前行&#10;Ctrl+Shift+K: 删除当前行&#10;Ctrl+/: 切换注释 | Alt+↑/↓: 移动行&#10;Ctrl+Enter: 下方插入行 | Ctrl+Shift+Enter: 上方插入行"
 						></textarea>
 					</div>
 					<div class="markdown-output">
@@ -330,14 +677,13 @@ console.log("Hello, Markdown!");
 		</main>
 
 		<footer>
-			<a
-				style="padding-left: 0%"
-				href="https://github.com/chen6019"
-				class="gn"
-				target="_blank"
-				>关于chen6019</a
-			>
-			<p>网页内容归chen6019所有 &copy; 2025</p>
+			<!-- <p>网站内容归chen6019所有 &copy; 2025</p> -->
+			<p>由 <a href="https://www.cloudflare.com/" target="_blank" style="color: #F6821E; text-decoration: none;">Cloudflare</a> 提供技术支持</p>
+			<div style="margin-top: 10px;">
+				<button class="btn" onclick="changeRandomBackground()" style="font-size: 12px; padding: 8px 16px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.9);" title="快捷键: Ctrl+B 或 Cmd+B">
+					🎨 更换背景图
+				</button>
+			</div>
 		</footer>
 
 		<script>
@@ -690,8 +1036,8 @@ console.log("Hello, Markdown!");
 • Ctrl+Z - 撤销 (浏览器默认)
 • Ctrl+Y - 重做 (浏览器默认)
 
-格式化：
-• Ctrl+B - 粗体 (**)
+背景与格式化：
+• Ctrl+B - 切换背景图 (焦点不在编辑框时) / 粗体 (焦点在编辑框时)
 • Ctrl+I - 斜体 (*)
 • Ctrl+/ - 切换行注释
 
@@ -713,7 +1059,7 @@ console.log("Hello, Markdown!");
 高级：
 • Ctrl+K Ctrl+C - 切换行注释
 
-💡 提示：这些快捷键模仿了VSCode编辑器的行为！
+💡 提示：这些快捷键模仿了VSCode编辑器的行为，同时支持背景图切换功能！
 				`;
 				
 				alert(helpContent);
