@@ -710,3 +710,121 @@
         margin: 12px 0; /* 适中的段落间距 */
     }
 }
+
+/* 语言切换按钮样式 */
+.language-switch {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 15px;
+    vertical-align: middle;
+}
+
+.lang-btn {
+    background: rgba(0, 136, 255, 0.2);
+    border: 1px solid rgba(0, 136, 255, 0.3);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    min-width: 50px;
+}
+
+.lang-btn:hover {
+    background: rgba(0, 136, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 136, 255, 0.3);
+}
+
+.lang-btn:active {
+    transform: translateY(0);
+}
+
+/* 确保h1能容纳内联的语言切换按钮 */
+header h1 {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* 确保h1内的图片和文本正确对齐 */
+header h1 img {
+    margin-right: 10px;
+}
+
+header h1 span {
+    flex: 1;
+}
+
+/* 移动端语言按钮适配 */
+@media (max-width: 800px) {
+    .language-switch {
+        margin-left: 10px;
+    }
+    
+    .lang-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 45px;
+    }
+    
+    /* 移动端h1样式调整 */
+    header h1 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    header h1 .language-switch {
+        align-self: flex-end;
+        margin-left: 0;
+        margin-top: -10px;
+    }
+}
+
+/* 平板端语言按钮适配 */
+@media (min-width: 801px) and (max-width: 1024px) {
+    .language-switch {
+        margin-left: 12px;
+    }
+}
+
+/* 确保语言按钮在header内部正确定位 */
+header {
+    position: relative;
+}
+
+/* 语言切换动画效果 */
+.lang-btn #lang-text {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.lang-btn:hover #lang-text {
+    transform: scale(1.1);
+}
+
+/* 语言切换通知样式增强 */
+.copy-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    min-width: 200px;
+}

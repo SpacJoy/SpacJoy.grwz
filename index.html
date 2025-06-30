@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>喵~呜~~！</title>
+    <title data-zh="喵~呜~~！" data-en="Meow~? Awoo~~!">喵~呜~~！</title>
     <link rel="icon" type="image/png" href="res/top.png">    
     <!-- 设置网页样式-->
      <link rel="stylesheet" type="text/css" href="main.css">
@@ -20,7 +20,12 @@
     <header>
         <h1>
             <img src="res/top.png" alt="Logo">
-            喵~？嗷~呜~~！
+            <span data-zh="喵~？嗷~呜~~！" data-en="Meow~? Awoo~~!">喵~？嗷~呜~~！</span>
+            <div class="language-switch">
+                <button id="lang-toggle" class="lang-btn" onclick="toggleLanguage()" title="切换语言 / Switch Language">
+                    <span id="lang-text">EN</span>
+                </button>
+            </div>
         </h1>
         <!-- <p>还在学习中，效果一般请见谅</p> -->
         <!-- <p>欢迎来到我的工具箱，这里有一些我常用的工具，欢迎大家提出宝贵意见。</p> -->
@@ -214,6 +219,9 @@
             
             console.log('🚀 开始统一页面初始化');
             
+            // 0. 初始化语言设置
+            initializeLanguage();
+            
             // 1. 初始化背景和布局
             checkLayoutAndSwitchBackground(true); // 初始化时设置背景图
             optimizeArticleLayout();
@@ -314,7 +322,8 @@
             // 创建通知元素
             const notification = document.createElement('div');
             notification.className = 'scroll-notification';
-            notification.textContent = '向下滑动查看更多';
+            const scrollText = currentLanguage === 'zh' ? '向下滑动查看更多' : 'Scroll down to see more';
+            notification.textContent = scrollText;
               // 添加到页面
             document.body.appendChild(notification);
             console.log('通知元素已添加到页面');
@@ -563,7 +572,8 @@
         function showCopySuccessNotification() {
             const notification = document.createElement('div');
             notification.className = 'copy-notification success';
-            notification.innerHTML = '✅ 服务器地址已复制到剪贴板';
+            const message = currentLanguage === 'zh' ? '✅ 服务器地址已复制到剪贴板' : '✅ Server address copied to clipboard';
+            notification.innerHTML = message;
             
             document.body.appendChild(notification);
             
@@ -582,7 +592,8 @@
         function showCopyErrorNotification() {
             const notification = document.createElement('div');
             notification.className = 'copy-notification error';
-            notification.innerHTML = '❌ 复制失败，请手动复制地址';
+            const message = currentLanguage === 'zh' ? '❌ 复制失败，请手动复制地址' : '❌ Copy failed, please copy manually';
+            notification.innerHTML = message;
             
             document.body.appendChild(notification);
             
@@ -692,13 +703,18 @@
         function showReadmeError() {
             const markdownContent = document.getElementById('markdown-content');
             if (markdownContent) {
+                const errorTitle = currentLanguage === 'zh' ? '😿 加载失败' : '😿 Loading Failed';
+                const errorMsg1 = currentLanguage === 'zh' ? '无法加载 README.md 文件，请检查文件是否存在。' : 'Failed to load README.md file, please check if the file exists.';
+                const errorMsg2 = currentLanguage === 'zh' ? '您可以在项目根目录创建一个 README.md 文件来显示个人简介。' : 'You can create a README.md file in the project root directory to display your personal profile.';
+                const retryText = currentLanguage === 'zh' ? '🔄 重试加载' : '🔄 Retry Loading';
+                
                 markdownContent.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.7);">
-                        <h2 style="color: #ff6b6b;">😿 加载失败</h2>
-                        <p>无法加载 README.md 文件，请检查文件是否存在。</p>
-                        <p>您可以在项目根目录创建一个 README.md 文件来显示个人简介。</p>
+                        <h2 style="color: #ff6b6b;">${errorTitle}</h2>
+                        <p>${errorMsg1}</p>
+                        <p>${errorMsg2}</p>
                         <button id="retry-readme-btn" class="btn" style="margin-top: 20px; display: inline-block; width: auto;">
-                            🔄 重试加载
+                            ${retryText}
                         </button>
                     </div>
                 `;
@@ -712,9 +728,10 @@
                             console.log('用户点击重试按钮，重新加载README');
                             
                             // 显示加载状态
+                            const loadingText = currentLanguage === 'zh' ? '🔄 正在重新加载个人简介...' : '🔄 Reloading personal profile...';
                             markdownContent.innerHTML = `
                                 <div class="loading-readme" style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.7);">
-                                    <p>🔄 正在重新加载个人简介...</p>
+                                    <p>${loadingText}</p>
                                 </div>
                             `;
                             
@@ -829,33 +846,35 @@
                 switch (status.status) {
                     case 'online':
                         statusIcon = '🟢';
-                        statusText = '在线';
+                        statusText = currentLanguage === 'zh' ? '在线' : 'Online';
                         statusColor = '#4CAF50';
-                        tooltipText = `服务器正常运行${status.loadTime ? ` (响应时间: ${status.loadTime}ms)` : ''} - 点击重新检测`;
+                        const responseTime = status.loadTime ? ` (${currentLanguage === 'zh' ? '响应时间' : 'Response time'}: ${status.loadTime}ms)` : '';
+                        const clickToRecheck = currentLanguage === 'zh' ? '点击重新检测' : 'Click to recheck';
+                        tooltipText = `${currentLanguage === 'zh' ? '服务器正常运行' : 'Server running normally'}${responseTime} - ${clickToRecheck}`;
                         break;
                     case 'server_error':
                         statusIcon = '🔴';
-                        statusText = '服务器错误';
+                        statusText = currentLanguage === 'zh' ? '服务器错误' : 'Server Error';
                         statusColor = '#F44336';
-                        tooltipText = '服务器错误 - 点击重新检测';
+                        tooltipText = `${currentLanguage === 'zh' ? '服务器错误' : 'Server error'} - ${currentLanguage === 'zh' ? '点击重新检测' : 'Click to recheck'}`;
                         break;
                     case 'timeout':
                         statusIcon = '🟡';
-                        statusText = '超时';
+                        statusText = currentLanguage === 'zh' ? '超时' : 'Timeout';
                         statusColor = '#FF9800';
-                        tooltipText = '连接超时，服务器可能过载 - 点击重新检测';
+                        tooltipText = `${currentLanguage === 'zh' ? '连接超时，服务器可能过载' : 'Connection timeout, server may be overloaded'} - ${currentLanguage === 'zh' ? '点击重新检测' : 'Click to recheck'}`;
                         break;
                     case 'network_error':
                         statusIcon = '🟠';
-                        statusText = '网络错误';
+                        statusText = currentLanguage === 'zh' ? '网络错误' : 'Network Error';
                         statusColor = '#FF5722';
-                        tooltipText = '网络连接问题 - 点击重新检测';
+                        tooltipText = `${currentLanguage === 'zh' ? '网络连接问题' : 'Network connection issue'} - ${currentLanguage === 'zh' ? '点击重新检测' : 'Click to recheck'}`;
                         break;
                     default:
                         statusIcon = '🔴';
-                        statusText = '离线';
+                        statusText = currentLanguage === 'zh' ? '离线' : 'Offline';
                         statusColor = '#F44336';
-                        tooltipText = '服务器不可达 - 点击重新检测';
+                        tooltipText = `${currentLanguage === 'zh' ? '服务器不可达' : 'Server unreachable'} - ${currentLanguage === 'zh' ? '点击重新检测' : 'Click to recheck'}`;
                 }
                 
                 statusElement.innerHTML = `<span style="color: ${statusColor}; cursor: pointer;" onclick="recheckServerStatus()" title="${tooltipText}">${statusIcon} ${statusText}</span>`;
@@ -922,9 +941,10 @@
             const photoStatus = document.getElementById('photo-status');
             const fnosStatus = document.getElementById('fnos-status');
             
-            if (openlistStatus) openlistStatus.innerHTML = '🔄 检测中...';
-            if (photoStatus) photoStatus.innerHTML = '🔄 检测中...';
-            if (fnosStatus) fnosStatus.innerHTML = '🔄 检测中...';
+            const checkingText = currentLanguage === 'zh' ? '🔄 检测中...' : '🔄 Checking...';
+            if (openlistStatus) openlistStatus.innerHTML = checkingText;
+            if (photoStatus) photoStatus.innerHTML = checkingText;
+            if (fnosStatus) fnosStatus.innerHTML = checkingText;
             
             // 显示检测通知
             showServerCheckNotification();
@@ -937,7 +957,8 @@
         function showServerCheckNotification() {
             const notification = document.createElement('div');
             notification.className = 'copy-notification success';
-            notification.innerHTML = '🔍 正在重新检测服务器状态...';
+            const message = currentLanguage === 'zh' ? '🔍 正在重新检测服务器状态...' : '🔍 Rechecking server status...';
+            notification.innerHTML = message;
             notification.style.background = 'rgba(76, 175, 80, 0.9)';
             
             document.body.appendChild(notification);
@@ -1052,7 +1073,8 @@
         function showBackgroundChangeNotification() {
             const notification = document.createElement('div');
             notification.className = 'copy-notification success';
-            notification.innerHTML = '🎨 背景图已更换！';
+            const message = currentLanguage === 'zh' ? '🎨 背景图已更换！' : '🎨 Background changed!';
+            notification.innerHTML = message;
             notification.style.background = 'rgba(76, 175, 80, 0.9)';
             
             document.body.appendChild(notification);
@@ -1071,84 +1093,229 @@
         // 将必要函数添加到全局作用域
         window.recheckServerStatus = recheckServerStatus;
         window.resetScrollNotification = resetScrollNotification;
+        window.toggleLanguage = toggleLanguage;
+
+        // 语言切换功能
+        let currentLanguage = 'zh'; // 默认中文
+        
+        // 语言切换函数
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'zh' ? 'en' : 'zh';
+            applyLanguage(currentLanguage);
+            
+            // 切换页面标题
+            const titleElement = document.title;
+            const titleTag = document.querySelector('title');
+            if (titleTag) {
+                const zhTitle = titleTag.getAttribute('data-zh');
+                const enTitle = titleTag.getAttribute('data-en');
+                if (currentLanguage === 'zh' && zhTitle) {
+                    document.title = zhTitle;
+                } else if (currentLanguage === 'en' && enTitle) {
+                    document.title = enTitle;
+                }
+            }
+            
+            // 保存语言设置到本地存储
+            localStorage.setItem('preferred-language', currentLanguage);
+            
+            // 更新按钮文本
+            const langText = document.getElementById('lang-text');
+            if (langText) {
+                langText.textContent = currentLanguage === 'zh' ? 'EN' : '中文';
+            }
+            
+            // 显示语言切换通知
+            showLanguageChangeNotification();
+            
+            // 切换语言后自动获取一次服务器在线状态
+            checkAllServerStatus();
+        }
+        
+        // 应用语言设置
+        function applyLanguage(lang) {
+            console.log(`🌍 切换语言到: ${lang === 'zh' ? '中文' : 'English'}`);
+            
+            // 获取所有有语言属性的元素
+            const elements = document.querySelectorAll('[data-zh][data-en]');
+            
+            elements.forEach(element => {
+                const zhText = element.getAttribute('data-zh');
+                const enText = element.getAttribute('data-en');
+                
+                if (zhText && enText) {
+                    element.textContent = lang === 'zh' ? zhText : enText;
+                }
+            });
+            
+            // 更新页面标题
+            const titleTag = document.querySelector('title');
+            if (titleTag) {
+                const zhTitle = titleTag.getAttribute('data-zh');
+                const enTitle = titleTag.getAttribute('data-en');
+                if (lang === 'zh' && zhTitle) {
+                    document.title = zhTitle;
+                } else if (lang === 'en' && enTitle) {
+                    document.title = enTitle;
+                }
+            }
+            
+            // 更新状态文本中的语言
+            updateStatusLanguage(lang);
+            
+            // 更新通知文本
+            updateNotificationTexts(lang);
+        }
+        
+        // 更新服务器状态显示的语言
+        function updateStatusLanguage(lang) {
+            const statusElements = ['openlist-status', 'photo-status', 'fnos-status'];
+            statusElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    const checkingText = element.querySelector('[data-zh][data-en]');
+                    if (checkingText) {
+                        const zhText = checkingText.getAttribute('data-zh');
+                        const enText = checkingText.getAttribute('data-en');
+                        if (zhText && enText) {
+                            checkingText.textContent = lang === 'zh' ? zhText : enText;
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 更新通知文本（为后续通知准备）
+        function updateNotificationTexts(lang) {
+            // 这个函数为动态生成的通知文本做准备
+            // 实际的通知文本更新会在各个通知函数中处理
+        }
+        
+        // 显示语言切换成功通知
+        function showLanguageChangeNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'copy-notification success';
+            const message = currentLanguage === 'zh' ? '🌍 已切换到中文' : '🌍 Switched to English';
+            notification.innerHTML = message;
+            notification.style.background = 'rgba(33, 150, 243, 0.9)';
+            
+            document.body.appendChild(notification);
+            
+            // 显示动画
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // 2秒后自动隐藏
+            setTimeout(() => {
+                hideCopyNotification(notification);
+            }, 2000);
+        }
+        
+        // 初始化语言设置
+        function initializeLanguage() {
+            // 从本地存储读取语言设置
+            const savedLanguage = localStorage.getItem('preferred-language');
+            if (savedLanguage && (savedLanguage === 'zh' || savedLanguage === 'en')) {
+                currentLanguage = savedLanguage;
+            } else {
+                // 检测浏览器语言
+                const browserLang = navigator.language || navigator.languages[0];
+                currentLanguage = browserLang.startsWith('zh') ? 'zh' : 'en';
+            }
+            
+            // 应用语言设置
+            applyLanguage(currentLanguage);
+            
+            // 更新按钮文本
+            const langText = document.getElementById('lang-text');
+            if (langText) {
+                langText.textContent = currentLanguage === 'zh' ? 'EN' : '中文';
+            }
+            
+            console.log(`🌍 语言初始化完成: ${currentLanguage === 'zh' ? '中文' : 'English'}`);
+        }
+
+        // 页面加载时初始化语言设置
+        window.addEventListener('load', initializeLanguage);
     </script>
     <main class="container">
         <article>
-            <h2>Openlist <span id="openlist-status" style="font-size: 0.8em; margin-left: 10px;">🔄 检测中...</span></h2>
+            <h2><span data-zh="Openlist" data-en="Openlist">Openlist</span> <span id="openlist-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h2>
             <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);">服务器维护中，暂不可用!</h2> -->
-            <p>Openlist网盘</p>
-            <p>仅支持网页使用</p>
-            <p>影视、应用、游戏等资源</p>
-            <p>默认可在共享目录上传文件</p>
-            <p>网盘里有其他网盘链接</p>
-            <p>不支持播放记录和视频信息</p>
-            <button class="btn" onclick="window.open('https://openlist.146019.xyz', '_blank')">前往Openlist</button>
-            <button class="btn" onclick="window.open('https://openlist.2012521.xyz', '_blank')">备用链接</button>
+            <p data-zh="Openlist网盘" data-en="Openlist Cloud Storage">Openlist网盘</p>
+            <p data-zh="仅支持网页使用" data-en="Web-only access">仅支持网页使用</p>
+            <p data-zh="影视、应用、游戏等资源" data-en="Movies, apps, games and other resources">影视、应用、游戏等资源</p>
+            <p data-zh="默认可在共享目录上传文件" data-en="Upload files to shared directory by default">默认可在共享目录上传文件</p>
+            <p data-zh="网盘里有其他网盘链接" data-en="Contains links to other cloud storage">网盘里有其他网盘链接</p>
+            <p data-zh="不支持播放记录和视频信息" data-en="No playback history or video info">不支持播放记录和视频信息</p>
+            <button class="btn" onclick="window.open('https://openlist.146019.xyz', '_blank')" data-zh="前往Openlist" data-en="Go to Openlist">前往Openlist</button>
+            <button class="btn" onclick="window.open('https://openlist.2012521.xyz', '_blank')" data-zh="备用链接" data-en="Backup Link">备用链接</button>
         </article>
         <article>
-            <h2>飞牛影视 <span id="fnos-status" style="font-size: 0.8em; margin-left: 10px;">🔄 检测中...</span></h2>
-            <p>个人影视库,账号：tlbx</p>
-            <p>有手机客户端，支持下载到本地离线播放</p>
-            <p>相比Openlist有播放记录和信息等功能</p>
+            <h2><span data-zh="飞牛影视" data-en="FeiNiu Media">飞牛影视</span> <span id="fnos-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h2>
+            <p data-zh="个人影视库,账号：tlbx" data-en="Personal media library, Account: tlbx">个人影视库,账号：tlbx</p>
+            <p data-zh="有手机客户端，支持下载到本地离线播放" data-en="Mobile app available, supports offline download">有手机客户端，支持下载到本地离线播放</p>
+            <p data-zh="相比Openlist有播放记录和信息等功能" data-en="Has playback history and info features compared to Openlist">相比Openlist有播放记录和信息等功能</p>
             <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);">服务器维护中，暂不可用!</h2> -->
-            <button class="btn" onclick="window.open('https://fn.146019.xyz/v', '_blank')">前往影视库</button>
-            <button class="btn" onclick="copyServerAddress('https://fn.146019.xyz')">复制服务器地址</button>
-            <button class="btn" onclick="copyServerAddress('20120224')">复制密码</button>
-            <button class="btn" onclick="window.open('https://download.liveupdate.fnnas.com/x86_64/app/FN_Media_1.3.1_06131020.apk', '_blank')">安装飞牛影视库</button>
-            <button class="btn" onclick="window.open('https://apps.apple.com/cn/app/%E9%A3%9E%E7%89%9B%E6%92%AD%E6%94%BE%E5%99%A8/id6738575136', '_blank')">安装飞牛影视库(Apple)</button>
+            <button class="btn" onclick="window.open('https://fn.146019.xyz/v', '_blank')" data-zh="前往影视库" data-en="Go to Media Library">前往影视库</button>
+            <button class="btn" onclick="copyServerAddress('https://fn.146019.xyz')" data-zh="复制服务器地址" data-en="Copy Server Address">复制服务器地址</button>
+            <button class="btn" onclick="copyServerAddress('20120224')" data-zh="复制密码" data-en="Copy Password">复制密码</button>
+            <button class="btn" onclick="window.open('https://download.liveupdate.fnnas.com/x86_64/app/FN_Media_1.3.1_06131020.apk', '_blank')" data-zh="安装飞牛影视库" data-en="Install FeiNiu Media">安装飞牛影视库</button>
+            <button class="btn" onclick="window.open('https://apps.apple.com/cn/app/%E9%A3%9E%E7%89%9B%E6%92%AD%E6%94%BE%E5%99%A8/id6738575136', '_blank')" data-zh="安装飞牛影视库(Apple)" data-en="Install FeiNiu Media (Apple)">安装飞牛影视库(Apple)</button>
         </article>
         <article>
-            <h2>2406寝室相册 <span id="photo-status" style="font-size: 0.8em; margin-left: 10px;">🔄 检测中...</span></h2>
+            <h2><span data-zh="2406寝室相册" data-en="2406 Dorm Album">2406寝室相册</span> <span id="photo-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h2>
             <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);">服务器维护中，暂不可用!</h2> -->
-            <p>2406专用寝室用相册</p>
-            <p>账号密码在寝室群公告</p>
-            <button class="btn" onclick="window.open('https://photo.146019.xyz/', '_blank')">前往相册</button>
-            <button class="btn" onclick="copyServerAddress('https://photo.146019.xyz')">复制服务器地址</button>
-            <button class="btn" onclick="window.open('https://play.google.com/store/apps/details?id=app.alextran.immich', '_blank')">安装相册（Google）</button>
-            <button class="btn" onclick="window.open('https://github.com/immich-app/immich/releases', '_blank')">安装相册（Github）</button>
-            <button class="btn" onclick="window.open('https://apps.apple.com/us/app/immich/id1613945652', '_blank')">安装相册（Apple）</button>
+            <p data-zh="2406专用寝室用相册" data-en="Exclusive photo album for dorm 2406">2406专用寝室用相册</p>
+            <p data-zh="账号密码在寝室群公告" data-en="Account info in dorm group announcement">账号密码在寝室群公告</p>
+            <button class="btn" onclick="window.open('https://photo.146019.xyz/', '_blank')" data-zh="前往相册" data-en="Go to Album">前往相册</button>
+            <button class="btn" onclick="copyServerAddress('https://photo.146019.xyz')" data-zh="复制服务器地址" data-en="Copy Server Address">复制服务器地址</button>
+            <button class="btn" onclick="window.open('https://play.google.com/store/apps/details?id=app.alextran.immich', '_blank')" data-zh="安装相册（Google）" data-en="Install Album (Google)">安装相册（Google）</button>
+            <button class="btn" onclick="window.open('https://github.com/immich-app/immich/releases', '_blank')" data-zh="安装相册（Github）" data-en="Install Album (Github)">安装相册（Github）</button>
+            <button class="btn" onclick="window.open('https://apps.apple.com/us/app/immich/id1613945652', '_blank')" data-zh="安装相册（Apple）" data-en="Install Album (Apple)">安装相册（Apple）</button>
         </article>
         <article>
-            <h2>将 Windows 设备接入智能家居</h2>
-            <p>通过小爱同学、天猫精灵等智能家具设备</p>
-            <p>实现对 Windows 电脑的远程控制</p>
-            <p>包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能</p>
-            <p>适合有远程自动化需求的用户。</p>
+            <h2 data-zh="将 Windows 设备接入智能家居" data-en="Connect Windows Devices to Smart Home">将 Windows 设备接入智能家居</h2>
+            <p data-zh="通过小爱同学、天猫精灵等智能家具设备" data-en="Via XiaoAi, Tmall Genie and other smart home devices">通过小爱同学、天猫精灵等智能家具设备</p>
+            <p data-zh="实现对 Windows 电脑的远程控制" data-en="Remote control of Windows computers">实现对 Windows 电脑的远程控制</p>
+            <p data-zh="包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能" data-en="Including shutdown, lock, launch apps/scripts, service management, display brightness, volume control">包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能</p>
+            <p data-zh="适合有远程自动化需求的用户。" data-en="Suitable for users with remote automation needs.">适合有远程自动化需求的用户。</p>
             <p> </p>
-            <button class="btn" onclick="window.open('https://github.com/chen6019/Remote-Controls', '_blank')">前往项目</button>
+            <button class="btn" onclick="window.open('https://github.com/chen6019/Remote-Controls', '_blank')" data-zh="前往项目" data-en="Go to Project">前往项目</button>
         </article>
         <article>
-            <h2>关于我</h2>
-            <p>我最喜欢的角色是天禄辟邪。</p>
-            <p>玩米哈游的游戏、我的世界(ID:TLBX_)。</p>
-            <p>喜欢折腾服务器、路由器、电脑和手机。</p>
+            <h2 data-zh="关于我" data-en="About Me">关于我</h2>
+            <p data-zh="我最喜欢的角色是天禄辟邪。" data-en="My favorite characters are Tianlu and Pixiu.">我最喜欢的角色是天禄辟邪。</p>
+            <p data-zh="玩米哈游的游戏、我的世界(ID:TLBX_)。" data-en="Playing Mihoyo games, Minecraft (ID:TLBX_).">玩米哈游的游戏、我的世界(ID:TLBX_)。</p>
+            <p data-zh="喜欢折腾服务器、路由器、电脑和手机。" data-en="Enjoys tinkering with servers, routers, PCs, and phones.">喜欢折腾服务器、路由器、电脑和手机。</p>
             <p> </p>
-            <button class="btn" onclick="window.open('https://github.com/chen6019', '_blank')">前往Github</button>
+            <button class="btn" onclick="window.open('https://github.com/chen6019', '_blank')" data-zh="前往Github" data-en="Go to Github">前往Github</button>
         </article>
         <article>
-            <h2>关于小说</h2>
-            <p>这是我写的一部小说。</p>
-            <p>目前仍在撰写大纲。</p>
-            <p>实际上，这也是我的幻想。</p>
-            <p>将会有很多心理描写，请理解。</p>
-            <p>仓库目前不对公开，待正式章节发布后将会公开。</p>
-            <button class="btn" onclick="window.open('https://github.com/chen6019/My.novel.ysy', '_blank')">前往Github</button>
+            <h2 data-zh="关于小说" data-en="About My Novel">关于小说</h2>
+            <p data-zh="这是我写的一部小说。" data-en="This is a novel I'm writing.">这是我写的一部小说。</p>
+            <p data-zh="目前仍在撰写大纲。" data-en="Currently still working on the outline.">目前仍在撰写大纲。</p>
+            <p data-zh="实际上，这也是我的幻想。" data-en="Actually, this is also my fantasy.">实际上，这也是我的幻想。</p>
+            <p data-zh="将会有很多心理描写，请理解。" data-en="There will be many psychological descriptions, please understand.">将会有很多心理描写，请理解。</p>
+            <p data-zh="仓库目前不对公开，待正式章节发布后将会公开。" data-en="Repository is private now, will be public after official chapters release.">仓库目前不对公开，待正式章节发布后将会公开。</p>
+            <button class="btn" onclick="window.open('https://github.com/chen6019/My.novel.ysy', '_blank')" data-zh="前往Github" data-en="Go to Github">前往Github</button>
         </article>
             <!-- 个人简介和信息展示区域 -->
             <section class="markdown-display-section">
             <div class="markdown-content" id="markdown-content">
                 <div class="loading-readme">
-                    <p>正在加载个人简介...</p>
+                    <p data-zh="正在加载个人简介..." data-en="Loading personal profile...">正在加载个人简介...</p>
                 </div>
             </div>
         </section>
     </main>
     <footer>
         <!-- <p>网站内容归chen6019所有 &copy; 2025</p> -->
-        <p>由 <a href="https://www.cloudflare.com/" target="_blank" style="color: #F6821E; text-decoration: none;">Cloudflare</a> 提供技术支持</p>
+        <p><span data-zh="由" data-en="Powered by">由</span> <a href="https://www.cloudflare.com/" target="_blank" style="color: #F6821E; text-decoration: none;">Cloudflare</a> <span data-zh="提供技术支持" data-en="technical support">提供技术支持</span></p>
         <div style="margin-top: 10px;">
             <button class="btn" onclick="changeRandomBackground()" style="font-size: 12px; padding: 8px 16px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.9);" title="快捷键: Ctrl+B 或 Cmd+B">
-                🎨 更换背景图
+                <span data-zh="🎨 更换背景图" data-en="🎨 Change Background">🎨 更换背景图</span>
             </button>
         </div>
     </footer>
