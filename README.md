@@ -3,7 +3,7 @@
 
 #### 纯内网：[内网](http://192.168.100.1:5244)
 
-## <img src="https://www.146019.xyz/res/mobile_bright_back/mobile_bright_back.png.jpg" alt="贴贴！喵~" style="width:15%; height:auto;"> <img src="https://www.146019.xyz/res/loading/Loading1.gif" alt="辟邪跑，喵~" style="width:20%; height:auto;"> <img src="https://www.146019.xyz/res/loading/Loading.gif" alt="天禄害怕，喵~" style="width:20%; height:auto;"> <img src="https://www.146019.xyz/res/loading/Loading3.gif" alt="咬尾巴，喵~" style="width:35%; height:auto;">
+## <img src="https://www.146019.xyz/res/mobile_bright_back/mobile_bright_back.png.jpg" alt="贴贴！喵~" style="width:15%; height:auto;"> <img src="https://www.146019.xyz/res/loading/Loading1.gif" alt="辟邪跑，嗷呜~" style="width:20%; height:auto;"> <img src="https://www.146019.xyz/res/loading/Loading.gif" alt="天禄害怕，嗷~" style="width:20%; height:auto;"> <img src="https://www.146019.xyz/res/loading/Loading3.gif" alt="咬尾巴，喵~" style="width:35%; height:auto;">
 
 # Hi there 👋 this is chen6019
 
