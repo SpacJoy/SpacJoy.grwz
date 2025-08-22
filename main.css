@@ -9,17 +9,7 @@ setTimeout(function () {
 <div class="content">
 < !-- 在这里添加你想显示的其他内容 -->
 </div> */
-/* 加载器容器样式 */
-.loader {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+/* 旧的 .loader 定位规则已由 index.css 覆盖，这里移除避免冲突 */
 /* 添加模糊效果的 div */
 .blur-effect {
     position: fixed;

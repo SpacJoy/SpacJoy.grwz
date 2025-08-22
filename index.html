@@ -185,6 +185,49 @@
         let eventListenersAdded = false;
         let scrollNotificationShown = false;
 
+        // 估算 WebP / GIF 动图时长（无法精确读取帧信息，采用启发式：按文件名序号映射 + 可扩展表）
+        function estimateAnimationDuration(src){
+            // 可自定义映射：某些编号更长/更短
+            const map = {
+                // 'loading005': 3800, // 示例：单独覆盖
+            };
+            const base = src.match(/loading(\d{3})/);
+            if(base){
+                const id = base[1];
+                if(map['loading'+id]) return map['loading'+id];
+                // 简单规则：序号越大，假设时长略长（示例线性 2.2s~3.4s）
+                const n = parseInt(id,10);
+                return 2200 + (n/30)*1200; // 2.2s ~ 3.4s 范围
+            }
+            return 2500; // 回退
+        }
+
+        function setupCssAnimationHide(durationMs){
+            const loaderEl = document.querySelector('.loader');
+            const blurEl = document.querySelector('.blur-effect');
+            if(!loaderEl) return;
+            const MIN_SHOW = 1200, MAX_SHOW = 4500;
+            const finalDuration = Math.min(MAX_SHOW, Math.max(MIN_SHOW, durationMs||2500));
+            loaderEl.style.setProperty('--loader-duration', finalDuration+'ms');
+            loaderEl.classList.add('loader-animating');
+            const onEnd = (e)=>{
+                if(e.target!==loaderEl) return; // 保证只处理一次
+                loaderEl.removeEventListener('animationend', onEnd);
+                // 进入淡出动画
+                loaderEl.classList.remove('loader-animating');
+                loaderEl.classList.add('loader-fade-out');
+                loaderEl.addEventListener('animationend', ()=>{
+                    if(loaderEl) loaderEl.style.display='none';
+                    if(blurEl) blurEl.style.display='none';
+                    setTimeout(showScrollNotification,100);
+                    setTimeout(loadReadmeContent,200);
+                    setTimeout(checkAllServerStatus,500);
+                    console.log(`✅ Loader 隐藏 (CSS 动画 ${finalDuration}ms + 淡出)`);
+                },{once:true});
+            };
+            loaderEl.addEventListener('animationend', onEnd);
+        }
+
         // 统一的页面初始化函数，确保只执行一次
         function initializePageComplete() {
             if (isInitialized) {
@@ -208,22 +251,15 @@
                 eventListenersAdded = true;
             }
             
-            // 3. 在2秒后隐藏 loader 并显示内容，启动其他功能
-            setTimeout(function () {
-                document.querySelector('.loader').style.display = 'none';
-                document.querySelector('.blur-effect').style.display = 'none';
-                  
-                // 延迟显示滑动提示通知
-                setTimeout(showScrollNotification, 100);
-                
-                // 加载 README.md 文件内容
-                setTimeout(loadReadmeContent, 200);
-                
-                // 检测服务器状态
-                setTimeout(checkAllServerStatus, 500);
-                
-                console.log('✅ 页面初始化完成');
-            }, 2000);
+            // 3. 根据动图估算时长 -> 设置 CSS 动画监听结束
+            const loadingEl = document.getElementById('loading-gif');
+            if(loadingEl && loadingEl.src){
+                const est = estimateAnimationDuration(loadingEl.src);
+                console.log(`⏳ 估算加载动画时长: ${Math.round(est)}ms (${loadingEl.src})`);
+                setupCssAnimationHide(est);
+            } else {
+                setupCssAnimationHide(2500);
+            }
         }
 
         // 添加所有事件监听器的函数
