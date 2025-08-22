@@ -19,7 +19,7 @@
     </div>
     <header>
         <h1>
-            <img src="res/top.png" alt="Logo">
+            <img src="res/top.webp" alt="Logo">
             <span data-zh="喵~？嗷~呜~~！" data-en="Meow~? Awoo~~!">喵~？嗷~呜~~！</span>
             <div class="language-switch">
                 <button id="lang-toggle" class="lang-btn" onclick="toggleLanguage()" title="切换语言 / Switch Language">
@@ -41,67 +41,26 @@
         const backgroundImages = {
             desktop: {
                 bright: [
-                    'res/bright_back/bright_back.png',
-                    'res/bright_back/bright_back1.jpg',
-                    'res/bright_back/bright_back2.png',
-                    'res/bright_back/bright_back3.jpg',
-                    'res/bright_back/bright_back4.jpg',
-                    'res/bright_back/bright_back5.jpg',
-                    'res/bright_back/bright_back6.png'
+                    ...Array.from({length:21},(_,i)=>`res/bright_back/bright_back${String(i+1).padStart(3,'0')}.webp`)
                 ],
                 dark: [
-                    'res/dark_back/dark_back.png',
-                    'res/dark_back/dark_back1.jpg',
-                    'res/dark_back/dark_back2.jpg',
-                    'res/dark_back/dark_back3.jpg',
-                    'res/dark_back/dark_back4.png',
-                    'res/dark_back/dark_back5.jpg'
+                    ...Array.from({length:8},(_,i)=>`res/dark_back/dark_back${String(i+1).padStart(3,'0')}.webp`)
                 ]
             },
             tablet: {
                 bright: [
-                    'res/mobile_bright_back/mobile_bright_back.png.jpg',
-                    'res/mobile_bright_back/mobile_bright_back.png2.png',
-                    'res/mobile_bright_back/mobile_bright_back.png3.png',
-                    'res/mobile_bright_back/mobile_bright_back.png4.jpg',
-                    'res/mobile_bright_back/mobile_bright_back.png5.jpg',
-                    'res/mobile_bright_back/mobile_bright_back.png6.jpeg',
-                    'res/mobile_bright_back/mobile_bright_back.png7.jpg',
-                    'res/mobile_bright_back/mobile_bright_back.png8.png',
-                    'res/mobile_bright_back/mobile_bright_back.png10.jpg',
-                    'res/mobile_bright_back/mobile_bright_back.png12.png'
+                    ...Array.from({length:21},(_,i)=>`res/mobile_bright_back/mobile_bright_back${String(i+1).padStart(3,'0')}.webp`)
                 ],
                 dark: [
-                    'res/mobile_dark_back/mobile_dark_back.jpg',
-                    'res/mobile_dark_back/mobile_dark_back1.jpg',
-                    'res/mobile_dark_back/mobile_dark_back2.jpg',
-                    'res/mobile_dark_back/mobile_dark_back3.jpg',
-                    'res/mobile_dark_back/mobile_dark_back4.jpg',
-                    'res/mobile_dark_back/mobile_dark_back5.png',
-                    'res/mobile_dark_back/mobile_dark_back6.jpeg'
+                    ...Array.from({length:11},(_,i)=>`res/mobile_dark_back/mobile_dark_back${String(i+1).padStart(3,'0')}.webp`)
                 ]
             },
             mobile: {
                 bright: [
-                    'res/mobile_bright_back/mobile_bright_back.png.jpg',
-                    'res/mobile_bright_back/mobile_bright_back.png2.png',
-                    'res/mobile_bright_back/mobile_bright_back.png3.png',
-                    'res/mobile_bright_back/mobile_bright_back.png4.jpg',
-                    'res/mobile_bright_back/mobile_bright_back.png5.jpg',
-                    'res/mobile_bright_back/mobile_bright_back.png6.jpeg',
-                    'res/mobile_bright_back/mobile_bright_back.png7.jpg',
-                    'res/mobile_bright_back/mobile_bright_back.png8.png',
-                    'res/mobile_bright_back/mobile_bright_back.png10.jpg',
-                    'res/mobile_bright_back/mobile_bright_back.png12.png'
+                    ...Array.from({length:29},(_,i)=>`res/mobile_bright_back/mobile_bright_back${String(i+1).padStart(3,'0')}.webp`)
                 ],
                 dark: [
-                    'res/mobile_dark_back/mobile_dark_back.jpg',
-                    'res/mobile_dark_back/mobile_dark_back1.jpg',
-                    'res/mobile_dark_back/mobile_dark_back2.jpg',
-                    'res/mobile_dark_back/mobile_dark_back3.jpg',
-                    'res/mobile_dark_back/mobile_dark_back4.jpg',
-                    'res/mobile_dark_back/mobile_dark_back5.png',
-                    'res/mobile_dark_back/mobile_dark_back6.jpeg'
+                    ...Array.from({length:11},(_,i)=>`res/mobile_dark_back/mobile_dark_back${String(i+1).padStart(3,'0')}.webp`)
                 ]
             }
         };
@@ -125,19 +84,31 @@
             }
         }
 
-        // 随机选择加载GIF
-        const loadingGifs = [
-            { src: 'res/loading/Loading.gif', width: '400px', height: '400px' },
-            { src: 'res/loading/Loading1.gif', width: '400px', height: '400px' },
-            { src: 'res/loading/Loading2.gif', width: '400px', height: '400px' },
-            { src: 'res/loading/Loading3.gif', width: '549px', height: '297px' },
-            { src: 'res/loading/Loading4.gif', width: '200px', height: '240px' }
-        ];
-        const randomGif = loadingGifs[Math.floor(Math.random() * loadingGifs.length)];
-        const loadingImg = document.getElementById('loading-gif');
-        loadingImg.src = randomGif.src;
-        loadingImg.style.width = randomGif.width;
-        loadingImg.style.height = randomGif.height;        // 检测主容器布局变化并切换背景 - 三种布局：移动端、平板端、桌面端
+        // 随机选择加载动图并自适应尺寸
+        (function initLoadingImage(){
+            const sources = Array.from({length:22},(_,i)=>`res/loading/loading${String(i+1).padStart(3,'0')}.webp`);
+            const pick = sources[Math.floor(Math.random()*sources.length)];
+            const imgEl = document.getElementById('loading-gif');
+            if(!imgEl) return;
+            imgEl.removeAttribute('width');
+            imgEl.removeAttribute('height');
+            imgEl.style.width = '';
+            imgEl.style.height = '';
+            imgEl.style.maxWidth = '60vmin';
+            imgEl.style.maxHeight = '60vmin';
+            imgEl.style.objectFit = 'contain';
+            imgEl.style.aspectRatio = 'auto';
+            imgEl.src = pick;
+            imgEl.onload = () => {
+                // 根据原始比例在限制框内自适应，宽高中取较小的缩放限制
+                const nw = imgEl.naturalWidth;
+                const nh = imgEl.naturalHeight;
+                if(nw && nh){
+                    // 仅用于记录调试，不强制固定尺寸
+                    console.log(`Loading image loaded: ${pick} (${nw}x${nh})`);
+                }
+            };
+        })();        // 检测主容器布局变化并切换背景 - 三种布局：移动端、平板端、桌面端
         function checkLayoutAndSwitchBackground(forceNewBackground = false, forceLayoutCheck = false) {
             // 防止重复执行
             if (isBackgroundSwitching && !forceLayoutCheck) {
