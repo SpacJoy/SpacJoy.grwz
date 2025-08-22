@@ -5,15 +5,15 @@
 
 # Hi there 👋 this is chen6019
 
-## <img src="https://146019.xyz/res/loading/loading006.webp" alt="天禄辟邪玩~喵~" style="width:48%; height:auto;"> <img src="https://146019.xyz/res/loading/loading001.webp" alt="天禄和辟邪可以一起生蛋！嗷~" style="width:48%; height:auto;"> 
-
 ## 1 day of work (24 hours) 2 days of rest (48 hours )
 ## 一个上一（24小时）休二（48小时）的牛马打工人
 
-## <img src="https://146019.xyz/res/loading/loading014.webp" alt="粉大个！喵~" style="width:48%; height:auto;"> <img src="https://146019.xyz/res/loading/loading011.webp" alt="江江！嗷呜~" style="width:48%; height:auto;"> 
+## <img src="https://146019.xyz/res/loading/loading006.webp" alt="天禄辟邪玩~喵~" style="width:48%; height:auto;"> <img src="https://146019.xyz/res/loading/loading001.webp" alt="天禄和辟邪可以一起生蛋！嗷~" style="width:48%; height:auto;"> 
 
 # "Memory Shapes the Soul, and the Soul Affects Memory"
 # "记忆塑造灵魂，灵魂影响记忆"
+
+## <img src="https://146019.xyz/res/loading/loading014.webp" alt="粉大个！喵~" style="width:48%; height:auto;"> <img src="https://146019.xyz/res/loading/loading011.webp" alt="江江！嗷呜~" style="width:48%; height:auto;"> 
 
 ## ![](https://github-readme-stats.vercel.app/api?username=chen6019&show_icons=true&hide_border=False&theme=ambient_gradient&include_all_commits=true) ![](https://github-readme-stats.vercel.app/api/top-langs/?username=chen6019&langs_count=10&layout=compact&exclude_repo=Cemiuiler,action-tmate,Aquarius223-s-sdm845-kernel)
 

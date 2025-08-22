@@ -245,8 +245,12 @@
             checkLayoutAndSwitchBackground(true); // 初始化时设置背景图
             optimizeArticleLayout();
 
-            // 1.1 并行预加载 README 内容（如果尚未加载）
+            // 1.1 创建 README 骨架占位并并行预加载 README 内容（如果尚未加载）
+            createReadmeSkeleton();
             setTimeout(()=>{ if(!isLoadingReadme) loadReadmeContent(); }, 50);
+
+            // 1.2 预取下一张背景图（不替换当前，仅缓存）
+            prefetchNextBackground();
             
             // 2. 添加事件监听器（只添加一次）
             if (!eventListenersAdded) {
@@ -266,6 +270,37 @@
                 setTimeout(checkAllServerStatus, 150);
                 setupCssAnimationHide(2500);
             }
+        }
+
+        // 创建 README 骨架占位
+        function createReadmeSkeleton(){
+            const container = document.getElementById('markdown-content');
+            if(!container || container.dataset.filled==='1') return;
+            const skeleton = document.createElement('div');
+            skeleton.className='readme-skeleton';
+            const pattern=["long","long","mid","long","long","short","long","mid","long"]; // 9 行示例
+            skeleton.innerHTML = pattern.map(cls=>`<div class="line ${cls}"></div>`).join('');
+            container.innerHTML='';
+            container.appendChild(skeleton);
+            container.dataset.filled='1';
+        }
+
+        // 预取下一张背景图（基于当前布局与主题随机再取一张并缓存）
+        function prefetchNextBackground(){
+            try {
+                const layoutClass = document.body.classList.contains('mobile-layout') ? 'mobile' : document.body.classList.contains('tablet-layout') ? 'tablet' : 'desktop';
+                const prefersDarkScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const theme = prefersDarkScheme ? 'dark' : 'bright';
+                const arr = backgroundImages[layoutClass] && backgroundImages[layoutClass][theme];
+                if(!arr || !arr.length) return;
+                const candidate = arr[Math.floor(Math.random()*arr.length)];
+                if(!candidate) return;
+                const img=new Image();
+                img.decoding='async';
+                img.loading='eager';
+                img.src=candidate;
+                img.onload=()=>console.log('🗂️ 已预取下一张背景',candidate);
+            } catch(e){ console.log('预取背景失败',e); }
         }
 
         // 添加所有事件监听器的函数
@@ -1260,7 +1295,7 @@
     <main class="container">
         <article>
             <h2><span data-zh="Openlist" data-en="Openlist">Openlist</span> <span id="openlist-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h2>
-            <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2>
+            <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2> -->
             <p data-zh="Openlist网盘" data-en="Openlist Cloud Storage">Openlist网盘</p>
             <p data-zh="仅支持网页使用" data-en="Web-only access">仅支持网页使用</p>
             <p data-zh="影视、应用、游戏等资源" data-en="Movies, apps, games and other resources">影视、应用、游戏等资源</p>
@@ -1272,7 +1307,7 @@
         </article>
         <article>
             <h2><span data-zh="飞牛影视" data-en="FeiNiu Media">飞牛影视</span> <span id="fnos-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h2>
-            <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2>
+            <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2> -->
             <p data-zh="个人影视库,账号：tlbx" data-en="Personal media library, Account: tlbx">个人影视库,账号：tlbx</p>
             <p data-zh="有手机客户端，支持下载到本地离线播放" data-en="Mobile app available, supports offline download">有手机客户端，支持下载到本地离线播放</p>
             <p data-zh="相比Openlist有播放记录和信息等功能" data-en="Has playback history and info features compared to Openlist">相比Openlist有播放记录和信息等功能</p>
@@ -1285,7 +1320,7 @@
         </article>
         <article>
             <h2><span data-zh="2406寝室相册" data-en="2406 Dorm Album">2406寝室相册</span> <span id="photo-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h2>
-            <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2>
+            <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2> -->
             <p data-zh="2406专用寝室用相册" data-en="Exclusive photo album for dorm 2406">2406专用寝室用相册</p>
             <p data-zh="账号密码在寝室群公告" data-en="Account info in dorm group announcement">账号密码在寝室群公告</p>
             <button class="btn" onclick="window.open('https://photo.146019.xyz/', '_blank')" data-zh="前往相册" data-en="Go to Album">前往相册</button>

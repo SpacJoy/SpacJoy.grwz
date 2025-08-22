@@ -878,6 +878,23 @@ header {
 @media (max-width:800px){
   .change-bg { margin-left:0; margin-top:8px; }
   header h1 { flex-direction: column; align-items: flex-start; }
+/* README 骨架屏 */
+.readme-skeleton { 
+    display:grid; gap:14px; padding:10px 4px; 
+}
+.readme-skeleton .line { 
+    height:14px; border-radius:7px; 
+    background: linear-gradient(100deg, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0.25) 40%, rgba(255,255,255,0.1) 60%); 
+    background-size:200% 100%; 
+    animation: skeletonShine 1.2s ease-in-out infinite; 
+}
+.readme-skeleton .line.short { width:40%; }
+.readme-skeleton .line.mid { width:65%; }
+.readme-skeleton .line.long { width:90%; }
+@keyframes skeletonShine { 
+    0% { background-position:200% 0; } 
+    100% { background-position:-200% 0; } 
+}
   .change-bg-btn { font-size:12px; padding:6px 10px; }
 }
 #loading-gif { position:relative; }
