@@ -5,12 +5,12 @@
 
 # Hi there 👋 this is chen6019
 
-## <img src="https://www.146019.xyz/res/loading/loading006.webp" alt="天禄辟邪玩~喵~" style="width:48%; height:auto;"> <img src="https://www.146019.xyz/res/loading/loading001.webp" alt="天禄和辟邪可以一起生蛋！嗷~" style="width:48%; height:auto;"> 
+## <img src="https://146019.xyz/res/loading/loading006.webp" alt="天禄辟邪玩~喵~" style="width:48%; height:auto;"> <img src="https://146019.xyz/res/loading/loading001.webp" alt="天禄和辟邪可以一起生蛋！嗷~" style="width:48%; height:auto;"> 
 
 ## 1 day of work (24 hours) 2 days of rest (48 hours )
 ## 一个上一（24小时）休二（48小时）的牛马打工人
 
-## <img src="https://www.146019.xyz/res/loading/loading014.webp" alt="粉大个！喵~" style="width:48%; height:auto;"> <img src="https://www.146019.xyz/res/loading/loading011.webp" alt="江江！嗷呜~" style="width:48%; height:auto;"> 
+## <img src="https://146019.xyz/res/loading/loading014.webp" alt="粉大个！喵~" style="width:48%; height:auto;"> <img src="https://146019.xyz/res/loading/loading011.webp" alt="江江！嗷呜~" style="width:48%; height:auto;"> 
 
 # "Memory Shapes the Soul, and the Soul Affects Memory"
 # "记忆塑造灵魂，灵魂影响记忆"
@@ -26,8 +26,10 @@
 ## ![Xiaomi 13](https://img.shields.io/badge/Xiaomi%2013-OS2.2%20Unlock%20BL%20-FD4900?style=flat-square&logo=xiaomi&logoColor=ffffff) ![Xiaomi Pad 6 Pro](https://img.shields.io/badge/Xiaomi%20Pad%206%20Pro-OS2.2%20Unlock%20BL-FD4900?style=flat-square&logo=xiaomi&logoColor=ffffff) ![X86 mini PC](https://img.shields.io/badge/X86%20mini%20PC-iStoreOS%20(Run%20PVE%20on%20This)-835BFF?style=flat-square&logo=openwrt&logoColor=ffffff) ![HINLINK OPC-H68K Board (SP)](https://img.shields.io/badge/HINLINK%20OPC%20H68K%20Board%20(SP)-iStoreOS-835BFF?style=flat-square&logo=openwrt&logoColor=ffffff)
 
 ## 🔗 Services
+## <img src="https://146019.xyz/res/loading/loading004.webp" alt="转圈圈~喵~" style="width:15%; height:auto;">
 
-## <a href="https://www.146019.xyz"><img src="https://img.shields.io/badge/喵~~!-3EA8FF?logo=macys" title="喵~" /></a>
+## <a href="https://146019.xyz"><img src="https://img.shields.io/badge/嗷呜~-3EA8FF?logo=macys" title="主" /></a> <a href="https://2012520.xyz"><img src="https://img.shields.io/badge/备用！喵~-3EA8FF?logo=macys" title="备用" /></a> <a href="https://2012521.xyz"><img src="https://img.shields.io/badge/备用域名！喵~-3EA8FF?logo=macys" title="备用域名" /></a>
+
 
 ## <img src="https://raw.githubusercontent.com/alexnaiman/alexnaiman/master/resources/bongocat.gif" width="50px" /> How to reach me: ...
 
