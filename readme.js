@@ -54,14 +54,32 @@ function renderMarkdown(markdownText) {
 			try {
 				const u = new URL(img.src, location.href);
 				if (/github-readme-stats\.vercel\.app/.test(u.host)) {
+					// 创建“加载中”占位
+					const placeholder = document.createElement("div");
+					placeholder.className = "external-img-loading";
+					placeholder.innerHTML =
+						'📊 <span data-zh="统计卡片加载中..." data-en="Loading stats card...">统计卡片加载中...</span>';
+					// 在原图前插入占位（仅第一次）
+					if (!img.__statsPlaceholderInserted) {
+						img.parentNode.insertBefore(placeholder, img);
+						img.__statsPlaceholderInserted = true;
+					}
+					// 加载成功后移除占位
+					img.addEventListener("load", () => {
+						placeholder.classList.add("fade-out");
+						setTimeout(() => placeholder.remove(), 300);
+					});
 					img.addEventListener("error", () => {
-						img.replaceWith(
-							Object.assign(document.createElement("div"), {
+						const fail = Object.assign(
+							document.createElement("div"),
+							{
 								className: "external-img-fallback",
 								innerHTML:
 									'📊 <span data-zh="统计卡片加载失败" data-en="Stats card failed">统计卡片加载失败</span>',
-							})
+							}
 						);
+						placeholder.replaceWith(fail);
+						img.remove();
 					});
 				}
 			} catch (_) {}
