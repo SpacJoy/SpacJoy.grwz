@@ -24,6 +24,51 @@ function createReadmeSkeleton() {
 }
 
 let isLoadingReadme = false;
+
+function renderMarkdown(markdownText) {
+	const lines = markdownText.split("\n");
+	const contentWithoutHeader = lines.slice(4).join("\n"); // 保持与原逻辑一致
+	marked.setOptions({
+		breaks: true,
+		gfm: true,
+		headerIds: false,
+		mangle: false,
+	});
+	let htmlContent = marked.parse(contentWithoutHeader);
+	const markdownContent = document.getElementById("markdown-content");
+	if (markdownContent) {
+		markdownContent.innerHTML = htmlContent;
+		const links = markdownContent.querySelectorAll("a");
+		links.forEach((link) => {
+			if (!link.hasAttribute("target"))
+				link.setAttribute("target", "_blank");
+		});
+		const images = markdownContent.querySelectorAll("img");
+		images.forEach((img) => {
+			if (!img.style.maxWidth) {
+				img.style.maxWidth = "100%";
+				img.style.height = "auto";
+				img.style.borderRadius = "8px";
+				img.style.margin = "10px 5px";
+			}
+			try {
+				const u = new URL(img.src, location.href);
+				if (/github-readme-stats\.vercel\.app/.test(u.host)) {
+					img.addEventListener("error", () => {
+						img.replaceWith(
+							Object.assign(document.createElement("div"), {
+								className: "external-img-fallback",
+								innerHTML:
+									'📊 <span data-zh="统计卡片加载失败" data-en="Stats card failed">统计卡片加载失败</span>',
+							})
+						);
+					});
+				}
+			} catch (_) {}
+		});
+	}
+}
+
 function loadReadmeContent() {
 	if (isLoadingReadme) return;
 	isLoadingReadme = true;
@@ -33,52 +78,7 @@ function loadReadmeContent() {
 			return r.text();
 		})
 		.then((markdownText) => {
-			const lines = markdownText.split("\n");
-			const contentWithoutHeader = lines.slice(4).join("\n");
-			marked.setOptions({
-				breaks: true,
-				gfm: true,
-				headerIds: false,
-				mangle: false,
-			});
-			let htmlContent = marked.parse(contentWithoutHeader);
-			// 不再预先过滤外部统计图片；仅在实际加载失败时替换为占位提示（保持最大兼容性）
-			const markdownContent = document.getElementById("markdown-content");
-			if (markdownContent) {
-				markdownContent.innerHTML = htmlContent;
-				const links = markdownContent.querySelectorAll("a");
-				links.forEach((link) => {
-					if (!link.hasAttribute("target"))
-						link.setAttribute("target", "_blank");
-				});
-				const images = markdownContent.querySelectorAll("img");
-				images.forEach((img) => {
-					if (!img.style.maxWidth) {
-						img.style.maxWidth = "100%";
-						img.style.height = "auto";
-						img.style.borderRadius = "8px";
-						img.style.margin = "10px 5px";
-					}
-					// 给外链图片添加失败占位
-					try {
-						const u = new URL(img.src, location.href);
-						if (/github-readme-stats\.vercel\.app/.test(u.host)) {
-							img.addEventListener("error", () => {
-								img.replaceWith(
-									Object.assign(
-										document.createElement("div"),
-										{
-											className: "external-img-fallback",
-											innerHTML:
-												'📊 <span data-zh="统计卡片加载失败" data-en="Stats card failed">统计卡片加载失败</span>',
-										}
-									)
-								);
-							});
-						}
-					} catch (_) {}
-				});
-			}
+			renderMarkdown(markdownText);
 		})
 		.catch((e) => {
 			console.error("加载 README 失败", e);
