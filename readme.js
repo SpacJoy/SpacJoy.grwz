@@ -23,7 +23,9 @@ function createReadmeSkeleton() {
 	container.dataset.filled = "1";
 }
 
-let isLoadingReadme = false;
+let isLoadingReadme = false; // 内部加载中标记
+window.isLoadingReadme = false; // 对外暴露以便其他模块判断
+window.readmeLoaded = false; // 是否已成功渲染完成
 
 function renderMarkdown(markdownText) {
 	const lines = markdownText.split("\n");
@@ -85,11 +87,15 @@ function renderMarkdown(markdownText) {
 			} catch (_) {}
 		});
 	}
+	// 成功渲染后标记
+	window.readmeLoaded = true;
 }
 
 function loadReadmeContent() {
-	if (isLoadingReadme) return;
+	if (window.readmeLoaded) return; // 已加载则直接返回
+	if (isLoadingReadme || window.isLoadingReadme) return; // 正在加载中
 	isLoadingReadme = true;
+	window.isLoadingReadme = true;
 	fetch("./README.md")
 		.then((r) => {
 			if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -104,6 +110,7 @@ function loadReadmeContent() {
 		})
 		.finally(() => {
 			isLoadingReadme = false;
+			window.isLoadingReadme = false;
 		});
 }
 

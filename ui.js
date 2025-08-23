@@ -42,8 +42,9 @@ function initializePageComplete() {
 	window.optimizeArticleLayout && window.optimizeArticleLayout();
 	window.createReadmeSkeleton && window.createReadmeSkeleton();
 	setTimeout(() => {
-		if (!window.isLoadingReadme)
+		if (!window.readmeLoaded && !window.isLoadingReadme) {
 			window.loadReadmeContent && window.loadReadmeContent();
+		}
 	}, 50);
 	window.prefetchNextBackground && window.prefetchNextBackground();
 	// 先启动 loader 隐藏逻辑，避免后续事件绑定出错阻塞
@@ -75,8 +76,11 @@ function initializePageComplete() {
 			}, 500);
 			if (window.showScrollNotification)
 				setTimeout(window.showScrollNotification, 100);
-			if (window.loadReadmeContent)
-				setTimeout(window.loadReadmeContent, 200);
+			if (window.loadReadmeContent && !window.readmeLoaded)
+				setTimeout(() => {
+					if (!window.readmeLoaded && !window.isLoadingReadme)
+						window.loadReadmeContent();
+				}, 200);
 			if (window.checkAllServerStatus)
 				setTimeout(window.checkAllServerStatus, 400);
 		}
