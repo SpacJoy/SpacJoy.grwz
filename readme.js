@@ -1,0 +1,109 @@
+// README 加载与骨架屏
+function createReadmeSkeleton() {
+	const container = document.getElementById("markdown-content");
+	if (!container || container.dataset.filled === "1") return;
+	const skeleton = document.createElement("div");
+	skeleton.className = "readme-skeleton";
+	const pattern = [
+		"long",
+		"long",
+		"mid",
+		"long",
+		"long",
+		"short",
+		"long",
+		"mid",
+		"long",
+	];
+	skeleton.innerHTML = pattern
+		.map((cls) => `<div class="line ${cls}"></div>`)
+		.join("");
+	container.innerHTML = "";
+	container.appendChild(skeleton);
+	container.dataset.filled = "1";
+}
+
+let isLoadingReadme = false;
+function loadReadmeContent() {
+	if (isLoadingReadme) return;
+	isLoadingReadme = true;
+	fetch("./README.md")
+		.then((r) => {
+			if (!r.ok) throw new Error(`HTTP ${r.status}`);
+			return r.text();
+		})
+		.then((markdownText) => {
+			const lines = markdownText.split("\n");
+			const contentWithoutHeader = lines.slice(4).join("\n");
+			marked.setOptions({
+				breaks: true,
+				gfm: true,
+				headerIds: false,
+				mangle: false,
+			});
+			const htmlContent = marked.parse(contentWithoutHeader);
+			const markdownContent = document.getElementById("markdown-content");
+			if (markdownContent) {
+				markdownContent.innerHTML = htmlContent;
+				const links = markdownContent.querySelectorAll("a");
+				links.forEach((link) => {
+					if (!link.hasAttribute("target"))
+						link.setAttribute("target", "_blank");
+				});
+				const images = markdownContent.querySelectorAll("img");
+				images.forEach((img) => {
+					if (!img.style.maxWidth) {
+						img.style.maxWidth = "100%";
+						img.style.height = "auto";
+						img.style.borderRadius = "8px";
+						img.style.margin = "10px 5px";
+					}
+				});
+			}
+		})
+		.catch((e) => {
+			console.error("加载 README 失败", e);
+			window.showReadmeError && window.showReadmeError();
+		})
+		.finally(() => {
+			isLoadingReadme = false;
+		});
+}
+
+function showReadmeError() {
+	const markdownContent = document.getElementById("markdown-content");
+	if (!markdownContent) return;
+	const errorTitle =
+		window.currentLanguage === "zh" ? "😿 加载失败" : "😿 Loading Failed";
+	const errorMsg1 =
+		window.currentLanguage === "zh"
+			? "无法加载 README.md 文件，请检查文件是否存在。"
+			: "Failed to load README.md file, please check if the file exists.";
+	const errorMsg2 =
+		window.currentLanguage === "zh"
+			? "您可以在项目根目录创建一个 README.md 文件来显示个人简介。"
+			: "You can create a README.md file in the project root directory to display your personal profile.";
+	const retryText =
+		window.currentLanguage === "zh" ? "🔄 重试加载" : "🔄 Retry Loading";
+	markdownContent.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.7);"><h2 style="color: #ff6b6b;">${errorTitle}</h2><p>${errorMsg1}</p><p>${errorMsg2}</p><button id="retry-readme-btn" class="btn" style="margin-top: 20px; display: inline-block; width: auto;">${retryText}</button></div>`;
+	setTimeout(() => {
+		const retryBtn = document.getElementById("retry-readme-btn");
+		if (retryBtn) {
+			retryBtn.addEventListener("click", function (e) {
+				e.preventDefault();
+				const loadingText =
+					window.currentLanguage === "zh"
+						? "🔄 正在重新加载个人简介..."
+						: "🔄 Reloading personal profile...";
+				markdownContent.innerHTML = `<div class="loading-readme" style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.7);"><p>${loadingText}</p></div>`;
+				setTimeout(() => {
+					loadReadmeContent();
+				}, 500);
+			});
+		}
+	}, 100);
+}
+
+window.createReadmeSkeleton = createReadmeSkeleton;
+window.loadReadmeContent = loadReadmeContent;
+window.showReadmeError = showReadmeError;
