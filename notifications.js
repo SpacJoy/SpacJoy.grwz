@@ -78,8 +78,8 @@ function showBackgroundChangeNotification() {
 	n.className = "copy-notification success";
 	n.innerHTML =
 		window.currentLanguage === "zh"
-			? "🎨 背景图已更换！"
-			: "🎨 Background changed!";
+			? "🎨 背景图已随机更换！"
+			: "🎨 Background changed randomly!";
 	mountNotification(n, true);
 	setTimeout(() => hideCopyNotification(n), 2200);
 }
