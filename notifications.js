@@ -4,8 +4,8 @@ function showCopySuccessNotification() {
 	notification.className = "copy-notification success";
 	notification.innerHTML =
 		window.currentLanguage === "zh"
-			? "✅ 服务器地址已复制到剪贴板"
-			: "✅ Server address copied to clipboard";
+			? "✅ 已复制到剪贴板"
+			: "✅ copied to clipboard";
 	document.body.appendChild(notification);
 	setTimeout(() => notification.classList.add("show"), 100);
 	setTimeout(() => hideCopyNotification(notification), 3000);
@@ -16,8 +16,8 @@ function showCopyErrorNotification() {
 	notification.className = "copy-notification error";
 	notification.innerHTML =
 		window.currentLanguage === "zh"
-			? "❌ 复制失败，请手动复制地址"
-			: "❌ Copy failed, please copy manually";
+			? "❌ 复制失败"
+			: "❌ Copy failed";
 	document.body.appendChild(notification);
 	setTimeout(() => notification.classList.add("show"), 100);
 	setTimeout(() => hideCopyNotification(notification), 5000);
@@ -53,30 +53,46 @@ function showServerCheckNotification() {
 	setTimeout(() => hideCopyNotification(notification), 3000);
 }
 
+function ensureStackContainer() {
+	let stack = document.querySelector(".notification-stack");
+	if (!stack) {
+		stack = document.createElement("div");
+		stack.className = "notification-stack";
+		document.body.appendChild(stack);
+	}
+	return stack;
+}
+
+function mountNotification(node, useStack = true) {
+	if (useStack) {
+		const stack = ensureStackContainer();
+		stack.appendChild(node);
+	} else {
+		document.body.appendChild(node);
+	}
+	requestAnimationFrame(() => node.classList.add("show"));
+}
+
 function showBackgroundChangeNotification() {
-	const notification = document.createElement("div");
-	notification.className = "copy-notification success";
-	notification.innerHTML =
+	const n = document.createElement("div");
+	n.className = "copy-notification success";
+	n.innerHTML =
 		window.currentLanguage === "zh"
 			? "🎨 背景图已更换！"
 			: "🎨 Background changed!";
-	notification.style.background = "rgba(76, 175, 80, 0.9)";
-	document.body.appendChild(notification);
-	setTimeout(() => notification.classList.add("show"), 100);
-	setTimeout(() => hideCopyNotification(notification), 2000);
+	mountNotification(n, true);
+	setTimeout(() => hideCopyNotification(n), 2200);
 }
 
 function showLanguageChangeNotification() {
-	const notification = document.createElement("div");
-	notification.className = "copy-notification success";
-	notification.innerHTML =
+	const n = document.createElement("div");
+	n.className = "copy-notification success";
+	n.innerHTML =
 		window.currentLanguage === "zh"
 			? "🌍 已切换到中文"
 			: "🌍 Switched to English";
-	notification.style.background = "rgba(33, 150, 243, 0.9)";
-	document.body.appendChild(notification);
-	setTimeout(() => notification.classList.add("show"), 100);
-	setTimeout(() => hideCopyNotification(notification), 2000);
+	mountNotification(n, true);
+	setTimeout(() => hideCopyNotification(n), 2000);
 }
 
 window.showCopySuccessNotification = showCopySuccessNotification;
@@ -148,17 +164,13 @@ function showScrollNotification() {
 	if (window.scrollNotificationShown) return;
 	window.scrollNotificationShown = true;
 	const n = document.createElement("div");
-	n.className = "copy-notification success";
-	n.style.bottom = "20px";
-	n.style.left = "50%";
-	n.style.transform = "translateX(-50%)";
+	n.className = "copy-notification scroll-tip";
 	n.innerHTML =
 		window.currentLanguage === "zh"
 			? "⬇️ 向下滚动，查看更多内容"
 			: "⬇️ Scroll down to see more";
-	document.body.appendChild(n);
-	setTimeout(() => n.classList.add("show"), 100);
-	setTimeout(() => hideCopyNotification(n), 4000);
+	mountNotification(n, false);
+	setTimeout(() => hideCopyNotification(n), 3000);
 }
 
 window.copyServerAddress = copyServerAddress;
