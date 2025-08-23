@@ -42,11 +42,7 @@ function loadReadmeContent() {
 				mangle: false,
 			});
 			let htmlContent = marked.parse(contentWithoutHeader);
-			// 过滤已知可能超时的外部统计图片（github-readme-stats.vercel.app）以减少控制台报错
-			htmlContent = htmlContent.replace(
-				/<img[^>]+github-readme-stats\.vercel\.app[^>]*>/g,
-				'<div class="external-img-fallback" style="padding:12px;margin:8px 0;border:1px dashed rgba(255,255,255,.3);border-radius:6px;font-size:14px;opacity:.85;">📊 <span data-zh="统计卡片暂不可用" data-en="Stats card unavailable">统计卡片暂不可用</span></div>'
-			);
+			// 不再预先过滤外部统计图片；仅在实际加载失败时替换为占位提示（保持最大兼容性）
 			const markdownContent = document.getElementById("markdown-content");
 			if (markdownContent) {
 				markdownContent.innerHTML = htmlContent;
