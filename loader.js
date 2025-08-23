@@ -46,6 +46,7 @@ function setupCssAnimationHide(durationMs) {
 	);
 	loaderEl.style.setProperty("--loader-duration", finalDuration + "ms");
 	loaderEl.classList.add("loader-animating");
+	console.log('[Loader] start hold animation', finalDuration+'ms');
 	let ended = false;
 
 	function doFadeOut() {
@@ -77,12 +78,32 @@ function setupCssAnimationHide(durationMs) {
 	// Fallback: some browsers might skip animationend if keyframes noop or tab hidden
 	setTimeout(() => {
 		if (!ended) {
-			console.warn(
-				"Loader animationend not fired in time, using fallback hide"
-			);
+			console.warn("[Loader] animationend not fired, fallback fade");
 			doFadeOut();
 		}
-	}, finalDuration + 500); // small buffer
+	}, finalDuration + 500); // buffer
+
+	// Reduced motion：更快结束
+	try {
+		if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			console.log('[Loader] prefers-reduced-motion detected, shorten display');
+			setTimeout(()=>{ if(!ended) doFadeOut(); }, Math.min(finalDuration, 1500));
+		}
+	} catch(_) {}
+
+	// Hard stop：绝对上限 8s 强制隐藏（包括 fade 时间）
+	setTimeout(()=>{
+		if (!ended) {
+			console.warn('[Loader] hard timeout reached, force hide');
+			ended = true;
+			loaderEl.classList.remove('loader-animating');
+			loaderEl.classList.add('loader-fade-out');
+			setTimeout(()=>{ if(loaderEl) loaderEl.style.display='none'; if(blurEl) blurEl.style.display='none'; }, 500);
+			setTimeout(window.showScrollNotification, 100);
+			setTimeout(window.loadReadmeContent, 200);
+			setTimeout(window.checkAllServerStatus, 400);
+		}
+	}, 8000);
 }
 
 window.estimateAnimationDuration = estimateAnimationDuration;
