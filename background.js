@@ -64,6 +64,19 @@ const backgroundImages = {
 	},
 };
 
+// 预取缓存
+let nextPrefetched = { layout: null, theme: null, url: null, loaded: false };
+
+function detectLayout() {
+	const w = window.innerWidth;
+	if (w <= 700) return "mobile";
+ 	if (w <= 1040) return "tablet";
+ 	return "desktop";
+}
+function detectTheme() {
+ 	return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'bright';
+}
+
 function getRandomBackground(layout, theme) {
 	const images = backgroundImages[layout] && backgroundImages[layout][theme];
 	if (!images || images.length === 0) return null;
@@ -79,29 +92,41 @@ function setBackgroundImage(imageUrl) {
 
 function prefetchNextBackground() {
 	try {
-		const layoutClass = document.body.classList.contains("mobile-layout")
-			? "mobile"
-			: document.body.classList.contains("tablet-layout")
-			? "tablet"
-			: "desktop";
-		const prefersDarkScheme =
-			window.matchMedia &&
-			window.matchMedia("(prefers-color-scheme: dark)").matches;
-		const theme = prefersDarkScheme ? "dark" : "bright";
-		const arr =
-			backgroundImages[layoutClass] &&
-			backgroundImages[layoutClass][theme];
+		const layout = detectLayout();
+		const theme = detectTheme();
+		const arr = backgroundImages[layout] && backgroundImages[layout][theme];
 		if (!arr || !arr.length) return;
 		const candidate = arr[Math.floor(Math.random() * arr.length)];
 		if (!candidate) return;
 		const img = new Image();
-		img.decoding = "async";
-		img.loading = "eager";
+		img.decoding = 'async';
+		img.loading = 'eager';
+		nextPrefetched = { layout, theme, url: candidate, loaded: false };
+		img.onload = () => { nextPrefetched.loaded = true; console.log('已预取下一张背景(缓存)', candidate); };
+		img.onerror = () => { if(nextPrefetched.url === candidate) nextPrefetched.loaded = false; };
 		img.src = candidate;
-		img.onload = () => console.log("已预取下一张背景", candidate);
 	} catch (e) {
-		console.log("预取背景失败", e);
+		console.log('预取背景失败', e);
 	}
+}
+
+function applyPrefetchedBackgroundOrRandom() {
+	const layout = detectLayout();
+	const theme = detectTheme();
+	let used = false;
+	if (nextPrefetched.url && nextPrefetched.loaded && nextPrefetched.layout === layout && nextPrefetched.theme === theme) {
+		setBackgroundImage(nextPrefetched.url);
+		console.log('使用已预取背景:', nextPrefetched.url);
+		used = true;
+	} else {
+		const randomBackground = getRandomBackground(layout, theme);
+		if (randomBackground) {
+			setBackgroundImage(randomBackground);
+			console.log('使用随机背景(未匹配预取):', randomBackground);
+		}
+	}
+	prefetchNextBackground();
+	return used;
 }
 
 function checkLayoutAndSwitchBackground(
@@ -153,3 +178,5 @@ window.getRandomBackground = getRandomBackground;
 window.setBackgroundImage = setBackgroundImage;
 window.prefetchNextBackground = prefetchNextBackground;
 window.checkLayoutAndSwitchBackground = checkLayoutAndSwitchBackground;
+window.applyPrefetchedBackgroundOrRandom = applyPrefetchedBackgroundOrRandom;
+window._getNextPrefetchedBackground = () => nextPrefetched;

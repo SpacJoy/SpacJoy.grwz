@@ -131,8 +131,15 @@ function copyServerAddress(address) {
 }
 
 function changeRandomBackground() {
-	if (window.checkLayoutAndSwitchBackground)
+	let usedPrefetch = false;
+	if (window.applyPrefetchedBackgroundOrRandom) {
+		usedPrefetch = window.applyPrefetchedBackgroundOrRandom();
+	} else if (window.checkLayoutAndSwitchBackground) {
 		window.checkLayoutAndSwitchBackground(true);
+	}
+	if (!usedPrefetch && window.checkLayoutAndSwitchBackground) {
+		window.checkLayoutAndSwitchBackground(true);
+	}
 	if (window.showBackgroundChangeNotification)
 		window.showBackgroundChangeNotification();
 }
