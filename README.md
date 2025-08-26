@@ -6,28 +6,15 @@
 <!-- 内联样式：在本站或支持 <style> 的平台生效；GitHub 会忽略 <style> 时自动降级为普通 Markdown -->
 
 <!-- 兼容 GitHub：去除 <style>，通过 HTML 结构 + 简单标签实现居中。颜色仅在支持 <font> 的渲染器显示；GitHub 会忽略颜色但保留内容。 -->
-<div align="center">
-    <h1><font color="#0088ff">Hi there 👋 this is chen6019</font></h1>
-    <p>
-        <img src="https://146019.xyz/res/loading/loading006.webp" alt="天禄辟邪玩~喵~" width="48%"> 
-        <img src="https://146019.xyz/res/loading/loading001.webp" alt="天禄和辟邪可以一起生蛋！嗷~" width="48%">
-    </p>
-    <h2><font color="#0088ff">记忆塑造灵魂，灵魂影响记忆<br/>Memory Shapes the Soul, and the Soul Affects Memory</font></h2>
-    <p>
-        <img src="https://146019.xyz/res/loading/loading014.webp" alt="粉大个！喵~" width="48%"> 
-        <img src="https://146019.xyz/res/loading/loading011.webp" alt="江江！嗷呜~" width="48%">
-    </p>
-    <p>
-        我最喜欢的角色是天禄辟邪<br/>
-        My favorite characters are Tianlu and Pixiu<br/>
-        玩米哈游的游戏、我的世界 (ID: TLBX_)<br/>
-        Playing Mihoyo games and Minecraft (ID: TLBX_)<br/>
-        喜欢折腾服务器、路由器、电脑和手机<br/>
-        Enjoy tinkering with servers, routers, computers and phones<br/>
-        一个上一（24小时）休二（48小时）的牛马打工人<br/>
-        1 day of work (24 hours) 2 days of rest (48 hours )
-    </p>
-</div>
+# <div align="center"><font color="#0088ff">Hi there 👋 this is chen6019</font></div>
+
+# <div align="center"><img src="https://146019.xyz/res/loading/loading006.webp" alt="天禄辟邪玩~喵~" width="48%"> <img src="https://146019.xyz/res/loading/loading001.webp" alt="天禄和辟邪可以一起生蛋！嗷~" width="48%"></div>
+
+## <div align="center"><font color="#0088ff">记忆塑造灵魂，灵魂影响记忆<br/>Memory Shapes the Soul, and the Soul Affects Memory</font></div>
+
+# <div align="center"><img src="https://146019.xyz/res/loading/loading014.webp" alt="粉大个！喵~" width="48%"> <img src="https://146019.xyz/res/loading/loading011.webp" alt="江江！嗷呜~" width="48%"></div>
+
+### <div align="center"><font color="#0088ff">我最喜欢的角色是天禄辟邪<br/>My favorite characters are Tianlu and Pixiu<br/>玩米哈游的游戏、我的世界 (ID: TLBX_)<br/>Playing Mihoyo games and Minecraft (ID: TLBX_)<br/>喜欢折腾服务器、路由器、电脑和手机<br/>Enjoy tinkering with servers, routers, computers and phones<br/><br/>一个上一（24小时）休二（48小时）的牛马打工人<br/>1 day of work (24 hours) 2 days of rest (48 hours )</font></div>
 
 ## <div align="center">![](https://github-readme-stats.vercel.app/api?username=chen6019&show_icons=true&hide_border=False&theme=ambient_gradient&include_all_commits=true) ![](https://github-readme-stats.vercel.app/api/top-langs/?username=chen6019&langs_count=10&layout=compact&exclude_repo=Cemiuiler,action-tmate,Aquarius223-s-sdm845-kernel)</div>
 
