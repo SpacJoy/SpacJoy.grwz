@@ -549,6 +549,21 @@
      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
  }
 
+/* README 中显式居中块（如 <div align="center">）的居中控制 */
+.markdown-content div[align="center"],
+.markdown-content .md-center-block {
+    text-align: center !important;
+    margin: 25px auto !important;
+    line-height: 1.8;
+    font-size: 1.02em;
+}
+
+/* 居中块内的换行等元素保持 inline-block 以便视觉集中 */
+.markdown-content div[align="center"] br { line-height: 1.2; }
+
+/* 居中块内的链接与文本不继承左对齐覆盖 */
+.markdown-content div[align="center"] p { text-align: center !important; }
+
  .markdown-content a {
      color: rgba(0, 136, 255, 0.9) !important;
      text-decoration: none;
