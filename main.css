@@ -630,6 +630,16 @@ header h1 img:hover {
     word-wrap: break-word;
     overflow-wrap: break-word;
     box-sizing: border-box;
+    margin-left: auto; /* 水平居中容器 */
+    margin-right: auto;
+    /* 可选：设置一个合理的最大宽度，避免超宽导致视觉不平衡 */
+    max-width: 980px;
+}
+
+/* 覆盖全局 h1/h2 在 README (markdown-content) 中的左侧 padding，防止整体视觉右偏 */
+.markdown-content h1, .markdown-content h2 {
+    padding-left: 0 !important; /* 去掉全局 10% / 2% 左内边距 */
+    text-align: center; /* README 语义上要求标题居中 */
 }
 
 /* Markdown内容样式 */
