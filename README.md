@@ -3,9 +3,6 @@
 
 #### 纯内网：[内网](http://192.168.100.1:5244)
 
-<!-- 内联样式：在本站或支持 <style> 的平台生效；GitHub 会忽略 <style> 时自动降级为普通 Markdown -->
-
-<!-- 兼容 GitHub：去除 <style>，通过 HTML 结构 + 简单标签实现居中。颜色仅在支持 <font> 的渲染器显示；GitHub 会忽略颜色但保留内容。 -->
 # <div align="center"><font color="#0088ff">Hi there 👋 this is chen6019</font></div>
 
 # <div align="center"><img src="https://146019.xyz/res/loading/loading006.webp" alt="天禄辟邪玩~喵~" width="48%"> <img src="https://146019.xyz/res/loading/loading001.webp" alt="天禄和辟邪可以一起生蛋！嗷~" width="48%"></div>
