@@ -15,13 +15,17 @@
 <div align="center">
 
 我最喜欢的角色是天禄辟邪
+
 My favorite characters are Tianlu and Pixiu<br/>
 玩米哈游的游戏、我的世界 (ID: TLBX_)
+
 Playing Mihoyo games and Minecraft (ID: TLBX_)<br/>
 喜欢折腾服务器、路由器、电脑和手机
+
 Enjoy tinkering with servers, routers, computers and phones<br/>
 一个上一（24小时）休二（48小时）的牛马打工人
-1 day of work (24 hours) 2 days of rest (48 hours )
+
+1 day of work (24 hours) 2 days of rest (48 hours )<br/>
 
 </div>
 
