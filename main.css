@@ -122,7 +122,8 @@ main {
     flex-wrap: wrap;
     justify-content: center;
     align-content: flex-start;
-    gap: 20px; /* 基础间距 */
+    --main-gap: 20px; /* 统一管理主容器间距变量 */
+    gap: var(--main-gap); /* 基础间距 */
     z-index: 2;
     max-width: 1400px; /* 限制最大宽度 */
     margin: 0 auto; /* 居中显示 */
@@ -132,7 +133,8 @@ main {
 /* 中等屏幕下的Flexbox处理 */
 @media (min-width: 1041px) and (max-width: 1199px) {
     main {
-        gap: 25px; /* 中等屏幕适中间距 */
+    --main-gap: 25px;
+    gap: var(--main-gap); /* 中等屏幕适中间距 */
     }
 }
 
@@ -150,7 +152,8 @@ main {
     main {
         padding: 15px;
         margin: 15px;
-        gap: 22px;
+    --main-gap: 22px;
+    gap: var(--main-gap);
         min-height: calc(100vh - 120px);
     }
     
@@ -578,10 +581,11 @@ header h1 img:hover {
 /* Markdown显示区域样式 */
 .markdown-display-section {
     width: 100%;
-    margin: 30px 0;
+    margin: 30px auto; /* 左右自动，尽量对称 */
     padding: 25px;
     background-color: rgba(255, 255, 255, 0.389);
-    border-radius: 20px;    backdrop-filter: blur(20px); /* 从16px增加到20px，进一步提高模糊度 */
+    border-radius: 20px;
+    backdrop-filter: blur(20px); /* 从16px增加到20px，进一步提高模糊度 */
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.15),
         0 4px 16px rgba(0, 0, 0, 0.1),
@@ -595,6 +599,15 @@ header h1 img:hover {
     max-width: 100%;
     box-sizing: border-box;
     overflow: hidden;
+}
+
+/* 当与其它卡片并排（桌面宽屏多列）时，补偿第一个项目左侧 gap 造成的视觉偏移 */
+@media (min-width: 1200px) {
+    .markdown-display-section {
+        /* 让容器内部内容相对父 flex gap 居中 */
+        margin-left: calc(var(--main-gap) / 2);
+        margin-right: calc(var(--main-gap) / 2);
+    }
 }
 
 /* Markdown显示区域玻璃光泽效果 */
@@ -891,6 +904,8 @@ header h1 img:hover {
             margin: 20px 0; /* 调整上下间距 */
             width: 100%; /* 确保全宽 */
             box-sizing: border-box;
+            margin-left: 0; /* 移除宽屏补偿 */
+            margin-right: 0;
         }
     }
     
