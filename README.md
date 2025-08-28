@@ -3,7 +3,7 @@
 
 #### 纯内网：[内网](http://192.168.100.1:5244)
 
-# <div align="center"><font color="#0088ff">Hi there 👋 this is chen6019</font></div>
+# <div align="center">Hi there 👋 this is chen6019</div>
 
 # <div align="center"><img src="https://146019.xyz/res/loading/loading006.webp" alt="天禄辟邪玩~喵~" width="48%"> <img src="https://146019.xyz/res/loading/loading001.webp" alt="天禄和辟邪可以一起生蛋！嗷~" width="48%"></div>
 
