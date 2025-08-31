@@ -1,12 +1,8 @@
 // Loader management (loading image + CSS animation hide)
 (function initLoadingImage() {
-	const RES_BASE = (window.RES_BASE_OVERRIDE || "https://ysy.146019.xyz/res/")
-		.replace(/\/+/g, "/")
-		.replace(/([^:])\/\/+/, "$1/");
-	const buildRes = (p) =>
-		RES_BASE.replace(/\/$/, "/") + p.replace(/^res\//, "");
-	const sources = Array.from({ length: 22 }, (_, i) =>
-		buildRes(`loading/loading${String(i + 1).padStart(3, "0")}.webp`)
+	const sources = Array.from(
+		{ length: 22 },
+		(_, i) => `res/loading/loading${String(i + 1).padStart(3, "0")}.webp`
 	);
 	const pick = sources[Math.floor(Math.random() * sources.length)];
 	const imgEl = document.getElementById("loading-gif");

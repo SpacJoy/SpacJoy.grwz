@@ -1,72 +1,64 @@
-// 资源基路径（优先使用对象 RES_BASE_OVERRIDE，可根据环境动态覆盖）
-const RES_BASE = (window.RES_BASE_OVERRIDE || "https://ysy.146019.xyz/res/")
-	.replace(/\/+/g, "/")
-	.replace(/([^:])\/\/+/, "$1/");
-function buildRes(path) {
-	// 允许传入已含 res/ 前缀或子目录
-	return RES_BASE.replace(/\/$/, "/") + path.replace(/^res\//, "");
-}
-
 // 背景图管理
 const backgroundImages = {
 	desktop: {
 		bright: [
-			...Array.from({ length: 21 }, (_, i) =>
-				buildRes(
-					`bright_back/bright_back${String(i + 1).padStart(
+			...Array.from(
+				{ length: 21 },
+				(_, i) =>
+					`res/bright_back/bright_back${String(i + 1).padStart(
 						3,
 						"0"
 					)}.webp`
-				)
 			),
 		],
 		dark: [
-			...Array.from({ length: 8 }, (_, i) =>
-				buildRes(
-					`dark_back/dark_back${String(i + 1).padStart(3, "0")}.webp`
-				)
+			...Array.from(
+				{ length: 8 },
+				(_, i) =>
+					`res/dark_back/dark_back${String(i + 1).padStart(
+						3,
+						"0"
+					)}.webp`
 			),
 		],
 	},
 	tablet: {
 		bright: [
-			...Array.from({ length: 21 }, (_, i) =>
-				buildRes(
-					`mobile_bright_back/mobile_bright_back${String(
+			...Array.from(
+				{ length: 21 },
+				(_, i) =>
+					`res/mobile_bright_back/mobile_bright_back${String(
 						i + 1
 					).padStart(3, "0")}.webp`
-				)
 			),
 		],
 		dark: [
-			...Array.from({ length: 11 }, (_, i) =>
-				buildRes(
-					`mobile_dark_back/mobile_dark_back${String(i + 1).padStart(
-						3,
-						"0"
-					)}.webp`
-				)
+			...Array.from(
+				{ length: 11 },
+				(_, i) =>
+					`res/mobile_dark_back/mobile_dark_back${String(
+						i + 1
+					).padStart(3, "0")}.webp`
 			),
 		],
 	},
 	mobile: {
 		bright: [
-			...Array.from({ length: 29 }, (_, i) =>
-				buildRes(
-					`mobile_bright_back/mobile_bright_back${String(
+			...Array.from(
+				{ length: 29 },
+				(_, i) =>
+					`res/mobile_bright_back/mobile_bright_back${String(
 						i + 1
 					).padStart(3, "0")}.webp`
-				)
 			),
 		],
 		dark: [
-			...Array.from({ length: 11 }, (_, i) =>
-				buildRes(
-					`mobile_dark_back/mobile_dark_back${String(i + 1).padStart(
-						3,
-						"0"
-					)}.webp`
-				)
+			...Array.from(
+				{ length: 11 },
+				(_, i) =>
+					`res/mobile_dark_back/mobile_dark_back${String(
+						i + 1
+					).padStart(3, "0")}.webp`
 			),
 		],
 	},
@@ -78,14 +70,11 @@ let nextPrefetched = { layout: null, theme: null, url: null, loaded: false };
 function detectLayout() {
 	const w = window.innerWidth;
 	if (w <= 700) return "mobile";
-	if (w <= 1040) return "tablet";
-	return "desktop";
+ 	if (w <= 1040) return "tablet";
+ 	return "desktop";
 }
 function detectTheme() {
-	return window.matchMedia &&
-		window.matchMedia("(prefers-color-scheme: dark)").matches
-		? "dark"
-		: "bright";
+ 	return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'bright';
 }
 
 function getRandomBackground(layout, theme) {
@@ -110,19 +99,14 @@ function prefetchNextBackground() {
 		const candidate = arr[Math.floor(Math.random() * arr.length)];
 		if (!candidate) return;
 		const img = new Image();
-		img.decoding = "async";
-		img.loading = "eager";
+		img.decoding = 'async';
+		img.loading = 'eager';
 		nextPrefetched = { layout, theme, url: candidate, loaded: false };
-		img.onload = () => {
-			nextPrefetched.loaded = true;
-			console.log("已预取下一张背景(缓存)", candidate);
-		};
-		img.onerror = () => {
-			if (nextPrefetched.url === candidate) nextPrefetched.loaded = false;
-		};
+		img.onload = () => { nextPrefetched.loaded = true; console.log('已预取下一张背景(缓存)', candidate); };
+		img.onerror = () => { if(nextPrefetched.url === candidate) nextPrefetched.loaded = false; };
 		img.src = candidate;
 	} catch (e) {
-		console.log("预取背景失败", e);
+		console.log('预取背景失败', e);
 	}
 }
 
@@ -130,20 +114,15 @@ function applyPrefetchedBackgroundOrRandom() {
 	const layout = detectLayout();
 	const theme = detectTheme();
 	let used = false;
-	if (
-		nextPrefetched.url &&
-		nextPrefetched.loaded &&
-		nextPrefetched.layout === layout &&
-		nextPrefetched.theme === theme
-	) {
+	if (nextPrefetched.url && nextPrefetched.loaded && nextPrefetched.layout === layout && nextPrefetched.theme === theme) {
 		setBackgroundImage(nextPrefetched.url);
-		console.log("使用已预取背景:", nextPrefetched.url);
+		console.log('使用已预取背景:', nextPrefetched.url);
 		used = true;
 	} else {
 		const randomBackground = getRandomBackground(layout, theme);
 		if (randomBackground) {
 			setBackgroundImage(randomBackground);
-			console.log("使用随机背景(未匹配预取):", randomBackground);
+			console.log('使用随机背景(未匹配预取):', randomBackground);
 		}
 	}
 	prefetchNextBackground();
