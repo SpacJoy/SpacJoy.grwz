@@ -77,7 +77,7 @@ function renderMarkdown(markdownText) {
 							{
 								className: "external-img-fallback",
 								innerHTML:
-									'📊 <span data-zh="统计卡片加载失败" data-en="Stats card failed">统计卡片加载失败</span>',
+									'📊 <span data-zh="与Github失去链接，统计卡片加载失败" data-en="Stats card failed">与Github失去链接，统计卡片加载失败</span>',
 							}
 						);
 						placeholder.replaceWith(fail);
