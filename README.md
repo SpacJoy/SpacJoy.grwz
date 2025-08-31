@@ -5,11 +5,11 @@
 
 # <div align="center">Hi there 👋 this is chen6019</div>
 
-# <div align="center"><img src="https://146019.xyz/res/loading/loading006.webp" alt="天禄辟邪玩~喵~" width="48%"> <img src="https://146019.xyz/res/loading/loading001.webp" alt="天禄和辟邪可以一起生蛋！嗷~" width="48%"></div>
+# <div align="center"><img src="https://ysy.146019.xyz/res/loading/loading006.webp" alt="天禄辟邪玩~喵~" width="48%"> <img src="https://ysy.146019.xyz/res/loading/loading001.webp" alt="天禄和辟邪可以一起生蛋！嗷~" width="48%"></div>
 
 ## <div align="center">记忆塑造灵魂，灵魂影响记忆<br/>Memory Shapes the Soul, and the Soul Affects Memory</div>
 
-# <div align="center"><img src="https://146019.xyz/res/loading/loading014.webp" alt="粉大个！喵~" width="48%"> <img src="https://146019.xyz/res/loading/loading011.webp" alt="江江！嗷呜~" width="48%"></div>
+# <div align="center"><img src="https://ysy.146019.xyz/res/loading/loading014.webp" alt="粉大个！喵~" width="48%"> <img src="https://ysy.146019.xyz/res/loading/loading011.webp" alt="江江！嗷呜~" width="48%"></div>
 
 ### <div align="center">我最喜欢的角色是天禄辟邪<br/>My favorite characters are Tianlu and Pixiu<br/>玩米哈游的游戏、我的世界 (ID: TLBX_)<br/>Playing Mihoyo games and Minecraft (ID: TLBX_)<br/>喜欢折腾服务器、路由器、电脑和手机<br/>Enjoy tinkering with servers, routers, computers and phones<br/><br/>一个上一（24小时）休二（48小时）的牛马打工人<br/>1 day of work (24 hours) 2 days of rest (48 hours )</div>
 
@@ -25,7 +25,7 @@
 
 # <div align="center">🔗 Services</div>
 
-# <div align="center"><img src="https://146019.xyz/res/loading/loading004.webp" alt="转圈圈~喵~" style="width:25%; height:auto;"></div>
+# <div align="center"><img src="https://ysy.146019.xyz/res/loading/loading004.webp" alt="转圈圈~喵~" style="width:25%; height:auto;"></div>
 ## <div align="center"><a href="https://146019.xyz"><img src="https://img.shields.io/badge/嗷呜~-3EA8FF?logo=macys" title="主" /></a> <a href="https://2012520.xyz"><img src="https://img.shields.io/badge/备用！喵~-3EA8FF?logo=macys" title="备用" /></a> <a href="https://2012521.xyz"><img src="https://img.shields.io/badge/备用域名！喵~-3EA8FF?logo=macys" title="备用域名" /></a></div>
 
 
