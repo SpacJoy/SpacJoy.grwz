@@ -1,32 +1,47 @@
 // Loader management (loading image + CSS animation hide)
 (function initLoadingImage() {
+	const RANDOM_ENDPOINT = "https://random.ysy.146019.xyz/res/loading"; // 后端随机返回 loading 目录下任意一张图
 	const RES_BASE = (window.RES_BASE_OVERRIDE || "https://ysy.146019.xyz/res/")
 		.replace(/\/+/g, "/")
 		.replace(/([^:])\/\/+/, "$1/");
 	const buildRes = (p) =>
 		RES_BASE.replace(/\/$/, "/") + p.replace(/^res\//, "");
-	const sources = Array.from({ length: 22 }, (_, i) =>
+	const fallbackSources = Array.from({ length: 22 }, (_, i) =>
 		buildRes(`loading/loading${String(i + 1).padStart(3, "0")}.webp`)
 	);
-	const pick = sources[Math.floor(Math.random() * sources.length)];
 	const imgEl = document.getElementById("loading-gif");
 	if (!imgEl) return;
-	imgEl.src = pick;
-	imgEl.removeAttribute("width");
-	imgEl.removeAttribute("height");
-	imgEl.style.width = "";
-	imgEl.style.height = "";
-	imgEl.style.maxWidth = "60vmin";
-	imgEl.style.maxHeight = "60vmin";
-	imgEl.style.objectFit = "contain";
-	imgEl.style.aspectRatio = "auto";
+
+	function applyCommonStyle() {
+		imgEl.removeAttribute("width");
+		imgEl.removeAttribute("height");
+		imgEl.style.width = "";
+		imgEl.style.height = "";
+		imgEl.style.maxWidth = "60vmin";
+		imgEl.style.maxHeight = "60vmin";
+		imgEl.style.objectFit = "contain";
+		imgEl.style.aspectRatio = "auto";
+	}
+
+	function pickFallback() {
+		const alt =
+			fallbackSources[Math.floor(Math.random() * fallbackSources.length)];
+		console.warn("[Loader] 随机接口失败，使用本地枚举 fallback:", alt);
+		imgEl.onerror = null; // 避免循环
+		imgEl.src = alt + "?t=" + Date.now();
+	}
+
 	imgEl.onload = () => {
 		console.log(
 			"Loading image loaded:",
-			pick,
+			imgEl.src,
 			imgEl.naturalWidth + "x" + imgEl.naturalHeight
 		);
 	};
+	imgEl.onerror = () => pickFallback();
+	applyCommonStyle();
+	// 加随机查询参数防缓存（某些 CDN 可能仍合并，可根据需要改成 cache-control 配置）
+	imgEl.src = RANDOM_ENDPOINT + "?t=" + Date.now();
 })();
 
 function estimateAnimationDuration(src) {
@@ -50,7 +65,7 @@ function setupCssAnimationHide(durationMs) {
 	);
 	loaderEl.style.setProperty("--loader-duration", finalDuration + "ms");
 	loaderEl.classList.add("loader-animating");
-	console.log('[Loader] start hold animation', finalDuration+'ms');
+	console.log("[Loader] start hold animation", finalDuration + "ms");
 	let ended = false;
 
 	function doFadeOut() {
@@ -89,20 +104,30 @@ function setupCssAnimationHide(durationMs) {
 
 	// Reduced motion：更快结束
 	try {
-		if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-			console.log('[Loader] prefers-reduced-motion detected, shorten display');
-			setTimeout(()=>{ if(!ended) doFadeOut(); }, Math.min(finalDuration, 1500));
+		if (
+			window.matchMedia &&
+			window.matchMedia("(prefers-reduced-motion: reduce)").matches
+		) {
+			console.log(
+				"[Loader] prefers-reduced-motion detected, shorten display"
+			);
+			setTimeout(() => {
+				if (!ended) doFadeOut();
+			}, Math.min(finalDuration, 1500));
 		}
-	} catch(_) {}
+	} catch (_) {}
 
 	// Hard stop：绝对上限 8s 强制隐藏（包括 fade 时间）
-	setTimeout(()=>{
+	setTimeout(() => {
 		if (!ended) {
-			console.warn('[Loader] hard timeout reached, force hide');
+			console.warn("[Loader] hard timeout reached, force hide");
 			ended = true;
-			loaderEl.classList.remove('loader-animating');
-			loaderEl.classList.add('loader-fade-out');
-			setTimeout(()=>{ if(loaderEl) loaderEl.style.display='none'; if(blurEl) blurEl.style.display='none'; }, 500);
+			loaderEl.classList.remove("loader-animating");
+			loaderEl.classList.add("loader-fade-out");
+			setTimeout(() => {
+				if (loaderEl) loaderEl.style.display = "none";
+				if (blurEl) blurEl.style.display = "none";
+			}, 500);
 			setTimeout(window.showScrollNotification, 100);
 			setTimeout(window.loadReadmeContent, 200);
 			setTimeout(window.checkAllServerStatus, 400);
