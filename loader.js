@@ -6,9 +6,9 @@
 		.replace(/([^:])\/\/+/, "$1/");
 	const buildRes = (p) =>
 		RES_BASE.replace(/\/$/, "/") + p.replace(/^res\//, "");
-	const fallbackSources = Array.from({ length: 22 }, (_, i) =>
-		buildRes(`loading/loading${String(i + 1).padStart(3, "0")}.webp`)
-	);
+	const fallbackSources = Array.from({ length: 24 }, (_, i) =>
+        buildRes(`loading/loading_${String(i + 1).padStart(3, "0")}.webp`)
+    );
 	const imgEl = document.getElementById("loading-gif");
 	if (!imgEl) return;
 
