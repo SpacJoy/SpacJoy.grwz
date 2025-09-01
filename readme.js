@@ -96,7 +96,7 @@ function loadReadmeContent() {
 	if (isLoadingReadme || window.isLoadingReadme) return; // 正在加载中
 	isLoadingReadme = true;
 	window.isLoadingReadme = true;
-	fetch("./README.md")
+	fetch("README.md")
 		.then((r) => {
 			if (!r.ok) throw new Error(`HTTP ${r.status}`);
 			return r.text();
