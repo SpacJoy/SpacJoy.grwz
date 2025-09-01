@@ -19,6 +19,13 @@ function applyLanguage(lang) {
 		if (zhText && enText)
 			element.textContent = lang === "zh" ? zhText : enText;
 	});
+	// 按钮 title 多语言
+	const bgBtn = document.getElementById("bg-toggle");
+	if (bgBtn) {
+		const zhT = bgBtn.getAttribute("data-zh-title");
+		const enT = bgBtn.getAttribute("data-en-title");
+		if (zhT && enT) bgBtn.title = lang === "zh" ? zhT : enT;
+	}
 	const titleTag = document.querySelector("title");
 	if (titleTag) {
 		const zhTitle = titleTag.getAttribute("data-zh");

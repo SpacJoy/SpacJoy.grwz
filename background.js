@@ -98,6 +98,9 @@ function detectLayout() {
 	return "desktop";
 }
 function detectTheme() {
+	if (window.currentTheme) {
+		return window.currentTheme === "dark" ? "dark" : "bright";
+	}
 	return window.matchMedia &&
 		window.matchMedia("(prefers-color-scheme: dark)").matches
 		? "dark"
