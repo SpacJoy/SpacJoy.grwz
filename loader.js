@@ -1,56 +1,58 @@
 // Loader management (loading image + CSS animation hide)
 (function initLoadingImage() {
-	const RANDOM_ENDPOINT = "https://random.ysy.146019.xyz/res/loading"; // 后端随机返回 loading 目录下任意一张图
-	const RES_BASE = (window.RES_BASE_OVERRIDE || "https://ysy.146019.xyz/res/")
-		.replace(/\/+/g, "/")
-		.replace(/([^:])\/\/+/, "$1/");
-	const buildRes = (p) =>
-		RES_BASE.replace(/\/$/, "/") + p.replace(/^res\//, "");
-	const fallbackSources = Array.from({ length: 24 }, (_, i) =>
-        buildRes(`loading/loading_${String(i + 1).padStart(3, "0")}.webp`)
-    );
-	const imgEl = document.getElementById("loading-gif");
-	if (!imgEl) return;
+    const RANDOM_ENDPOINT = "https://random.ysy.146019.xyz/res/loading"; // 服务器返回随机 loading 图片
+    const imgEl = document.getElementById("loading-gif");
+    if (!imgEl) return;
 
-	function applyCommonStyle() {
-		imgEl.removeAttribute("width");
-		imgEl.removeAttribute("height");
-		imgEl.style.width = "";
-		imgEl.style.height = "";
-		imgEl.style.maxWidth = "60vmin";
-		imgEl.style.maxHeight = "60vmin";
-		imgEl.style.objectFit = "contain";
-		imgEl.style.aspectRatio = "auto";
-	}
+    function applyCommonStyle() {
+        imgEl.removeAttribute("width");
+        imgEl.removeAttribute("height");
+        imgEl.style.width = "";
+        imgEl.style.height = "";
+        imgEl.style.maxWidth = "60vmin";
+        imgEl.style.maxHeight = "60vmin";
+        imgEl.style.objectFit = "contain";
+        imgEl.style.aspectRatio = "auto";
+    }
 
-	function pickFallback() {
-		const alt =
-			fallbackSources[Math.floor(Math.random() * fallbackSources.length)];
-		console.warn("[Loader] 随机接口失败，使用本地枚举 fallback:", alt);
-		imgEl.onerror = null; // 避免循环
-		imgEl.src = alt + "?t=" + Date.now();
-	}
+    let retryCount = 0;
+    const MAX_RETRIES = 3;
 
-	imgEl.onload = () => {
-		console.log(
-			"Loading image loaded:",
-			imgEl.src,
-			imgEl.naturalWidth + "x" + imgEl.naturalHeight
-		);
-	};
-	imgEl.onerror = () => pickFallback();
-	applyCommonStyle();
-	// 加随机查询参数防缓存（某些 CDN 可能仍合并，可根据需要改成 cache-control 配置）
-	imgEl.src = RANDOM_ENDPOINT + "?t=" + Date.now();
+    function loadRandom() {
+        imgEl.src = `${RANDOM_ENDPOINT}?t=${Date.now()}_${Math.random()
+            .toString(36)
+            .slice(2)}`;
+    }
+
+    imgEl.onload = () => {
+        console.log(
+            "[Loader] image loaded:",
+            imgEl.src,
+            imgEl.naturalWidth + "x" + imgEl.naturalHeight
+        );
+    };
+    imgEl.onerror = () => {
+        retryCount++;
+        if (retryCount > MAX_RETRIES) {
+            console.error("[Loader] 随机接口连续失败，放弃重试");
+            imgEl.onerror = null;
+            imgEl.alt = "(loading)";
+            return;
+        }
+        const delay = 200 * retryCount; // 简单线性退避
+        console.warn(
+            `[Loader] 加载失败，重试 ${retryCount}/${MAX_RETRIES}，${delay}ms 后`
+        );
+        setTimeout(loadRandom, delay);
+    };
+
+    applyCommonStyle();
+    loadRandom();
 })();
 
 function estimateAnimationDuration(src) {
-	const base = src.match(/loading(\d{3})/);
-	if (base) {
-		const id = parseInt(base[1], 10);
-		return 2200 + (id / 30) * 1200;
-	}
-	return 2500;
+    // 由于改为纯随机接口，无法再依据文件编号估算，统一返回基准值
+    return 2500;
 }
 
 function setupCssAnimationHide(durationMs) {
