@@ -193,6 +193,17 @@ function prefetchNextBackground() {
         if (queue.length < PREFETCH_TARGET && !prefetchingNow) {
             _prefetchOne();
         }
+
+        // 如果可用预取数量不足，加速补充
+        const loadedCount = queue.filter((e) => e.loaded).length;
+        if (
+            loadedCount < 1 &&
+            !prefetchingNow &&
+            queue.length < PREFETCH_TARGET
+        ) {
+            console.log("[Background] 紧急补充预取，当前可用:", loadedCount);
+            setTimeout(() => _prefetchOne(), 50); // 快速补充
+        }
     } catch (e) {
         console.warn("预取出错", e);
     }
@@ -215,6 +226,17 @@ function applyPrefetchedBackgroundOrRandom() {
 
 function crossfadeToPrefetched() {
     ensureContainer();
+
+    // 检查可用的预取图片数量
+    const loadedCount = queue.filter((e) => e.loaded).length;
+
+    // 如果可用预取少于2张，提示预取中（避免用完最后一张时白屏）
+    if (loadedCount < 2) {
+        console.log("[Background] 预取队列不足，剩余可用:", loadedCount);
+        prefetchNextBackground(); // 尝试补充
+        return false; // 返回 false 触发 "预取中" 提示
+    }
+
     // 找一个已加载的（优先匹配当前布局+主题）
     const layout = detectLayout();
     const theme = detectTheme();
@@ -222,11 +244,13 @@ function crossfadeToPrefetched() {
         (e) => e.loaded && e.layout === layout && e.theme === theme
     );
     if (idx === -1) idx = queue.findIndex((e) => e.loaded);
+
     if (idx === -1) {
         console.log("[Background] 没有可切换的预取，补充中");
         prefetchNextBackground();
         return false;
     }
+
     const entry = queue[idx];
     activateLayer(entry.layer, entry.url);
     queue.splice(idx, 1);
@@ -250,3 +274,8 @@ window.crossfadeToPrefetched = crossfadeToPrefetched;
 window._getNextPrefetchedBackground = () => queue.slice();
 window.loadFirstBackground = loadFirstBackground;
 window.checkCanStartPrefetch = checkCanStartPrefetch;
+window.getPrefetchStatus = () => ({
+    total: queue.length,
+    loaded: queue.filter((e) => e.loaded).length,
+    prefetching: prefetchingNow,
+});
