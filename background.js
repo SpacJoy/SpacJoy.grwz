@@ -61,6 +61,7 @@ function setBackgroundImage(imageUrl) {
         console.log("[Background] 开始加载背景:", imageUrl);
         document.body.style.backgroundImage = `url('${imageUrl}')`;
         console.log("背景图已设置为:", imageUrl);
+		window._backgroundLoadedOnce = true;
     }
 }
 

@@ -34,6 +34,23 @@
     const loadUrl = RANDOM_ENDPOINT + "?t=" + Date.now();
     console.log("[Loader] 开始加载 loading 图:", loadUrl);
     imgEl.src = loadUrl;
+
+    // 提前触发背景图加载（若函数已定义）
+    try {
+        if (window.applyPrefetchedBackgroundOrRandom) {
+            console.log(
+                "[Loader] 触发背景图初次加载 (applyPrefetchedBackgroundOrRandom)"
+            );
+            window.applyPrefetchedBackgroundOrRandom();
+        } else if (window.checkLayoutAndSwitchBackground) {
+            console.log(
+                "[Loader] 触发背景图初次加载 (checkLayoutAndSwitchBackground)"
+            );
+            window.checkLayoutAndSwitchBackground(true);
+        }
+    } catch (e) {
+        console.warn("[Loader] 提前加载背景失败", e);
+    }
 })();
 
 function estimateAnimationDuration(src) {
