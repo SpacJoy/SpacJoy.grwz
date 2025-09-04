@@ -147,17 +147,18 @@ function copyServerAddress(address) {
 }
 
 function changeRandomBackground() {
-	let usedPrefetch = false;
-	if (window.applyPrefetchedBackgroundOrRandom) {
-		usedPrefetch = window.applyPrefetchedBackgroundOrRandom();
-	} else if (window.checkLayoutAndSwitchBackground) {
-		window.checkLayoutAndSwitchBackground(true);
-	}
-	if (!usedPrefetch && window.checkLayoutAndSwitchBackground) {
-		window.checkLayoutAndSwitchBackground(true);
-	}
-	if (window.showBackgroundChangeNotification)
-		window.showBackgroundChangeNotification();
+	let ok = false;
+    if (window.crossfadeToPrefetched) {
+        ok = window.crossfadeToPrefetched();
+    } else if (window.applyPrefetchedBackgroundOrRandom) {
+        ok = window.applyPrefetchedBackgroundOrRandom();
+    } else if (window.checkLayoutAndSwitchBackground) {
+        window.checkLayoutAndSwitchBackground(true);
+        ok = true;
+    }
+    if (ok && window.showBackgroundChangeNotification) {
+        window.showBackgroundChangeNotification();
+    }
 }
 
 function showScrollNotification() {
