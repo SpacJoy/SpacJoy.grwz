@@ -1,4 +1,53 @@
 // Loader management (loading image + CSS animation hide)
+// 全局加载状态
+window.loadingStates = {
+    loadingImageReady: false,
+    firstBackgroundLoaded: false,
+    readmeLoaded: false
+};
+
+// 检查是否可以隐藏 Loading
+function checkCanHideLoader() {
+    const states = window.loadingStates;
+    // README 或首张背景图任一加载完成即可隐藏
+    if (states.loadingImageReady && (states.firstBackgroundLoaded || states.readmeLoaded)) {
+        console.log("[Loader] 条件满足，开始隐藏 Loading");
+        hideLoader();
+        return true;
+    }
+    return false;
+}
+
+// 隐藏 Loading 的函数
+function hideLoader() {
+    if (window.loaderHidden) return;
+    window.loaderHidden = true;
+    
+    const loaderEl = document.querySelector(".loader");
+    const blurEl = document.querySelector(".blur-effect");
+    if (!loaderEl) return;
+    
+    loaderEl.classList.add("loader-fade-out");
+    loaderEl.addEventListener("animationend", () => {
+        if (loaderEl) loaderEl.style.display = "none";
+        if (blurEl) blurEl.style.display = "none";
+        setTimeout(() => {
+            if (window.showScrollNotification) window.showScrollNotification();
+            if (window.checkAllServerStatus) window.checkAllServerStatus();
+        }, 100);
+        console.log("Loader hidden");
+    }, { once: true });
+}
+
+// 设置状态并检查隐藏条件
+function setLoadingState(key, value) {
+    window.loadingStates[key] = value;
+    console.log(`[Loader] ${key} = ${value}`, window.loadingStates);
+    checkCanHideLoader();
+}
+
+window.setLoadingState = setLoadingState;
+window.checkCanHideLoader = checkCanHideLoader;
 (function initLoadingImage() {
     // 仅使用随机接口；不再进行本地（枚举）回退
     const RANDOM_ENDPOINT = "https://random.ysy.146019.xyz/res/loading";
@@ -22,6 +71,21 @@
             imgEl.src,
             imgEl.naturalWidth + "x" + imgEl.naturalHeight
         );
+        
+        setLoadingState('loadingImageReady', true);
+        
+        // Loading图加载完后，开始加载首张背景图和README
+        setTimeout(() => {
+            console.log("[Loader] Loading图加载完成，开始加载首张背景图和README");
+            
+            // 同时启动背景图和README加载
+            if (window.loadFirstBackground) {
+                window.loadFirstBackground();
+            }
+            if (window.loadReadmeContent) {
+                window.loadReadmeContent();
+            }
+        }, 50);
     };
     imgEl.onerror = () => {
         console.warn(
@@ -34,23 +98,6 @@
     const loadUrl = RANDOM_ENDPOINT + "?t=" + Date.now();
     console.log("[Loader] 开始加载 loading 图:", loadUrl);
     imgEl.src = loadUrl;
-
-    // 提前触发背景图加载（若函数已定义）
-    try {
-        if (window.applyPrefetchedBackgroundOrRandom) {
-            console.log(
-                "[Loader] 触发背景图初次加载 (applyPrefetchedBackgroundOrRandom)"
-            );
-            window.applyPrefetchedBackgroundOrRandom();
-        } else if (window.checkLayoutAndSwitchBackground) {
-            console.log(
-                "[Loader] 触发背景图初次加载 (checkLayoutAndSwitchBackground)"
-            );
-            window.checkLayoutAndSwitchBackground(true);
-        }
-    } catch (e) {
-        console.warn("[Loader] 提前加载背景失败", e);
-    }
 })();
 
 function estimateAnimationDuration(src) {
@@ -62,86 +109,10 @@ function estimateAnimationDuration(src) {
 	return 2500;
 }
 
+// 保留这个函数供兼容，但现在使用新的状态管理逻辑
 function setupCssAnimationHide(durationMs) {
-	const loaderEl = document.querySelector(".loader");
-	const blurEl = document.querySelector(".blur-effect");
-	if (!loaderEl) return;
-	const MIN_SHOW = 1200,
-		MAX_SHOW = 4500;
-	const finalDuration = Math.min(
-		MAX_SHOW,
-		Math.max(MIN_SHOW, durationMs || 2500)
-	);
-	loaderEl.style.setProperty("--loader-duration", finalDuration + "ms");
-	loaderEl.classList.add("loader-animating");
-	console.log("[Loader] start hold animation", finalDuration + "ms");
-	let ended = false;
-
-	function doFadeOut() {
-		if (ended) return; // prevent double
-		ended = true;
-		loaderEl.classList.remove("loader-animating");
-		loaderEl.classList.add("loader-fade-out");
-		loaderEl.addEventListener(
-			"animationend",
-			() => {
-				if (loaderEl) loaderEl.style.display = "none";
-				if (blurEl) blurEl.style.display = "none";
-				setTimeout(window.showScrollNotification, 100);
-				setTimeout(window.loadReadmeContent, 200);
-				setTimeout(window.checkAllServerStatus, 500);
-				console.log("Loader hidden (fade phase complete)");
-			},
-			{ once: true }
-		);
-	}
-
-	const onEnd = (e) => {
-		if (e.target !== loaderEl) return;
-		loaderEl.removeEventListener("animationend", onEnd);
-		doFadeOut();
-	};
-	loaderEl.addEventListener("animationend", onEnd);
-
-	// Fallback: some browsers might skip animationend if keyframes noop or tab hidden
-	setTimeout(() => {
-		if (!ended) {
-			console.warn("[Loader] animationend not fired, fallback fade");
-			doFadeOut();
-		}
-	}, finalDuration + 500); // buffer
-
-	// Reduced motion：更快结束
-	try {
-		if (
-			window.matchMedia &&
-			window.matchMedia("(prefers-reduced-motion: reduce)").matches
-		) {
-			console.log(
-				"[Loader] prefers-reduced-motion detected, shorten display"
-			);
-			setTimeout(() => {
-				if (!ended) doFadeOut();
-			}, Math.min(finalDuration, 1500));
-		}
-	} catch (_) {}
-
-	// Hard stop：绝对上限 8s 强制隐藏（包括 fade 时间）
-	setTimeout(() => {
-		if (!ended) {
-			console.warn("[Loader] hard timeout reached, force hide");
-			ended = true;
-			loaderEl.classList.remove("loader-animating");
-			loaderEl.classList.add("loader-fade-out");
-			setTimeout(() => {
-				if (loaderEl) loaderEl.style.display = "none";
-				if (blurEl) blurEl.style.display = "none";
-			}, 500);
-			setTimeout(window.showScrollNotification, 100);
-			setTimeout(window.loadReadmeContent, 200);
-			setTimeout(window.checkAllServerStatus, 400);
-		}
-	}, 8000);
+	console.log("[Loader] setupCssAnimationHide 已弃用，现在使用状态管理逻辑");
+	// 不再使用基于时间的自动隐藏，改为基于加载状态
 }
 
 window.estimateAnimationDuration = estimateAnimationDuration;

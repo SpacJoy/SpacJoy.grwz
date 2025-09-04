@@ -37,59 +37,28 @@ function initializePageComplete() {
     window.isInitialized = true;
     console.log("页面初始化开始");
     window.initializeLanguage && window.initializeLanguage();
-    // 如果已通过 loader 触发过背景加载则不再强制刷新
-    if (!window._backgroundLoadedOnce) {
-        window.checkLayoutAndSwitchBackground &&
-            window.checkLayoutAndSwitchBackground(true);
-    } else {
-        console.log("[UI] 背景已在 loader 阶段加载，跳过初次强制刷新");
-    }
+
+    // 现在由 loader.js 统一管理加载时序，这里只做基础初始化
     window.optimizeArticleLayout && window.optimizeArticleLayout();
     window.createReadmeSkeleton && window.createReadmeSkeleton();
-    setTimeout(() => {
-        if (!window.readmeLoaded && !window.isLoadingReadme) {
-            window.loadReadmeContent && window.loadReadmeContent();
-        }
-    }, 50);
-    window.prefetchNextBackground && window.prefetchNextBackground();
-    // 先启动 loader 隐藏逻辑，避免后续事件绑定出错阻塞
-    const loadingEl = document.getElementById("loading-gif");
-    let est = 2500;
-    if (loadingEl && loadingEl.src && window.estimateAnimationDuration) {
-        est = window.estimateAnimationDuration(loadingEl.src) || 2500;
-    }
-    if (window.setupCssAnimationHide) window.setupCssAnimationHide(est);
-    setTimeout(() => {
-        window.checkAllServerStatus && window.checkAllServerStatus();
-    }, 150);
+
     try {
         window.addEventListeners && window.addEventListeners();
     } catch (e) {
-        console.error("addEventListeners 失败，不影响 loader 隐藏", e);
+        console.error("addEventListeners 失败", e);
     }
-    // 安全兜底：6 秒仍未隐藏则强制淡出
+
+    // 安全兜底：10秒后强制隐藏 loader（如果还在显示）
     setTimeout(() => {
         const loader = document.querySelector(".loader");
-        if (loader && loader.style.display !== "none") {
+        if (loader && loader.style.display !== "none" && !window.loaderHidden) {
             console.warn("安全兜底：强制隐藏 loader");
-            loader.classList.remove("loader-animating");
-            loader.classList.add("loader-fade-out");
-            setTimeout(() => {
-                if (loader) loader.style.display = "none";
-                const blur = document.querySelector(".blur-effect");
-                if (blur) blur.style.display = "none";
-            }, 500);
-            if (window.showScrollNotification)
-                setTimeout(window.showScrollNotification, 100);
-            if (window.loadReadmeContent && !window.readmeLoaded)
-                setTimeout(() => {
-                    if (!window.readmeLoaded && !window.isLoadingReadme)
-                        window.loadReadmeContent();
-                }, 200);
-            if (window.checkAllServerStatus)
-                setTimeout(window.checkAllServerStatus, 400);
+            if (window.setLoadingState) {
+                window.setLoadingState("firstBackgroundLoaded", true);
+                window.setLoadingState("readmeLoaded", true);
+            }
         }
-    }, 6000);
+    }, 10000);
 }
 
 window.addEventListeners = addEventListeners;

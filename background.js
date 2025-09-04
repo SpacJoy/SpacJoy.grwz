@@ -31,7 +31,7 @@ let queue = []; // {url,layout,theme,layer,loaded}
 let container = null;
 let activeLayer = null;
 let prefetchingNow = false; // 当前是否正在预取一张
-let readmeLoadedOnce = false; // README是否已加载完成
+let firstBackgroundLoaded = false; // 首张背景是否已加载完成
 
 function ensureContainer() {
     if (container) return container;
@@ -56,6 +56,40 @@ function getRandomBackground() {
     } catch (e) {
         console.warn("[Background] 构建随机URL失败", e);
         return null;
+    }
+}
+
+// 专门加载首张背景图的函数
+function loadFirstBackground() {
+    if (firstBackgroundLoaded) return;
+
+    ensureContainer();
+    const url = getRandomBackground();
+    if (!url) return;
+
+    console.log("[Background] 开始加载首张背景:", url);
+    const layer = createLayer(url);
+    const img = new Image();
+    img.onload = () => {
+        activateLayer(layer, url);
+        console.log("[Background] 首张背景加载完成");
+    };
+    img.onerror = () => {
+        console.warn("[Background] 首张背景加载失败");
+        if (layer.parentNode) layer.parentNode.removeChild(layer);
+    };
+    img.src = url;
+}
+
+// 检查是否可以开始预取（需要README和首张背景都完成）
+function checkCanStartPrefetch() {
+    if (
+        firstBackgroundLoaded &&
+        window.loadingStates &&
+        window.loadingStates.readmeLoaded
+    ) {
+        console.log("[Background] README和首张背景都已完成，开始预取");
+        prefetchNextBackground();
     }
 }
 
@@ -86,6 +120,16 @@ function activateLayer(layer, url) {
     activeLayer = layer;
     window._backgroundLoadedOnce = true;
     console.log("[Background] 激活背景:", url);
+
+    // 如果这是首张背景图，更新状态
+    if (!firstBackgroundLoaded) {
+        firstBackgroundLoaded = true;
+        if (window.setLoadingState) {
+            window.setLoadingState("firstBackgroundLoaded", true);
+        }
+        // 检查是否可以开始预取
+        checkCanStartPrefetch();
+    }
 }
 
 function _prefetchOne() {
@@ -135,15 +179,14 @@ function _prefetchOne() {
 
 function prefetchNextBackground() {
     try {
-        // 只有 README 加载完成后才开始预取
-        if (!readmeLoadedOnce) {
-            if (window.readmeLoaded) {
-                readmeLoadedOnce = true;
-                console.log("[Background] README 已加载完成，开始预取背景");
-            } else {
-                console.log("[Background] 等待 README 加载完成再预取背景");
-                return;
-            }
+        // 只有首张背景和README都加载完成后才开始预取
+        if (
+            !firstBackgroundLoaded ||
+            !window.loadingStates ||
+            !window.loadingStates.readmeLoaded
+        ) {
+            console.log("[Background] 等待首张背景和README都完成再预取");
+            return;
         }
 
         // 逐张预取，避免并发
@@ -154,7 +197,6 @@ function prefetchNextBackground() {
         console.warn("预取出错", e);
     }
 }
-
 function applyPrefetchedBackgroundOrRandom() {
     ensureContainer();
     prefetchNextBackground();
@@ -206,3 +248,5 @@ window.prefetchNextBackground = prefetchNextBackground;
 window.applyPrefetchedBackgroundOrRandom = applyPrefetchedBackgroundOrRandom;
 window.crossfadeToPrefetched = crossfadeToPrefetched;
 window._getNextPrefetchedBackground = () => queue.slice();
+window.loadFirstBackground = loadFirstBackground;
+window.checkCanStartPrefetch = checkCanStartPrefetch;

@@ -83,42 +83,57 @@ function renderMarkdown(markdownText) {
                         placeholder.replaceWith(fail);
                         img.remove();
                     });
+                } else if (/raw\.githubusercontent\.com/.test(u.host)) {
+                    // 处理 GitHub 原始文件（如 GIF）
+                    img.addEventListener("error", () => {
+                        console.warn("[README] GitHub 原始文件加载失败:", img.src);
+                        // 创建失败提示，但不显眼
+                        const fallback = document.createElement("span");
+                        fallback.className = "github-raw-fallback";
+                        fallback.style.cssText = "font-size:0.8em;color:#666;opacity:0.7;";
+                        fallback.innerHTML = '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
+                        img.replaceWith(fallback);
+                    });
                 }
             } catch (_) {}
         });
     }
     // 成功渲染后标记
     window.readmeLoaded = true;
-    // 通知背景模块可以开始预取
+
+    // 通知加载状态管理器
+    if (window.setLoadingState) {
+        window.setLoadingState("readmeLoaded", true);
+    }
+
+    // 检查是否可以开始预取
     setTimeout(() => {
-        if (window.prefetchNextBackground) {
-            console.log("[README] 渲染完成，触发背景预取");
-            window.prefetchNextBackground();
+        if (window.checkCanStartPrefetch) {
+            window.checkCanStartPrefetch();
         }
     }, 100);
 }
-
 function loadReadmeContent() {
-	if (window.readmeLoaded) return; // 已加载则直接返回
-	if (isLoadingReadme || window.isLoadingReadme) return; // 正在加载中
-	isLoadingReadme = true;
-	window.isLoadingReadme = true;
-	fetch("README.md")
-		.then((r) => {
-			if (!r.ok) throw new Error(`HTTP ${r.status}`);
-			return r.text();
-		})
-		.then((markdownText) => {
-			renderMarkdown(markdownText);
-		})
-		.catch((e) => {
-			console.error("加载 README 失败", e);
-			window.showReadmeError && window.showReadmeError();
-		})
-		.finally(() => {
-			isLoadingReadme = false;
-			window.isLoadingReadme = false;
-		});
+    if (window.readmeLoaded) return; // 已加载则直接返回
+    if (isLoadingReadme || window.isLoadingReadme) return; // 正在加载中
+    isLoadingReadme = true;
+    window.isLoadingReadme = true;
+    fetch("README.md")
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.text();
+        })
+        .then((markdownText) => {
+            renderMarkdown(markdownText);
+        })
+        .catch((e) => {
+            console.error("加载 README 失败", e);
+            window.showReadmeError && window.showReadmeError();
+        })
+        .finally(() => {
+            isLoadingReadme = false;
+            window.isLoadingReadme = false;
+        });
 }
 
 function showReadmeError() {
