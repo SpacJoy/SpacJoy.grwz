@@ -147,7 +147,7 @@ function copyServerAddress(address) {
 }
 
 function changeRandomBackground() {
-	let ok = false;
+    let ok = false;
     if (window.crossfadeToPrefetched) {
         ok = window.crossfadeToPrefetched();
     } else if (window.applyPrefetchedBackgroundOrRandom) {
@@ -156,25 +156,42 @@ function changeRandomBackground() {
         window.checkLayoutAndSwitchBackground(true);
         ok = true;
     }
+
     if (ok && window.showBackgroundChangeNotification) {
         window.showBackgroundChangeNotification();
+    } else if (!ok) {
+        // 没有可切换的预取背景时显示提示
+        showNoPrefetchNotification();
     }
 }
 
+function showNoPrefetchNotification() {
+    const n = document.createElement("div");
+    n.className = "copy-notification no-prefetch-tip";
+    n.style.background = "rgba(255, 193, 7, 0.9)"; // 黄色警告色
+    n.innerHTML =
+        window.currentLanguage === "zh"
+            ? "⏳ 背景图预取中，请稍候再试"
+            : "⏳ Background prefetching, please wait";
+    mountNotification(n, false);
+    setTimeout(() => hideCopyNotification(n), 2500);
+}
+
 function showScrollNotification() {
-	if (window.scrollNotificationShown) return;
-	window.scrollNotificationShown = true;
-	const n = document.createElement("div");
-	n.className = "copy-notification scroll-tip";
-	n.innerHTML =
-		window.currentLanguage === "zh"
-			? "⬇️ 向下滚动，查看更多内容"
-			: "⬇️ Scroll down to see more";
-	mountNotification(n, false);
-	setTimeout(() => hideCopyNotification(n), 3000);
+    if (window.scrollNotificationShown) return;
+    window.scrollNotificationShown = true;
+    const n = document.createElement("div");
+    n.className = "copy-notification scroll-tip";
+    n.innerHTML =
+        window.currentLanguage === "zh"
+            ? "⬇️ 向下滚动，查看更多内容"
+            : "⬇️ Scroll down to see more";
+    mountNotification(n, false);
+    setTimeout(() => hideCopyNotification(n), 3000);
 }
 
 window.copyServerAddress = copyServerAddress;
 window.fallbackCopyTextToClipboard = fallbackCopyTextToClipboard;
 window.changeRandomBackground = changeRandomBackground;
 window.showScrollNotification = showScrollNotification;
+window.showNoPrefetchNotification = showNoPrefetchNotification;
