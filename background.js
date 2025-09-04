@@ -57,28 +57,35 @@ function getRandomBackground(layout, theme) {
 }
 
 function setBackgroundImage(imageUrl) {
-	if (imageUrl) {
-		document.body.style.backgroundImage = `url('${imageUrl}')`;
-		console.log("背景图已设置为:", imageUrl);
-	}
+    if (imageUrl) {
+        console.log("[Background] 开始加载背景:", imageUrl);
+        document.body.style.backgroundImage = `url('${imageUrl}')`;
+        console.log("背景图已设置为:", imageUrl);
+    }
 }
 
 function prefetchNextBackground() {
-	try {
-		const layout = detectLayout();
-		const theme = detectTheme();
-		const candidate = buildRandomDirUrl(mapDir(layout, theme));
-		if (!candidate) return;
-		const img = new Image();
-		img.decoding = 'async';
-		img.loading = 'eager';
-		nextPrefetched = { layout, theme, url: candidate, loaded: false };
-		img.onload = () => { nextPrefetched.loaded = true; console.log('[Background] 预取完成', candidate); };
-		img.onerror = () => { if (nextPrefetched.url === candidate) nextPrefetched.loaded = false; };
-		img.src = candidate;
-	} catch (e) {
-		console.log('预取背景失败', e);
-	}
+    try {
+        const layout = detectLayout();
+        const theme = detectTheme();
+        const candidate = buildRandomDirUrl(mapDir(layout, theme));
+        if (!candidate) return;
+        console.log("[Background] 开始预取背景:", candidate);
+        const img = new Image();
+        img.decoding = "async";
+        img.loading = "eager";
+        nextPrefetched = { layout, theme, url: candidate, loaded: false };
+        img.onload = () => {
+            nextPrefetched.loaded = true;
+            console.log("[Background] 预取完成", candidate);
+        };
+        img.onerror = () => {
+            if (nextPrefetched.url === candidate) nextPrefetched.loaded = false;
+        };
+        img.src = candidate;
+    } catch (e) {
+        console.log("预取背景失败", e);
+    }
 }
 
 function applyPrefetchedBackgroundOrRandom() {

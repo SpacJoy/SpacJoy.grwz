@@ -31,7 +31,9 @@
         imgEl.style.display = "none";
     };
     applyCommonStyle();
-    imgEl.src = RANDOM_ENDPOINT + "?t=" + Date.now();
+    const loadUrl = RANDOM_ENDPOINT + "?t=" + Date.now();
+    console.log("[Loader] 开始加载 loading 图:", loadUrl);
+    imgEl.src = loadUrl;
 })();
 
 function estimateAnimationDuration(src) {
