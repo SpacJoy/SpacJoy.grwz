@@ -28,67 +28,74 @@ window.isLoadingReadme = false; // 对外暴露以便其他模块判断
 window.readmeLoaded = false; // 是否已成功渲染完成
 
 function renderMarkdown(markdownText) {
-	const lines = markdownText.split("\n");
-	const contentWithoutHeader = lines.slice(4).join("\n"); // 保持与原逻辑一致
-	marked.setOptions({
-		breaks: true,
-		gfm: true,
-		headerIds: false,
-		mangle: false,
-	});
-	let htmlContent = marked.parse(contentWithoutHeader);
-	const markdownContent = document.getElementById("markdown-content");
-	if (markdownContent) {
-		markdownContent.innerHTML = htmlContent;
-		const links = markdownContent.querySelectorAll("a");
-		links.forEach((link) => {
-			if (!link.hasAttribute("target"))
-				link.setAttribute("target", "_blank");
-		});
-		const images = markdownContent.querySelectorAll("img");
-		images.forEach((img) => {
-			if (!img.style.maxWidth) {
-				img.style.maxWidth = "100%";
-				img.style.height = "auto";
-				img.style.borderRadius = "8px";
-				img.style.margin = "10px 5px";
-			}
-			try {
-				const u = new URL(img.src, location.href);
-				if (/github-readme-stats\.vercel\.app/.test(u.host)) {
-					// 创建“加载中”占位
-					const placeholder = document.createElement("div");
-					placeholder.className = "external-img-loading";
-					placeholder.innerHTML =
-						'📊 <span data-zh="统计卡片加载中..." data-en="Loading stats card...">统计卡片加载中...</span>';
-					// 在原图前插入占位（仅第一次）
-					if (!img.__statsPlaceholderInserted) {
-						img.parentNode.insertBefore(placeholder, img);
-						img.__statsPlaceholderInserted = true;
-					}
-					// 加载成功后移除占位
-					img.addEventListener("load", () => {
-						placeholder.classList.add("fade-out");
-						setTimeout(() => placeholder.remove(), 300);
-					});
-					img.addEventListener("error", () => {
-						const fail = Object.assign(
-							document.createElement("div"),
-							{
-								className: "external-img-fallback",
-								innerHTML:
-									'📊 <span data-zh="与Github失去链接，统计卡片加载失败" data-en="Stats card failed">与Github失去链接，统计卡片加载失败</span>',
-							}
-						);
-						placeholder.replaceWith(fail);
-						img.remove();
-					});
-				}
-			} catch (_) {}
-		});
-	}
-	// 成功渲染后标记
-	window.readmeLoaded = true;
+    const lines = markdownText.split("\n");
+    const contentWithoutHeader = lines.slice(4).join("\n"); // 保持与原逻辑一致
+    marked.setOptions({
+        breaks: true,
+        gfm: true,
+        headerIds: false,
+        mangle: false,
+    });
+    let htmlContent = marked.parse(contentWithoutHeader);
+    const markdownContent = document.getElementById("markdown-content");
+    if (markdownContent) {
+        markdownContent.innerHTML = htmlContent;
+        const links = markdownContent.querySelectorAll("a");
+        links.forEach((link) => {
+            if (!link.hasAttribute("target"))
+                link.setAttribute("target", "_blank");
+        });
+        const images = markdownContent.querySelectorAll("img");
+        images.forEach((img) => {
+            if (!img.style.maxWidth) {
+                img.style.maxWidth = "100%";
+                img.style.height = "auto";
+                img.style.borderRadius = "8px";
+                img.style.margin = "10px 5px";
+            }
+            try {
+                const u = new URL(img.src, location.href);
+                if (/github-readme-stats\.vercel\.app/.test(u.host)) {
+                    // 创建“加载中”占位
+                    const placeholder = document.createElement("div");
+                    placeholder.className = "external-img-loading";
+                    placeholder.innerHTML =
+                        '📊 <span data-zh="统计卡片加载中..." data-en="Loading stats card...">统计卡片加载中...</span>';
+                    // 在原图前插入占位（仅第一次）
+                    if (!img.__statsPlaceholderInserted) {
+                        img.parentNode.insertBefore(placeholder, img);
+                        img.__statsPlaceholderInserted = true;
+                    }
+                    // 加载成功后移除占位
+                    img.addEventListener("load", () => {
+                        placeholder.classList.add("fade-out");
+                        setTimeout(() => placeholder.remove(), 300);
+                    });
+                    img.addEventListener("error", () => {
+                        const fail = Object.assign(
+                            document.createElement("div"),
+                            {
+                                className: "external-img-fallback",
+                                innerHTML:
+                                    '📊 <span data-zh="与Github失去链接，统计卡片加载失败" data-en="Stats card failed">与Github失去链接，统计卡片加载失败</span>',
+                            }
+                        );
+                        placeholder.replaceWith(fail);
+                        img.remove();
+                    });
+                }
+            } catch (_) {}
+        });
+    }
+    // 成功渲染后标记
+    window.readmeLoaded = true;
+    // 通知背景模块可以开始预取
+    setTimeout(() => {
+        if (window.prefetchNextBackground) {
+            console.log("[README] 渲染完成，触发背景预取");
+            window.prefetchNextBackground();
+        }
+    }, 100);
 }
 
 function loadReadmeContent() {
