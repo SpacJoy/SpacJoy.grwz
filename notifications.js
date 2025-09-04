@@ -205,20 +205,10 @@ function showNoPrefetchNotification() {
     n.className = "copy-notification no-prefetch-tip";
     n.style.background = "rgba(255, 193, 7, 0.9)"; // 黄色警告色
 
-    // 获取预取状态信息
-    let statusText = "";
-    if (window.getPrefetchStatus) {
-        const status = window.getPrefetchStatus();
-        statusText =
-            window.currentLanguage === "zh"
-                ? `⏳ 背景图预取中 (${status.loaded}/${status.total})`
-                : `⏳ Background prefetching (${status.loaded}/${status.total})`;
-    } else {
-        statusText =
-            window.currentLanguage === "zh"
-                ? "⏳ 背景图预取中，请稍候再试"
-                : "⏳ Background prefetching, please wait";
-    }
+    // 简化提示文本，不显示进度
+    const statusText = window.currentLanguage === "zh"
+        ? "⏳ 背景图加载中，请稍候再试"
+        : "⏳ Background loading, please wait";
 
     n.innerHTML = statusText;
     mountNotification(n, false); // 会覆盖当前通知
