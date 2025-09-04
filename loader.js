@@ -1,47 +1,37 @@
 // Loader management (loading image + CSS animation hide)
 (function initLoadingImage() {
-	const RANDOM_ENDPOINT = "https://random.ysy.146019.xyz/res/loading"; // 后端随机返回 loading 目录下任意一张图
-	const RES_BASE = (window.RES_BASE_OVERRIDE || "https://ysy.146019.xyz/res/")
-		.replace(/\/+/g, "/")
-		.replace(/([^:])\/\/+/, "$1/");
-	const buildRes = (p) =>
-		RES_BASE.replace(/\/$/, "/") + p.replace(/^res\//, "");
-	const fallbackSources = Array.from({ length: 24 }, (_, i) =>
-        buildRes(`loading/loading_${String(i + 1).padStart(3, "0")}.webp`)
-    );
-	const imgEl = document.getElementById("loading-gif");
-	if (!imgEl) return;
+    // 仅使用随机接口；不再进行本地（枚举）回退
+    const RANDOM_ENDPOINT = "https://random.ysy.146019.xyz/res/loading";
+    const imgEl = document.getElementById("loading-gif");
+    if (!imgEl) return;
 
-	function applyCommonStyle() {
-		imgEl.removeAttribute("width");
-		imgEl.removeAttribute("height");
-		imgEl.style.width = "";
-		imgEl.style.height = "";
-		imgEl.style.maxWidth = "60vmin";
-		imgEl.style.maxHeight = "60vmin";
-		imgEl.style.objectFit = "contain";
-		imgEl.style.aspectRatio = "auto";
-	}
+    function applyCommonStyle() {
+        imgEl.removeAttribute("width");
+        imgEl.removeAttribute("height");
+        imgEl.style.width = "";
+        imgEl.style.height = "";
+        imgEl.style.maxWidth = "60vmin";
+        imgEl.style.maxHeight = "60vmin";
+        imgEl.style.objectFit = "contain";
+        imgEl.style.aspectRatio = "auto";
+    }
 
-	function pickFallback() {
-		const alt =
-			fallbackSources[Math.floor(Math.random() * fallbackSources.length)];
-		console.warn("[Loader] 随机接口失败，使用本地枚举 fallback:", alt);
-		imgEl.onerror = null; // 避免循环
-		imgEl.src = alt + "?t=" + Date.now();
-	}
-
-	imgEl.onload = () => {
-		console.log(
-			"Loading image loaded:",
-			imgEl.src,
-			imgEl.naturalWidth + "x" + imgEl.naturalHeight
-		);
-	};
-	imgEl.onerror = () => pickFallback();
-	applyCommonStyle();
-	// 加随机查询参数防缓存（某些 CDN 可能仍合并，可根据需要改成 cache-control 配置）
-	imgEl.src = RANDOM_ENDPOINT + "?t=" + Date.now();
+    imgEl.onload = () => {
+        console.log(
+            "Loading image loaded:",
+            imgEl.src,
+            imgEl.naturalWidth + "x" + imgEl.naturalHeight
+        );
+    };
+    imgEl.onerror = () => {
+        console.warn(
+            "[Loader] 随机接口加载失败，不再使用本地图片回退，将隐藏加载图。"
+        );
+        // 简单隐藏图片区域，保持 loader 其余逻辑继续
+        imgEl.style.display = "none";
+    };
+    applyCommonStyle();
+    imgEl.src = RANDOM_ENDPOINT + "?t=" + Date.now();
 })();
 
 function estimateAnimationDuration(src) {

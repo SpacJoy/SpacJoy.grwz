@@ -9,7 +9,8 @@ function buildRes(path) {
 
 // 随机图片 API 配置
 const RANDOM_API_BASE = "https://random.ysy.146019.xyz/"; // 直接访问返回整桶随机
-const USE_RANDOM_BACKGROUND_API = true; // 开关：true 使用随机接口；false 使用本地枚举列表
+// 已移除本地枚举，始终使用随机接口
+const USE_RANDOM_BACKGROUND_API = true;
 // 为不同布局+主题映射目录（与之前枚举目录保持一致）
 function mapDir(layout, theme) {
 	if (layout === 'desktop') {
@@ -24,69 +25,7 @@ function buildRandomDirUrl(dir) {
 }
 
 // 背景图管理
-const backgroundImages = {
-	desktop: {
-		bright: [
-			...Array.from({ length: 21 }, (_, i) =>
-				buildRes(
-					`bright_back/bright_back${String(i + 1).padStart(
-						3,
-						"0"
-					)}.webp`
-				)
-			),
-		],
-		dark: [
-			...Array.from({ length: 8 }, (_, i) =>
-				buildRes(
-					`dark_back/dark_back${String(i + 1).padStart(3, "0")}.webp`
-				)
-			),
-		],
-	},
-	tablet: {
-		bright: [
-			...Array.from({ length: 21 }, (_, i) =>
-				buildRes(
-					`mobile_bright_back/mobile_bright_back${String(
-						i + 1
-					).padStart(3, "0")}.webp`
-				)
-			),
-		],
-		dark: [
-			...Array.from({ length: 11 }, (_, i) =>
-				buildRes(
-					`mobile_dark_back/mobile_dark_back${String(i + 1).padStart(
-						3,
-						"0"
-					)}.webp`
-				)
-			),
-		],
-	},
-	mobile: {
-		bright: [
-			...Array.from({ length: 29 }, (_, i) =>
-				buildRes(
-					`mobile_bright_back/mobile_bright_back${String(
-						i + 1
-					).padStart(3, "0")}.webp`
-				)
-			),
-		],
-		dark: [
-			...Array.from({ length: 11 }, (_, i) =>
-				buildRes(
-					`mobile_dark_back/mobile_dark_back${String(i + 1).padStart(
-						3,
-						"0"
-					)}.webp`
-				)
-			),
-		],
-	},
-};
+// 本地背景枚举已删除
 
 // 预取缓存
 let nextPrefetched = { layout: null, theme: null, url: null, loaded: false };
@@ -108,17 +47,13 @@ function detectTheme() {
 }
 
 function getRandomBackground(layout, theme) {
-	if (USE_RANDOM_BACKGROUND_API) {
-		try {
-			const dir = mapDir(layout, theme);
-			return buildRandomDirUrl(dir);
-		} catch (e) {
-			console.warn('[Background] 随机接口构建失败，回退本地枚举', e);
-		}
+	try {
+		const dir = mapDir(layout, theme);
+		return buildRandomDirUrl(dir);
+	} catch (e) {
+		console.warn('[Background] 随机接口构建失败，无本地枚举可回退', e);
+		return null;
 	}
-	const images = backgroundImages[layout] && backgroundImages[layout][theme];
-	if (!images || images.length === 0) return null;
-	return images[Math.floor(Math.random() * images.length)];
 }
 
 function setBackgroundImage(imageUrl) {
@@ -132,14 +67,7 @@ function prefetchNextBackground() {
 	try {
 		const layout = detectLayout();
 		const theme = detectTheme();
-		let candidate;
-		if (USE_RANDOM_BACKGROUND_API) {
-			candidate = buildRandomDirUrl(mapDir(layout, theme));
-		} else {
-			const arr = backgroundImages[layout] && backgroundImages[layout][theme];
-			if (!arr || !arr.length) return;
-			candidate = arr[Math.floor(Math.random() * arr.length)];
-		}
+		const candidate = buildRandomDirUrl(mapDir(layout, theme));
 		if (!candidate) return;
 		const img = new Image();
 		img.decoding = 'async';
@@ -170,7 +98,7 @@ function applyPrefetchedBackgroundOrRandom() {
 		const randomBackground = getRandomBackground(layout, theme);
 		if (randomBackground) {
 			setBackgroundImage(randomBackground);
-			console.log("使用随机背景(未匹配预取):", randomBackground);
+			console.log("使用随机背景:", randomBackground);
 		}
 	}
 	prefetchNextBackground();
@@ -215,7 +143,7 @@ function checkLayoutAndSwitchBackground(
 	if (forceNewBackground || layoutChanged || forceLayoutCheck) {
 		const randomBackground = getRandomBackground(layoutType, theme);
 		if (randomBackground) setBackgroundImage(randomBackground);
-		console.log("布局检测: ", layoutType, theme, USE_RANDOM_BACKGROUND_API ? '[API]' : '[ENUM]', randomBackground);
+		console.log("布局检测: ", layoutType, theme, '[API]', randomBackground);
 	} else {
 		console.log("布局调整: ", layoutType, "(背景未更换)");
 	}
