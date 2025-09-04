@@ -26,7 +26,7 @@ function detectTheme() {
 }
 
 // 状态
-const PREFETCH_TARGET = 3;
+const PREFETCH_TARGET = 6;
 let queue = []; // {url,layout,theme,layer,loaded}
 let container = null;
 let activeLayer = null;
@@ -197,7 +197,7 @@ function prefetchNextBackground() {
         // 如果可用预取数量不足，加速补充
         const loadedCount = queue.filter((e) => e.loaded).length;
         if (
-            loadedCount < 1 &&
+            loadedCount < 2 &&
             !prefetchingNow &&
             queue.length < PREFETCH_TARGET
         ) {
@@ -230,8 +230,8 @@ function crossfadeToPrefetched() {
     // 检查可用的预取图片数量
     const loadedCount = queue.filter((e) => e.loaded).length;
 
-    // 如果可用预取少于2张，提示预取中（避免用完最后一张时白屏）
-    if (loadedCount < 2) {
+    // 如果可用预取少于3张，提示预取中（避免用完最后一张时白屏）
+    if (loadedCount < 3) {
         console.log("[Background] 预取队列不足，剩余可用:", loadedCount);
         prefetchNextBackground(); // 尝试补充
         return false; // 返回 false 触发 "预取中" 提示
