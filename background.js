@@ -39,15 +39,64 @@ function ensureContainer() {
         const style = document.createElement("style");
         style.id = "bg-layer-styles";
         style.textContent = `.bg-layer-stack{position:fixed;inset:0;z-index:-10;pointer-events:none;overflow:hidden}
-        .bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity .85s ease;will-change:opacity}
+        .bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity .85s ease;will-change:opacity;background-color:#f5f5f5}
         .bg-layer.active{opacity:1}
-        .bg-layer.fading{opacity:0!important}`;
+        .bg-layer.fading{opacity:0!important}
+        @media (prefers-color-scheme: dark) {
+            .bg-layer{background-color:#000000}
+        }`;
         document.head.appendChild(style);
     }
     container = document.createElement("div");
     container.className = "bg-layer-stack";
+
+    // 根据深色模式状态设置背景底色
+    updateContainerBackgroundColor();
+
     document.body.prepend(container);
     return container;
+}
+
+// 根据深色模式状态更新背景容器底色
+function updateContainerBackgroundColor() {
+    if (!container) return;
+
+    const isDarkMode = detectTheme() === "dark";
+
+    // 深色模式使用深色底色，浅色模式使用浅色底色
+    if (isDarkMode) {
+        container.style.backgroundColor = "#1a1a1a"; // 深灰色
+    } else {
+        container.style.backgroundColor = "#f5f5f5"; // 浅灰色
+    }
+
+    // 同时更新所有现有背景层的背景色
+    updateAllLayersBackgroundColor(isDarkMode);
+
+    console.log("[Background] 已更新背景底色，深色模式:", isDarkMode);
+}
+
+// 更新所有背景层的背景色
+function updateAllLayersBackgroundColor(isDarkMode) {
+    if (!container) return;
+
+    const layers = container.querySelectorAll(".bg-layer");
+    const backgroundColor = isDarkMode ? "#000000" : "#f5f5f5";
+
+    layers.forEach((layer) => {
+        layer.style.backgroundColor = backgroundColor;
+    });
+
+    console.log("[Background] 已更新", layers.length, "个背景层的背景色");
+} // 监听深色模式变化
+function setupDarkModeListener() {
+    if (window.matchMedia) {
+        const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        darkModeQuery.addEventListener("change", (e) => {
+            console.log("[Background] 深色模式状态改变:", e.matches);
+            updateContainerBackgroundColor();
+        });
+    }
 }
 
 function getRandomBackground() {
@@ -94,6 +143,11 @@ function createLayer(url) {
     const layer = document.createElement("div");
     layer.className = "bg-layer";
     layer.style.backgroundImage = `url('${url}')`;
+
+    // 根据深色模式设置背景色，在图片加载期间显示
+    const isDarkMode = detectTheme() === "dark";
+    layer.style.backgroundColor = isDarkMode ? "#000000" : "#f5f5f5";
+
     container.appendChild(layer);
     return layer;
 }
@@ -266,8 +320,12 @@ window.crossfadeToPrefetched = crossfadeToPrefetched;
 window._getNextPrefetchedBackground = () => queue.slice();
 window.loadFirstBackground = loadFirstBackground;
 window.checkCanStartPrefetch = checkCanStartPrefetch;
+window.updateContainerBackgroundColor = updateContainerBackgroundColor;
 window.getPrefetchStatus = () => ({
     total: queue.length,
     loaded: queue.filter((e) => e.loaded).length,
     prefetching: prefetchingNow,
 });
+
+// 初始化深色模式监听器
+setupDarkModeListener();
