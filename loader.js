@@ -3,15 +3,16 @@
 window.loadingStates = {
     loadingImageReady: false,
     firstBackgroundLoaded: false,
-    readmeLoaded: false
 };
+
+let hideTimeoutId = null; // 6秒超时定时器
 
 // 检查是否可以隐藏 Loading
 function checkCanHideLoader() {
     const states = window.loadingStates;
-    // README 或首张背景图任一加载完成即可隐藏
-    if (states.loadingImageReady && (states.firstBackgroundLoaded || states.readmeLoaded)) {
-        console.log("[Loader] 条件满足，开始隐藏 Loading");
+    // 背景图加载完成即可隐藏
+    if (states.loadingImageReady && states.firstBackgroundLoaded) {
+        console.log("[Loader] 背景图加载完成，开始隐藏 Loading");
         hideLoader();
         return true;
     }
@@ -22,21 +23,32 @@ function checkCanHideLoader() {
 function hideLoader() {
     if (window.loaderHidden) return;
     window.loaderHidden = true;
-    
+
+    // 清除超时定时器
+    if (hideTimeoutId) {
+        clearTimeout(hideTimeoutId);
+        hideTimeoutId = null;
+    }
+
     const loaderEl = document.querySelector(".loader");
     const blurEl = document.querySelector(".blur-effect");
     if (!loaderEl) return;
-    
+
     loaderEl.classList.add("loader-fade-out");
-    loaderEl.addEventListener("animationend", () => {
-        if (loaderEl) loaderEl.style.display = "none";
-        if (blurEl) blurEl.style.display = "none";
-        setTimeout(() => {
-            if (window.showScrollNotification) window.showScrollNotification();
-            if (window.checkAllServerStatus) window.checkAllServerStatus();
-        }, 100);
-        console.log("Loader hidden");
-    }, { once: true });
+    loaderEl.addEventListener(
+        "animationend",
+        () => {
+            if (loaderEl) loaderEl.style.display = "none";
+            if (blurEl) blurEl.style.display = "none";
+            setTimeout(() => {
+                if (window.showScrollNotification)
+                    window.showScrollNotification();
+                if (window.checkAllServerStatus) window.checkAllServerStatus();
+            }, 100);
+            console.log("Loader hidden");
+        },
+        { once: true }
+    );
 }
 
 // 设置状态并检查隐藏条件
@@ -71,20 +83,24 @@ window.checkCanHideLoader = checkCanHideLoader;
             imgEl.src,
             imgEl.naturalWidth + "x" + imgEl.naturalHeight
         );
-        
-        setLoadingState('loadingImageReady', true);
-        
-        // Loading图加载完后，开始加载首张背景图和README
+
+        setLoadingState("loadingImageReady", true);
+
+        // 设置6秒超时隐藏
+        hideTimeoutId = setTimeout(() => {
+            console.log("[Loader] 6秒超时，强制隐藏 Loading");
+            hideLoader();
+        }, 6000);
+
+        // Loading图加载完后，开始加载首张背景图
         setTimeout(() => {
-            console.log("[Loader] Loading图加载完成，开始加载首张背景图和README");
-            
-            // 同时启动背景图和README加载
+            console.log("[Loader] Loading图加载完成，开始加载首张背景图");
+
+            // 只启动背景图加载
             if (window.loadFirstBackground) {
                 window.loadFirstBackground();
             }
-            if (window.loadReadmeContent) {
-                window.loadReadmeContent();
-            }
+            // README 由其他地方独立加载，不再绑定到 loader
         }, 50);
     };
     imgEl.onerror = () => {

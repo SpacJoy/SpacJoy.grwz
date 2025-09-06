@@ -38,9 +38,21 @@ function initializePageComplete() {
     console.log("页面初始化开始");
     window.initializeLanguage && window.initializeLanguage();
 
-    // 现在由 loader.js 统一管理加载时序，这里只做基础初始化
+    // 基础初始化
     window.optimizeArticleLayout && window.optimizeArticleLayout();
     window.createReadmeSkeleton && window.createReadmeSkeleton();
+
+    // 独立启动 README 加载（不再依赖 loader）
+    setTimeout(() => {
+        if (
+            window.loadReadmeContent &&
+            !window.readmeLoaded &&
+            !window.isLoadingReadme
+        ) {
+            console.log("[UI] 启动 README 加载");
+            window.loadReadmeContent();
+        }
+    }, 100);
 
     try {
         window.addEventListeners && window.addEventListeners();
