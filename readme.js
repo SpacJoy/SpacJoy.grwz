@@ -100,7 +100,18 @@ function renderMarkdown(markdownText) {
     }
     // 成功渲染后标记
     window.readmeLoaded = true;
-    console.log("[README] 渲染完成");
+
+    // 通知加载状态管理器
+    if (window.setLoadingState) {
+        window.setLoadingState("readmeLoaded", true);
+    }
+
+    // 检查是否可以开始预取
+    setTimeout(() => {
+        if (window.checkCanStartPrefetch) {
+            window.checkCanStartPrefetch();
+        }
+    }, 100);
 }
 function loadReadmeContent() {
     if (window.readmeLoaded) return; // 已加载则直接返回
