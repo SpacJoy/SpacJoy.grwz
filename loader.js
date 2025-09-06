@@ -3,16 +3,30 @@
 window.loadingStates = {
     loadingImageReady: false,
     firstBackgroundLoaded: false,
-    readmeLoaded: false
+    readmeLoaded: false,
 };
+
+// 防止重复调用隐藏逻辑的标志
+let hideLoaderScheduled = false;
 
 // 检查是否可以隐藏 Loading
 function checkCanHideLoader() {
     const states = window.loadingStates;
-    // README 或首张背景图任一加载完成即可隐藏
-    if (states.loadingImageReady && (states.firstBackgroundLoaded || states.readmeLoaded)) {
-        console.log("[Loader] 条件满足，开始隐藏 Loading");
-        hideLoader();
+    // 需要首张背景图和README都加载完成
+    if (
+        states.loadingImageReady &&
+        states.firstBackgroundLoaded &&
+        states.readmeLoaded &&
+        !hideLoaderScheduled
+    ) {
+        console.log(
+            "[Loader] 首张背景图和README都已加载完成，1秒后隐藏 Loading"
+        );
+        hideLoaderScheduled = true; // 设置标志防止重复调用
+        // 等待1秒后隐藏
+        setTimeout(() => {
+            hideLoader();
+        }, 1000);
         return true;
     }
     return false;
@@ -22,21 +36,26 @@ function checkCanHideLoader() {
 function hideLoader() {
     if (window.loaderHidden) return;
     window.loaderHidden = true;
-    
+
     const loaderEl = document.querySelector(".loader");
     const blurEl = document.querySelector(".blur-effect");
     if (!loaderEl) return;
-    
+
     loaderEl.classList.add("loader-fade-out");
-    loaderEl.addEventListener("animationend", () => {
-        if (loaderEl) loaderEl.style.display = "none";
-        if (blurEl) blurEl.style.display = "none";
-        setTimeout(() => {
-            if (window.showScrollNotification) window.showScrollNotification();
-            if (window.checkAllServerStatus) window.checkAllServerStatus();
-        }, 100);
-        console.log("Loader hidden");
-    }, { once: true });
+    loaderEl.addEventListener(
+        "animationend",
+        () => {
+            if (loaderEl) loaderEl.style.display = "none";
+            if (blurEl) blurEl.style.display = "none";
+            setTimeout(() => {
+                if (window.showScrollNotification)
+                    window.showScrollNotification();
+                if (window.checkAllServerStatus) window.checkAllServerStatus();
+            }, 100);
+            console.log("Loader hidden");
+        },
+        { once: true }
+    );
 }
 
 // 设置状态并检查隐藏条件
@@ -71,13 +90,15 @@ window.checkCanHideLoader = checkCanHideLoader;
             imgEl.src,
             imgEl.naturalWidth + "x" + imgEl.naturalHeight
         );
-        
-        setLoadingState('loadingImageReady', true);
-        
+
+        setLoadingState("loadingImageReady", true);
+
         // Loading图加载完后，开始加载首张背景图和README
         setTimeout(() => {
-            console.log("[Loader] Loading图加载完成，开始加载首张背景图和README");
-            
+            console.log(
+                "[Loader] Loading图加载完成，开始加载首张背景图和README"
+            );
+
             // 同时启动背景图和README加载
             if (window.loadFirstBackground) {
                 window.loadFirstBackground();
@@ -101,18 +122,18 @@ window.checkCanHideLoader = checkCanHideLoader;
 })();
 
 function estimateAnimationDuration(src) {
-	const base = src.match(/loading(\d{3})/);
-	if (base) {
-		const id = parseInt(base[1], 10);
-		return 2200 + (id / 30) * 1200;
-	}
-	return 2500;
+    const base = src.match(/loading(\d{3})/);
+    if (base) {
+        const id = parseInt(base[1], 10);
+        return 2200 + (id / 30) * 1200;
+    }
+    return 2500;
 }
 
 // 保留这个函数供兼容，但现在使用新的状态管理逻辑
 function setupCssAnimationHide(durationMs) {
-	console.log("[Loader] setupCssAnimationHide 已弃用，现在使用状态管理逻辑");
-	// 不再使用基于时间的自动隐藏，改为基于加载状态
+    console.log("[Loader] setupCssAnimationHide 已弃用，现在使用状态管理逻辑");
+    // 不再使用基于时间的自动隐藏，改为基于加载状态
 }
 
 window.estimateAnimationDuration = estimateAnimationDuration;
