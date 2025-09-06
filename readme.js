@@ -86,17 +86,12 @@ function renderMarkdown(markdownText) {
                 } else if (/raw\.githubusercontent\.com/.test(u.host)) {
                     // 处理 GitHub 原始文件（如 GIF）
                     img.addEventListener("error", () => {
-                        console.warn(
-                            "[README] GitHub 原始文件加载失败:",
-                            img.src
-                        );
+                        console.warn("[README] GitHub 原始文件加载失败:", img.src);
                         // 创建失败提示，但不显眼
                         const fallback = document.createElement("span");
                         fallback.className = "github-raw-fallback";
-                        fallback.style.cssText =
-                            "font-size:0.8em;color:#666;opacity:0.7;";
-                        fallback.innerHTML =
-                            '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
+                        fallback.style.cssText = "font-size:0.8em;color:#666;opacity:0.7;";
+                        fallback.innerHTML = '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
                         img.replaceWith(fallback);
                     });
                 }
@@ -106,11 +101,6 @@ function renderMarkdown(markdownText) {
     // 成功渲染后标记
     window.readmeLoaded = true;
     console.log("[README] 渲染完成");
-
-    // 触发背景预取检查
-    if (window.checkCanStartPrefetch) {
-        window.checkCanStartPrefetch();
-    }
 }
 function loadReadmeContent() {
     if (window.readmeLoaded) return; // 已加载则直接返回
