@@ -81,6 +81,11 @@ body {
     background-repeat: no-repeat;
 }
 
+/* 深色模式下为body和背景层添加黑色底色 */
+[data-theme="dark"] body {
+    background-color: #000000;
+}
+
 /* 注释掉固定背景设置，改用JavaScript随机背景功能 */
 
 /* 设置页面底部样式 */

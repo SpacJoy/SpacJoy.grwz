@@ -41,7 +41,9 @@ function ensureContainer() {
         style.textContent = `.bg-layer-stack{position:fixed;inset:0;z-index:-10;pointer-events:none;overflow:hidden}
         .bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity .85s ease;will-change:opacity}
         .bg-layer.active{opacity:1}
-        .bg-layer.fading{opacity:0!important}`;
+        .bg-layer.fading{opacity:0!important}
+        [data-theme="dark"] .bg-layer{background-color:#000000}
+        [data-theme="light"] .bg-layer{background-color:transparent}`;
         document.head.appendChild(style);
     }
     container = document.createElement("div");
