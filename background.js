@@ -81,10 +81,10 @@ function loadFirstBackground() {
     img.src = url;
 }
 
-// 检查是否可以开始预取（只需要首张背景完成）
+// 检查是否可以开始预取（需要首张背景和README都完成）
 function checkCanStartPrefetch() {
-    if (firstBackgroundLoaded) {
-        console.log("[Background] 首张背景已完成，开始预取");
+    if (firstBackgroundLoaded && window.readmeLoaded) {
+        console.log("[Background] 首张背景和README都已完成，开始预取");
         prefetchNextBackground();
     }
 }
@@ -175,9 +175,9 @@ function _prefetchOne() {
 
 function prefetchNextBackground() {
     try {
-        // 只需要首张背景加载完成后就开始预取
-        if (!firstBackgroundLoaded) {
-            console.log("[Background] 等待首张背景完成再预取");
+        // 需要首张背景和README都加载完成后才开始预取
+        if (!firstBackgroundLoaded || !window.readmeLoaded) {
+            console.log("[Background] 等待首张背景和README都完成再预取");
             return;
         }
 
