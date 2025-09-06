@@ -79,15 +79,6 @@ body {
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
-    /* 根据深色模式设置底色 */
-    background-color: #f5f5f5; /* 浅色模式默认底色 */
-}
-
-/* 深色模式下的 body 底色 */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #1a1a1a; /* 深色模式底色 */
-    }
 }
 
 /* 注释掉固定背景设置，改用JavaScript随机背景功能 */
