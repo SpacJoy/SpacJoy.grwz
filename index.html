@@ -1,439 +1,153 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script>
-            // 条件性设置权限策略 - 避免在本地开发环境中过度限制
-            const isLocal = location.hostname === '127.0.0.1' || location.hostname === 'localhost';
-            if (!isLocal) {
-                document.write('<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), local-network=(), bluetooth=(), usb=(), serial=()">');
-                document.write('<meta name="referrer" content="no-referrer">');
-            }
-        </script>
-        <title data-zh="喵~呜~~！" data-en="Meow~? Awoo~~!">喵~呜~~！</title>
-        <link
-            rel="icon"
-            type="image/webp"
-            href="https://ysy.146019.xyz/icon/top.webp"
-        />
-        <!-- 设置网页样式-->
-        <link rel="stylesheet" type="text/css" href="main.css" />
-        <link rel="stylesheet" type="text/css" href="index.css" />
-        <!-- 引入 marked.js 用于 Markdown 渲染 -->
-        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-        <script>
-            // 备用marked.js加载
-            if (typeof marked === "undefined") {
-                document.write(
-                    '<script src="https://unpkg.com/marked@latest/marked.min.js"><\/script>'
-                );
-            }
-        </script>
-        <script src="marked-fallback.js"></script>
-    </head>
 
-    <body>
-        <div class="blur-effect"></div>
-        <div class="loader">
-            <img id="loading-gif" src="" alt="Loading..." />
-        </div>
-        <header>
-            <h1>
-                <div class="title-row">
-                    <img
-                        src="https://ysy.146019.xyz/icon/top.webp"
-                        alt="Logo"
-                    />
-                    <div class="header-controls">
-                        <div class="language-switch">
-                            <button
-                                id="lang-toggle"
-                                class="lang-btn"
-                                onclick="toggleLanguage()"
-                                title="切换语言 / Switch Language"
-                            >
-                                <span id="lang-text">EN</span>
-                            </button>
-                        </div>
-                        <div class="change-bg">
-                            <button
-                                id="bg-toggle"
-                                class="lang-btn change-bg-btn"
-                                onclick="changeRandomBackground()"
-                                data-zh-title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景"
-                                data-en-title="Change Background (Ctrl+B)\nEach device/window sees its own random background"
-                                title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景"
-                            >
-                                <span
-                                    data-zh="🎨 更换背景"
-                                    data-en="🎨 Background"
-                                    >🎨 更换背景</span
-                                >
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <span
-                    class="title-text"
-                    data-zh="记忆塑造灵魂，灵魂影响记忆！"
-                    data-en="Memory shapes the soul, the soul influences memory!"
-                    >记忆塑造灵魂，灵魂影响记忆！
-                </span>
-            </h1>
-            <!-- <p>欢迎来到我的工具箱，这里有一些我常用的工具，欢迎大家提出宝贵意见。</p> -->
-            <!-- <p>对了！我主推天禄哦~！</p> -->
-        </header>
-        <script src="./globals.js" defer></script>
-        <script src="./background.js" defer></script>
-        <script src="./loader.js" defer></script>
-        <script src="./readme.js" defer></script>
-        <script src="./servers.js" defer></script>
-        <script src="./notifications.js" defer></script>
-        <script src="./lang.js" defer></script>
-        <script src="./ui.js" defer></script>
-        <!-- legacy bootstrap (kept for compatibility) -->
-        <script src="./app.js" defer></script>
-        <main class="container">
-            <article>
-                <h2 data-zh="影视" data-en="Film(TV)">影视</h2>
-                <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2> -->
-                <p>
-                    <span data-zh="MoonTV" data-en="MoonTV">MoonTV</span>
-                    <span id="moontv-status"
-                        >🔄
-                        <span data-zh="检测中..." data-en="Checking..."
-                            >检测中...</span
-                        ></span
-                    >
-                </p>
-                <p data-zh="免费影视资源" data-en="Free Film Resources">
-                    免费影视资源
-                </p>
-                <p data-zh="开源项目" data-en="Open Source Projects">
-                    开源项目
-                </p>
-                <p data-zh="自带跳广告" data-en="Built-in Ad Skipper">
-                    自带跳广告
-                </p>
-                <button
-                    class="btn"
-                    onclick="window.open('https://moontv.146019.xyz', '_blank')"
-                    data-zh="前往MoonTV(需要密码)"
-                    data-en="Go to MoonTV(Password required)"
-                >
-                    前往MoonTV(需要密码)
-                </button>
-                <button
-                    class="btn"
-                    onclick="copyServerAddress('2012521')"
-                    data-zh="点击复制密码"
-                    data-en="Click to copy the password"
-                >
-                    点击复制密码
-                </button>
-                <button
-                    class="btn"
-                    onclick="window.open('https://github.com/samqin123/MoonTV', '_blank')"
-                    data-zh="项目地址"
-                    data-en="Project Repository"
-                >
-                    项目地址
-                </button>
-            </article>
-            <article>
-                <h2
-                    data-zh="将 Windows 设备接入智能家居"
-                    data-en="Connect Windows Devices to Smart Home"
-                >
-                    将 Windows 设备接入智能家居
-                </h2>
-                <p
-                    data-zh="通过小爱同学、天猫精灵等智能家具设备"
-                    data-en="Via XiaoAi, Tmall Genie and other smart home devices"
-                >
-                    通过小爱同学、天猫精灵等智能家具设备
-                </p>
-                <p
-                    data-zh="实现对 Windows 电脑的远程控制"
-                    data-en="Remote control of Windows computers"
-                >
-                    实现对 Windows 电脑的远程控制
-                </p>
-                <p
-                    data-zh="包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能"
-                    data-en="Including shutdown, lock, launch apps/scripts, service management, display brightness, volume control"
-                >
-                    包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能
-                </p>
-                <p
-                    data-zh="适合有远程自动化需求的用户。"
-                    data-en="Suitable for users with remote automation needs."
-                >
-                    适合有远程自动化需求的用户。
-                </p>
-                <p></p>
-                <button
-                    class="btn"
-                    onclick="window.open('https://github.com/chen6019/Remote-Controls', '_blank')"
-                    data-zh="前往项目"
-                    data-en="Go to Project"
-                >
-                    前往项目
-                </button>
-            </article>
-            <article>
-                <h2>
-                    <span data-zh="Openlist" data-en="Openlist">Openlist</span>
-                    <span
-                        id="openlist-status"
-                        style="font-size: 0.8em; margin-left: 10px"
-                        >🔄
-                        <span data-zh="检测中..." data-en="Checking..."
-                            >检测中...</span
-                        ></span
-                    >
-                </h2>
-                <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2> -->
-                <p data-zh="Openlist网盘" data-en="Openlist Cloud Storage">
-                    Openlist网盘
-                </p>
-                <p data-zh="仅支持网页使用" data-en="Web-only access">
-                    仅支持网页使用
-                </p>
-                <p
-                    data-zh="影视、应用、游戏等资源"
-                    data-en="Movies, apps, games and other resources"
-                >
-                    影视、应用、游戏等资源
-                </p>
-                <p
-                    data-zh="默认可在共享目录上传文件"
-                    data-en="Upload files to shared directory by default"
-                >
-                    默认可在共享目录上传文件
-                </p>
-                <p
-                    data-zh="网盘里有其他网盘链接"
-                    data-en="Contains links to other cloud storage"
-                >
-                    网盘里有其他网盘链接
-                </p>
-                <p
-                    data-zh="不支持播放记录和视频信息"
-                    data-en="No playback history or video info"
-                >
-                    不支持播放记录和视频信息
-                </p>
-                <button
-                    class="btn"
-                    onclick="window.open('https://openlist.146019.xyz', '_blank')"
-                    data-zh="前往Openlist"
-                    data-en="Go to Openlist"
-                >
-                    前往Openlist
-                </button>
-                <button
-                    class="btn"
-                    onclick="window.open('https://openlist.2012521.xyz', '_blank')"
-                    data-zh="备用链接"
-                    data-en="Backup Link"
-                >
-                    备用链接
-                </button>
-            </article>
-            <article>
-                <h2>
-                    <span data-zh="飞牛影视" data-en="FeiNiu Media"
-                        >飞牛影视</span
-                    >
-                    <span
-                        id="fnos-status"
-                        style="font-size: 0.8em; margin-left: 10px"
-                        >🔄
-                        <span data-zh="检测中..." data-en="Checking..."
-                            >检测中...</span
-                        ></span
-                    >
-                </h2>
-                <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2> -->
-                <p
-                    data-zh="个人影视库,账号：tlbx"
-                    data-en="Personal media library, Account: tlbx"
-                >
-                    个人影视库,账号：tlbx
-                </p>
-                <p
-                    data-zh="有手机客户端，支持下载到本地离线播放"
-                    data-en="Mobile app available, supports offline download"
-                >
-                    有手机客户端，支持下载到本地离线播放
-                </p>
-                <p
-                    data-zh="相比Openlist有播放记录和信息等功能"
-                    data-en="Has playback history and info features compared to Openlist"
-                >
-                    相比Openlist有播放记录和信息等功能
-                </p>
-                <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);">服务器维护中，暂不可用!</h2> -->
-                <button
-                    class="btn"
-                    onclick="window.open('https://fn.146019.xyz/v', '_blank')"
-                    data-zh="前往影视库"
-                    data-en="Go to Media Library"
-                >
-                    前往影视库
-                </button>
-                <button
-                    class="btn"
-                    onclick="copyServerAddress('https://fn.146019.xyz')"
-                    data-zh="复制服务器地址"
-                    data-en="Copy Server Address"
-                >
-                    复制服务器地址
-                </button>
-                <button
-                    class="btn"
-                    onclick="copyServerAddress('20120224')"
-                    data-zh="复制密码"
-                    data-en="Copy Password"
-                >
-                    复制密码
-                </button>
-                <button
-                    class="btn"
-                    onclick="window.open('https://www.fnnas.com/download?key=media_app', '_blank')"
-                    data-zh="安装飞牛影视"
-                    data-en="Install FeiNiu Media"
-                >
-                    安装飞牛影视
-                </button>
-            </article>
-            <article>
-                <h2 data-zh="关于小说" data-en="About My Novel">关于小说</h2>
-                <p
-                    data-zh="这是我写的一部小说。"
-                    data-en="This is a novel I'm writing."
-                >
-                    这是我写的一部小说。
-                </p>
-                <p
-                    data-zh="目前仍在撰写大纲。"
-                    data-en="Currently still working on the outline."
-                >
-                    目前仍在撰写大纲。
-                </p>
-                <p
-                    data-zh="实际上，这也是我的幻想。"
-                    data-en="Actually, this is also my fantasy."
-                >
-                    实际上，这也是我的幻想。
-                </p>
-                <p
-                    data-zh="将会有很多心理描写，请理解。"
-                    data-en="There will be many psychological descriptions, please understand."
-                >
-                    将会有很多心理描写，请理解。
-                </p>
-                <p
-                    data-zh="仓库目前不对公开，待正式章节发布后将会公开。"
-                    data-en="Repository is private now, will be public after official chapters release."
-                >
-                    仓库目前不对公开，待正式章节发布后将会公开。
-                </p>
-                <button
-                    class="btn"
-                    onclick="window.open('https://github.com/chen6019/My.novel.ysy', '_blank')"
-                    data-zh="前往Github"
-                    data-en="Go to Github"
-                >
-                    前往Github
-                </button>
-            </article>
-            <article>
-                <h2>
-                    <span data-zh="2406寝室相册" data-en="2406 Dorm Album"
-                        >2406寝室相册</span
-                    >
-                    <span
-                        id="photo-status"
-                        style="font-size: 0.8em; margin-left: 10px"
-                        >🔄
-                        <span data-zh="检测中..." data-en="Checking..."
-                            >检测中...</span
-                        ></span
-                    >
-                </h2>
-                <!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2> -->
-                <p
-                    data-zh="2406专用寝室用相册"
-                    data-en="Exclusive photo album for dorm 2406"
-                >
-                    2406专用寝室用相册
-                </p>
-                <p
-                    data-zh="账号密码在寝室群公告"
-                    data-en="Account info in dorm group announcement"
-                >
-                    账号密码在寝室群公告
-                </p>
-                <button
-                    class="btn"
-                    onclick="window.open('https://photo.146019.xyz/', '_blank')"
-                    data-zh="前往相册"
-                    data-en="Go to Album"
-                >
-                    前往相册
-                </button>
-                <button
-                    class="btn"
-                    onclick="copyServerAddress('https://photo.146019.xyz')"
-                    data-zh="复制服务器地址"
-                    data-en="Copy Server Address"
-                >
-                    复制服务器地址
-                </button>
-                <button
-                    class="btn"
-                    onclick="window.open('https://play.google.com/store/apps/details?id=app.alextran.immich', '_blank')"
-                    data-zh="安装相册（Google）"
-                    data-en="Install Album (Google)"
-                >
-                    安装相册（Google）
-                </button>
-                <button
-                    class="btn"
-                    onclick="window.open('https://github.com/immich-app/immich/releases', '_blank')"
-                    data-zh="安装相册（Github）"
-                    data-en="Install Album (Github)"
-                >
-                    安装相册（Github）
-                </button>
-                <button
-                    class="btn"
-                    onclick="window.open('https://apps.apple.com/us/app/immich/id1613945652', '_blank')"
-                    data-zh="安装相册（Apple）"
-                    data-en="Install Album (Apple)"
-                >
-                    安装相册（Apple）
-                </button>
-            </article>
-            <!-- 个人简介和信息展示区域 -->
-            <section class="markdown-display-section">
-                <div class="markdown-content" id="markdown-content">
-                    <div class="loading-readme">
-                        <p
-                            data-zh="正在加载个人简介..."
-                            data-en="Loading personal profile..."
-                        >
-                            正在加载个人简介...
-                        </p>
-                    </div>
-                </div>
-            </section>
-        </main>
-        <footer>
-            <!-- 可在此放置其它底部信息 -->
-        </footer>
-    </body>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), local-network=(), private-network-access=()">
+	<meta http-equiv="Content-Security-Policy" content="connect-src 'self' https: data: blob:; object-src 'none';">
+	<title data-zh="喵~呜~~！" data-en="Meow~? Awoo~~!">喵~呜~~！</title>
+	<link rel="icon" type="image/webp" href="https://ysy.146019.xyz/icon/top.webp">    
+	<!-- 设置网页样式-->
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<link rel="stylesheet" type="text/css" href="index.css">
+	<!-- 引入 marked.js 用于 Markdown 渲染 -->
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script>
+		// 备用marked.js加载
+		if (typeof marked === 'undefined') {
+			document.write('<script src="https://unpkg.com/marked@latest/marked.min.js"><\/script>');
+		}
+	</script>
+	<script src="marked-fallback.js"></script>
+	<script>
+		// 防止意外的本地网络权限请求
+		if (window.navigator && window.navigator.permissions) {
+			// 预先拒绝本地网络权限请求（如果支持的话）
+			try {
+				navigator.permissions.query({name: 'local-fonts'}).catch(() => {});
+			} catch(e) {}
+		}
+	</script>
+</head>
+
+<body>
+	<div class="blur-effect"></div>    <div class="loader">
+		<img id="loading-gif" src="" alt="Loading...">
+	</div>
+	<header>
+		<h1>
+			<div class="title-row">
+				<img src="https://ysy.146019.xyz/icon/top.webp" alt="Logo">
+				<div class="header-controls">
+				<div class="language-switch">
+					<button id="lang-toggle" class="lang-btn" onclick="toggleLanguage()" title="切换语言 / Switch Language">
+						<span id="lang-text">EN</span>
+					</button>
+				</div>
+				<div class="change-bg">
+					<button id="bg-toggle" class="lang-btn change-bg-btn" onclick="changeRandomBackground()" 
+						data-zh-title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景" 
+						data-en-title="Change Background (Ctrl+B)\nEach device/window sees its own random background" 
+						title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景">
+						<span data-zh="🎨 更换背景" data-en="🎨 Background">🎨 更换背景</span>
+					</button>
+				</div>
+				</div>
+			</div>
+			<span class="title-text" data-zh="记忆塑造灵魂，灵魂影响记忆！" data-en="Memory shapes the soul, the soul influences memory!">记忆塑造灵魂，灵魂影响记忆！
+			</span>
+		</h1>
+		<!-- <p>欢迎来到我的工具箱，这里有一些我常用的工具，欢迎大家提出宝贵意见。</p> -->
+		<!-- <p>对了！我主推天禄哦~！</p> -->
+	</header>
+	<script src="./globals.js" defer></script>
+	<script src="./background.js" defer></script>
+	<script src="./loader.js" defer></script>
+	<script src="./readme.js" defer></script>
+	<script src="./servers.js" defer></script>
+	<script src="./notifications.js" defer></script>
+	<script src="./lang.js" defer></script>
+	<script src="./ui.js" defer></script>
+	<!-- legacy bootstrap (kept for compatibility) -->
+	<script src="./app.js" defer></script>
+	<main class="container">
+		<article>
+			<h2 data-zh="影视" data-en="Film(TV)">影视</h2>
+			<!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2> -->
+			<p><span data-zh="MoonTV" data-en="MoonTV">MoonTV</span> <span id="moontv-status">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></p>
+			<p data-zh="免费影视资源" data-en="Free Film Resources">免费影视资源</p>
+			<p data-zh="开源项目" data-en="Open Source Projects">开源项目</p>
+			<p data-zh="自带跳广告" data-en="Built-in Ad Skipper">自带跳广告</p>
+			<button class="btn" onclick="window.open('https://moontv.146019.xyz', '_blank')" data-zh="前往MoonTV(需要密码)" data-en="Go to MoonTV(Password required)">前往MoonTV(需要密码)</button>
+			<button class="btn" onclick="copyServerAddress('2012521')" data-zh="点击复制密码" data-en="Click to copy the password">点击复制密码</button>
+			<button class="btn" onclick="window.open('https://github.com/samqin123/MoonTV', '_blank')" data-zh="项目地址" data-en="Project Repository">项目地址</button>
+		</article>
+		<article>
+			<h2 data-zh="将 Windows 设备接入智能家居" data-en="Connect Windows Devices to Smart Home">将 Windows 设备接入智能家居</h2>
+			<p data-zh="通过小爱同学、天猫精灵等智能家具设备" data-en="Via XiaoAi, Tmall Genie and other smart home devices">通过小爱同学、天猫精灵等智能家具设备</p>
+			<p data-zh="实现对 Windows 电脑的远程控制" data-en="Remote control of Windows computers">实现对 Windows 电脑的远程控制</p>
+			<p data-zh="包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能" data-en="Including shutdown, lock, launch apps/scripts, service management, display brightness, volume control">包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能</p>
+			<p data-zh="适合有远程自动化需求的用户。" data-en="Suitable for users with remote automation needs.">适合有远程自动化需求的用户。</p>
+			<p> </p>
+			<button class="btn" onclick="window.open('https://github.com/chen6019/Remote-Controls', '_blank')" data-zh="前往项目" data-en="Go to Project">前往项目</button>
+		</article>
+		<article>
+			<h2><span data-zh="Openlist" data-en="Openlist">Openlist</span> <span id="openlist-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h2>
+			<!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2> -->
+			<p data-zh="Openlist网盘" data-en="Openlist Cloud Storage">Openlist网盘</p>
+			<p data-zh="仅支持网页使用" data-en="Web-only access">仅支持网页使用</p>
+			<p data-zh="影视、应用、游戏等资源" data-en="Movies, apps, games and other resources">影视、应用、游戏等资源</p>
+			<p data-zh="默认可在共享目录上传文件" data-en="Upload files to shared directory by default">默认可在共享目录上传文件</p>
+			<p data-zh="网盘里有其他网盘链接" data-en="Contains links to other cloud storage">网盘里有其他网盘链接</p>
+			<p data-zh="不支持播放记录和视频信息" data-en="No playback history or video info">不支持播放记录和视频信息</p>
+			<button class="btn" onclick="window.open('https://openlist.146019.xyz', '_blank')" data-zh="前往Openlist" data-en="Go to Openlist">前往Openlist</button>
+			<button class="btn" onclick="window.open('https://openlist.2012521.xyz', '_blank')" data-zh="备用链接" data-en="Backup Link">备用链接</button>
+		</article>
+		<article>
+			<h2><span data-zh="飞牛影视" data-en="FeiNiu Media">飞牛影视</span> <span id="fnos-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h2>
+			<!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2> -->
+			<p data-zh="个人影视库,账号：tlbx" data-en="Personal media library, Account: tlbx">个人影视库,账号：tlbx</p>
+			<p data-zh="有手机客户端，支持下载到本地离线播放" data-en="Mobile app available, supports offline download">有手机客户端，支持下载到本地离线播放</p>
+			<p data-zh="相比Openlist有播放记录和信息等功能" data-en="Has playback history and info features compared to Openlist">相比Openlist有播放记录和信息等功能</p>
+			<!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);">服务器维护中，暂不可用!</h2> -->
+			<button class="btn" onclick="window.open('https://fn.146019.xyz/v', '_blank')" data-zh="前往影视库" data-en="Go to Media Library">前往影视库</button>
+			<button class="btn" onclick="copyServerAddress('https://fn.146019.xyz')" data-zh="复制服务器地址" data-en="Copy Server Address">复制服务器地址</button>
+			<button class="btn" onclick="copyServerAddress('20120224')" data-zh="复制密码" data-en="Copy Password">复制密码</button>
+			<button class="btn" onclick="window.open('https://www.fnnas.com/download?key=media_app', '_blank')" data-zh="安装飞牛影视" data-en="Install FeiNiu Media">安装飞牛影视</button>
+		</article>
+		<article>
+			<h2 data-zh="关于小说" data-en="About My Novel">关于小说</h2>
+			<p data-zh="这是我写的一部小说。" data-en="This is a novel I'm writing.">这是我写的一部小说。</p>
+			<p data-zh="目前仍在撰写大纲。" data-en="Currently still working on the outline.">目前仍在撰写大纲。</p>
+			<p data-zh="实际上，这也是我的幻想。" data-en="Actually, this is also my fantasy.">实际上，这也是我的幻想。</p>
+			<p data-zh="将会有很多心理描写，请理解。" data-en="There will be many psychological descriptions, please understand.">将会有很多心理描写，请理解。</p>
+			<p data-zh="仓库目前不对公开，待正式章节发布后将会公开。" data-en="Repository is private now, will be public after official chapters release.">仓库目前不对公开，待正式章节发布后将会公开。</p>
+			<button class="btn" onclick="window.open('https://github.com/chen6019/My.novel.ysy', '_blank')" data-zh="前往Github" data-en="Go to Github">前往Github</button>
+		</article>
+		<article>
+			<h2><span data-zh="2406寝室相册" data-en="2406 Dorm Album">2406寝室相册</span> <span id="photo-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h2>
+			<!-- <h2 style="color: #ff4444; text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);"><span data-zh="转移服务器中，可能暂不可用!" data-en="Server migration in progress, temporarily unavailable!">转移服务器中，暂不可用!</span></h2> -->
+			<p data-zh="2406专用寝室用相册" data-en="Exclusive photo album for dorm 2406">2406专用寝室用相册</p>
+			<p data-zh="账号密码在寝室群公告" data-en="Account info in dorm group announcement">账号密码在寝室群公告</p>
+			<button class="btn" onclick="window.open('https://photo.146019.xyz/', '_blank')" data-zh="前往相册" data-en="Go to Album">前往相册</button>
+			<button class="btn" onclick="copyServerAddress('https://photo.146019.xyz')" data-zh="复制服务器地址" data-en="Copy Server Address">复制服务器地址</button>
+			<button class="btn" onclick="window.open('https://play.google.com/store/apps/details?id=app.alextran.immich', '_blank')" data-zh="安装相册（Google）" data-en="Install Album (Google)">安装相册（Google）</button>
+			<button class="btn" onclick="window.open('https://github.com/immich-app/immich/releases', '_blank')" data-zh="安装相册（Github）" data-en="Install Album (Github)">安装相册（Github）</button>
+			<button class="btn" onclick="window.open('https://apps.apple.com/us/app/immich/id1613945652', '_blank')" data-zh="安装相册（Apple）" data-en="Install Album (Apple)">安装相册（Apple）</button>
+		</article>
+		<!-- 个人简介和信息展示区域 -->
+		<section class="markdown-display-section">
+			<div class="markdown-content" id="markdown-content">
+				<div class="loading-readme">
+					<p data-zh="正在加载个人简介..." data-en="Loading personal profile...">正在加载个人简介...</p>
+				</div>
+			</div>
+		</section>
+	</main>
+	<footer>
+	<!-- 可在此放置其它底部信息 -->
+	</footer>
+</body>
+
 </html>
