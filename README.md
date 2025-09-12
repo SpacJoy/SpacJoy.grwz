@@ -1,7 +1,4 @@
 <!-- @format -->
-## 导航：[点击访问](https://146019.xyz) | [备用1](https://2012520.xyz) | [备用2](https://2012521.xyz) | [备用3](https://www.146019.xyz)
-
-#### 纯内网：[内网](http://192.168.100.1:5244)
 
 # <div align="center">Hi there 👋 this is chen6019</div>
 
@@ -26,7 +23,7 @@
 # <div align="center">🔗 Services</div>
 
 # <div align="center"><img src="https://ysy.146019.xyz/bqb/AM/hp/bqb_004.gif" alt="转圈圈~喵~" style="width:25%; height:auto;"></div>
-## <div align="center"><a href="https://146019.xyz"><img src="https://img.shields.io/badge/嗷呜~-3EA8FF?logo=macys" title="主" /></a> <a href="https://2012520.xyz"><img src="https://img.shields.io/badge/备用！喵~-3EA8FF?logo=macys" title="备用" /></a> <a href="https://2012521.xyz"><img src="https://img.shields.io/badge/备用域名！喵~-3EA8FF?logo=macys" title="备用域名" /></a></div>
+## <div align="center"><a href="https://146019.xyz"><img src="https://img.shields.io/badge/喵~-146019.xyz-3EA8FF?logo=macys" title="点击访问" /></a> <a href="https://2012520.xyz"><img src="https://img.shields.io/badge/嗷~-2012520.xyz-3EA8FF?logo=macys" title="备用（GitHub）" /></a> <a href="https://2012521.xyz"><img src="https://img.shields.io/badge/备用1-2012521.xyz-3EA8FF?logo=macys" title="备用1" /></a> <a href="https://www.146019.xyz"><img src="https://img.shields.io/badge/备用2-www.146019.xyz-3EA8FF?logo=macys" title="备用2" /></a></div>
 
 
 # <div align="center"><img src="https://raw.githubusercontent.com/alexnaiman/alexnaiman/master/resources/bongocat.gif" width="50px" /> How to reach me: ...</div>
