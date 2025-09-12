@@ -1,5 +1,18 @@
 // 三张预取 + 多层淡入淡出实现
 const RANDOM_API_BASE = "https://rad.ysy.146019.xyz/";
+
+// 检测是否为内网环境
+function isLocalDevelopment() {
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    
+    // 检测常见的本地开发环境
+    return hostname === '127.0.0.1' || 
+           hostname === 'localhost' || 
+           (hostname === '127.0.0.1' && port === '5500') ||
+           hostname.endsWith('.local');
+}
+
 function mapDir(layout) {
     // 新的目录结构：bz下按设备类型分类，不再区分深色模式
     if (layout === "desktop") return "bz/hp"; // 横屏
@@ -86,6 +99,12 @@ function loadFirstBackground() {
 
 // 检查是否可以开始预取（需要README和首张背景都完成）
 function checkCanStartPrefetch() {
+    // 如果是内网环境，禁用背景预加载
+    if (isLocalDevelopment()) {
+        console.log("[Background] 检测到内网环境，跳过背景预加载");
+        return;
+    }
+    
     if (
         firstBackgroundLoaded &&
         window.loadingStates &&
@@ -273,6 +292,7 @@ window.crossfadeToPrefetched = crossfadeToPrefetched;
 window._getNextPrefetchedBackground = () => queue.slice();
 window.loadFirstBackground = loadFirstBackground;
 window.checkCanStartPrefetch = checkCanStartPrefetch;
+window.isLocalDevelopment = isLocalDevelopment;
 window.getPrefetchStatus = () => ({
     total: queue.length,
     loaded: queue.filter((e) => e.loaded).length,

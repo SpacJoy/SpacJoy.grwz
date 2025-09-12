@@ -1,4 +1,5 @@
 // README 加载与骨架屏
+
 function createReadmeSkeleton() {
     const container = document.getElementById("markdown-content");
     if (!container || container.dataset.filled === "1") return;
@@ -57,6 +58,15 @@ function renderMarkdown(markdownText) {
             });
             const images = markdownContent.querySelectorAll("img");
             images.forEach((img) => {
+                // 只在非本地开发环境中添加跨域属性
+                if (
+                    !window.isLocalDevelopment ||
+                    !window.isLocalDevelopment()
+                ) {
+                    img.setAttribute("crossorigin", "anonymous");
+                    img.setAttribute("referrerpolicy", "no-referrer");
+                }
+
                 if (!img.style.maxWidth) {
                     img.style.maxWidth = "100%";
                     img.style.height = "auto";
@@ -178,7 +188,14 @@ function loadGithubReadme() {
     const githubUrl =
         "https://raw.githubusercontent.com/chen6019/chen6019/main/README.md";
 
-    return fetch(githubUrl)
+    // 针对Cloudflare Pages添加特殊的fetch选项
+    const fetchOptions = {
+        mode: "cors",
+        credentials: "omit",
+        referrerPolicy: "no-referrer",
+    };
+
+    return fetch(githubUrl, fetchOptions)
         .then((r) => {
             if (!r.ok) throw new Error(`GitHub README HTTP ${r.status}`);
             return r.text();
@@ -189,6 +206,23 @@ function loadGithubReadme() {
             console.log("[README] GitHub备用README加载成功");
             return processedText;
         });
+}
+
+// 检测是否为Cloudflare Pages环境
+function isCloudflarePages() {
+    const hostname = window.location.hostname;
+    const origin = window.location.origin;
+
+    // 检测多种Cloudflare Pages的标识
+    return (
+        hostname.includes(".pages.dev") ||
+        hostname.includes("chen6019-grwz.pages.dev") ||
+        origin.includes(".pages.dev") ||
+        (window.navigator &&
+            window.navigator.userAgent &&
+            document.referrer &&
+            document.referrer.includes("pages.dev"))
+    );
 }
 
 function loadReadmeContent() {
@@ -206,6 +240,29 @@ function loadReadmeContent() {
 
     isLoadingReadme = true;
     window.isLoadingReadme = true;
+
+    // 针对Cloudflare Pages的特殊处理
+    if (isCloudflarePages()) {
+        console.log(
+            "[README] 检测到Cloudflare Pages环境，直接使用GitHub README"
+        );
+        loadGithubReadme()
+            .then((processedText) => {
+                renderMarkdown(processedText);
+            })
+            .catch((githubError) => {
+                console.error(
+                    "Cloudflare Pages环境下GitHub README加载失败",
+                    githubError
+                );
+                window.showReadmeError && window.showReadmeError();
+            })
+            .finally(() => {
+                isLoadingReadme = false;
+                window.isLoadingReadme = false;
+            });
+        return;
+    }
 
     // 加载本地README.md文件（与网站文件一起部署到服务器）
     fetch("./README.md")
@@ -276,3 +333,4 @@ window.loadReadmeContent = loadReadmeContent;
 window.showReadmeError = showReadmeError;
 window.loadGithubReadme = loadGithubReadme;
 window.replaceLocalImagePaths = replaceLocalImagePaths;
+window.isCloudflarePages = isCloudflarePages;
