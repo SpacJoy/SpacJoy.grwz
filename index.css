@@ -625,15 +625,6 @@ header h1 span.title-text {
 	min-width: auto;
 }
 
-.header-controls #theme-toggle {
-	width: 44px;
-	justify-content: center;
-}
-
-.header-controls #theme-icon {
-	font-size: 16px;
-}
-
 /* 语言按钮与其他按钮的分隔 */
 .header-controls .language-switch {
 	margin-right: 8px;
@@ -651,14 +642,6 @@ header h1 span.title-text {
 		.header-controls .lang-btn {
 			padding: 6px 8px;
 			font-size: 12px;
-		}
-		
-		.header-controls #theme-toggle {
-			width: 38px;
-		}
-		
-		.header-controls #theme-icon {
-			font-size: 14px;
 		}
 		
 		/* 语言按钮分隔调整 */
