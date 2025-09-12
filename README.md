@@ -23,7 +23,7 @@
 # <div align="center">🔗 Services</div>
 
 # <div align="center"><img src="https://ysy.146019.xyz/bqb/AM/hp/bqb_004.gif" alt="转圈圈~喵~" style="width:25%; height:auto;"></div>
-## <div align="center"><a href="https://146019.xyz"><img src="https://img.shields.io/badge/喵~-146019.xyz-3EA8FF?logo=macys" title="点击访问" /></a> <a href="https://2012520.xyz"><img src="https://img.shields.io/badge/嗷~-2012520.xyz-3EA8FF?logo=macys" title="备用（GitHub）" /></a> <a href="https://2012521.xyz"><img src="https://img.shields.io/badge/备用1-2012521.xyz-3EA8FF?logo=macys" title="备用1" /></a> <a href="https://www.146019.xyz"><img src="https://img.shields.io/badge/备用2-www.146019.xyz-3EA8FF?logo=macys" title="备用2" /></a></div>
+## <div align="center"><a href="https://146019.xyz"><img src="https://img.shields.io/badge/喵~-146019.xyz-3EA8FF?logo=Cloudflare" title="点击访问" /></a> <a href="https://2012520.xyz"><img src="https://img.shields.io/badge/嗷~-2012520.xyz-3EA8FF?logo=github" title="备用（GitHub）" /></a> <a href="https://2012521.xyz"><img src="https://img.shields.io/badge/备用1-2012521.xyz-3EA8FF?logo=macys" title="备用1" /></a> <a href="https://www.146019.xyz"><img src="https://img.shields.io/badge/备用2-www.146019.xyz-3EA8FF?logo=macys" title="备用2" /></a></div>
 
 
 # <div align="center"><img src="https://raw.githubusercontent.com/alexnaiman/alexnaiman/master/resources/bongocat.gif" width="50px" /> How to reach me: ...</div>
