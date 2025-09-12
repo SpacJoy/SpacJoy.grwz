@@ -28,80 +28,109 @@ window.isLoadingReadme = false; // 对外暴露以便其他模块判断
 window.readmeLoaded = false; // 是否已成功渲染完成
 
 function renderMarkdown(markdownText) {
-    // 不再删除前几行，直接渲染完整内容
-    marked.setOptions({
-        breaks: true,
-        gfm: true,
-        headerIds: false,
-        mangle: false,
-    });
-    let htmlContent = marked.parse(markdownText);
-    const markdownContent = document.getElementById("markdown-content");
-    if (markdownContent) {
-        markdownContent.innerHTML = htmlContent;
-        const links = markdownContent.querySelectorAll("a");
-        links.forEach((link) => {
-            if (!link.hasAttribute("target"))
-                link.setAttribute("target", "_blank");
-        });
-        const images = markdownContent.querySelectorAll("img");
-        images.forEach((img) => {
-            if (!img.style.maxWidth) {
-                img.style.maxWidth = "100%";
-                img.style.height = "auto";
-                img.style.borderRadius = "8px";
-                img.style.margin = "10px 5px";
-            }
-            try {
-                const u = new URL(img.src, location.href);
-                if (/github-readme-stats\.vercel\.app/.test(u.host)) {
-                    // 创建“加载中”占位
-                    const placeholder = document.createElement("div");
-                    placeholder.className = "external-img-loading";
-                    placeholder.innerHTML =
-                        '📊 <span data-zh="统计卡片加载中..." data-en="Loading stats card...">统计卡片加载中...</span>';
-                    // 在原图前插入占位（仅第一次）
-                    if (!img.__statsPlaceholderInserted) {
-                        img.parentNode.insertBefore(placeholder, img);
-                        img.__statsPlaceholderInserted = true;
-                    }
-                    // 加载成功后移除占位
-                    img.addEventListener("load", () => {
-                        placeholder.classList.add("fade-out");
-                        setTimeout(() => placeholder.remove(), 300);
-                    });
-                    img.addEventListener("error", () => {
-                        const fail = Object.assign(
-                            document.createElement("div"),
-                            {
-                                className: "external-img-fallback",
-                                innerHTML:
-                                    '📊 <span data-zh="与Github失去链接，统计卡片加载失败" data-en="Stats card failed">与Github失去链接，统计卡片加载失败</span>',
-                            }
-                        );
-                        placeholder.replaceWith(fail);
-                        img.remove();
-                    });
-                } else if (/raw\.githubusercontent\.com/.test(u.host)) {
-                    // 处理 GitHub 原始文件（如 GIF）
-                    img.addEventListener("error", () => {
-                        console.warn(
-                            "[README] GitHub 原始文件加载失败:",
-                            img.src
-                        );
-                        // 创建失败提示，但不显眼
-                        const fallback = document.createElement("span");
-                        fallback.className = "github-raw-fallback";
-                        fallback.style.cssText =
-                            "font-size:0.8em;color:#666;opacity:0.7;";
-                        fallback.innerHTML =
-                            '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
-                        img.replaceWith(fallback);
-                    });
-                }
-            } catch (_) {}
-        });
+    // 检查marked.js是否已加载
+    if (typeof marked === "undefined") {
+        console.error("[README] marked.js未加载，等待后重试...");
+        // 等待1秒后重试
+        setTimeout(() => {
+            renderMarkdown(markdownText);
+        }, 1000);
+        return;
     }
+
+    // 不再删除前几行，直接渲染完整内容
+    try {
+        marked.setOptions({
+            breaks: true,
+            gfm: true,
+            headerIds: false,
+            mangle: false,
+        });
+        let htmlContent = marked.parse(markdownText);
+        const markdownContent = document.getElementById("markdown-content");
+        if (markdownContent) {
+            markdownContent.innerHTML = htmlContent;
+            const links = markdownContent.querySelectorAll("a");
+            links.forEach((link) => {
+                if (!link.hasAttribute("target"))
+                    link.setAttribute("target", "_blank");
+            });
+            const images = markdownContent.querySelectorAll("img");
+            images.forEach((img) => {
+                if (!img.style.maxWidth) {
+                    img.style.maxWidth = "100%";
+                    img.style.height = "auto";
+                    img.style.borderRadius = "8px";
+                    img.style.margin = "10px 5px";
+                }
+                try {
+                    const u = new URL(img.src, location.href);
+                    if (/github-readme-stats\.vercel\.app/.test(u.host)) {
+                        // 创建“加载中”占位
+                        const placeholder = document.createElement("div");
+                        placeholder.className = "external-img-loading";
+                        placeholder.innerHTML =
+                            '📊 <span data-zh="统计卡片加载中..." data-en="Loading stats card...">统计卡片加载中...</span>';
+                        // 在原图前插入占位（仅第一次）
+                        if (!img.__statsPlaceholderInserted) {
+                            img.parentNode.insertBefore(placeholder, img);
+                            img.__statsPlaceholderInserted = true;
+                        }
+                        // 加载成功后移除占位
+                        img.addEventListener("load", () => {
+                            placeholder.classList.add("fade-out");
+                            setTimeout(() => placeholder.remove(), 300);
+                        });
+                        img.addEventListener("error", () => {
+                            const fail = Object.assign(
+                                document.createElement("div"),
+                                {
+                                    className: "external-img-fallback",
+                                    innerHTML:
+                                        '📊 <span data-zh="与Github失去链接，统计卡片加载失败" data-en="Stats card failed">与Github失去链接，统计卡片加载失败</span>',
+                                }
+                            );
+                            placeholder.replaceWith(fail);
+                            img.remove();
+                        });
+                    } else if (/raw\.githubusercontent\.com/.test(u.host)) {
+                        // 处理 GitHub 原始文件（如 GIF）
+                        img.addEventListener("error", () => {
+                            console.warn(
+                                "[README] GitHub 原始文件加载失败:",
+                                img.src
+                            );
+                            // 创建失败提示，但不显眼
+                            const fallback = document.createElement("span");
+                            fallback.className = "github-raw-fallback";
+                            fallback.style.cssText =
+                                "font-size:0.8em;color:#666;opacity:0.7;";
+                            fallback.innerHTML =
+                                '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
+                            img.replaceWith(fallback);
+                        });
+                    }
+                } catch (_) {}
+            });
+        }
+    } catch (error) {
+        console.error("[README] markdown渲染失败:", error);
+        // 显示错误信息
+        const markdownContent = document.getElementById("markdown-content");
+        if (markdownContent) {
+            markdownContent.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: #666;">
+                    <h3>📝 Markdown渲染失败</h3>
+                    <p>请检查marked.js是否正确加载</p>
+                    <button onclick="location.reload()" style="margin-top: 10px; padding: 5px 15px;">
+                        🔄 重新加载页面
+                    </button>
+                </div>
+            `;
+        }
+        return;
+    }
+
     // 成功渲染后标记
     window.readmeLoaded = true;
 
@@ -126,19 +155,19 @@ function replaceLocalImagePaths(markdownText) {
         /src=["']([^"']*bqb_\d+\.gif)["']/g,
         'src="https://ysy.146019.xyz/bqb/AM/hp/$1"'
     );
-    
+
     // 也处理可能的webp格式
     processedText = processedText.replace(
         /src=["']([^"']*bqb_\d+\.webp)["']/g,
         'src="https://ysy.146019.xyz/bqb/AM/hp/$1"'
     );
-    
+
     // 处理loading图片
     processedText = processedText.replace(
         /src=["']([^"']*loading_\d+\.(?:gif|webp))["']/g,
         'src="https://ysy.146019.xyz/bqb/AM/$1"'
     );
-    
+
     console.log("[README] 图片路径替换完成");
     return processedText;
 }
@@ -146,8 +175,9 @@ function replaceLocalImagePaths(markdownText) {
 // 从GitHub加载备用README
 function loadGithubReadme() {
     console.log("[README] 尝试从GitHub加载备用README...");
-    const githubUrl = "https://raw.githubusercontent.com/chen6019/chen6019/main/README.md";
-    
+    const githubUrl =
+        "https://raw.githubusercontent.com/chen6019/chen6019/main/README.md";
+
     return fetch(githubUrl)
         .then((r) => {
             if (!r.ok) throw new Error(`GitHub README HTTP ${r.status}`);
@@ -164,6 +194,16 @@ function loadGithubReadme() {
 function loadReadmeContent() {
     if (window.readmeLoaded) return; // 已加载则直接返回
     if (isLoadingReadme || window.isLoadingReadme) return; // 正在加载中
+
+    // 检查marked.js是否可用
+    if (typeof marked === "undefined") {
+        console.warn("[README] marked.js未加载，延迟重试...");
+        setTimeout(() => {
+            loadReadmeContent();
+        }, 500);
+        return;
+    }
+
     isLoadingReadme = true;
     window.isLoadingReadme = true;
 
@@ -180,7 +220,7 @@ function loadReadmeContent() {
         .catch((e) => {
             console.error("加载本地 README 失败", e);
             console.log("[README] 尝试从GitHub加载备用README...");
-            
+
             // 本地加载失败，尝试从GitHub加载
             return loadGithubReadme()
                 .then((processedText) => {

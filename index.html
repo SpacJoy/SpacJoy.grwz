@@ -4,13 +4,21 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), local-network=()">
 	<title data-zh="喵~呜~~！" data-en="Meow~? Awoo~~!">喵~呜~~！</title>
 	<link rel="icon" type="image/webp" href="https://ysy.146019.xyz/icon/top.webp">    
 	<!-- 设置网页样式-->
-	 <link rel="stylesheet" type="text/css" href="main.css">
+	<link rel="stylesheet" type="text/css" href="main.css">
 	<link rel="stylesheet" type="text/css" href="index.css">
 	<!-- 引入 marked.js 用于 Markdown 渲染 -->
 	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script>
+		// 备用marked.js加载
+		if (typeof marked === 'undefined') {
+			document.write('<script src="https://unpkg.com/marked@latest/marked.min.js"><\/script>');
+		}
+	</script>
+	<script src="marked-fallback.js"></script>
 </head>
 
 <body>
