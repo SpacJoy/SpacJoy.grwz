@@ -68,8 +68,8 @@ function setLoadingState(key, value) {
 window.setLoadingState = setLoadingState;
 window.checkCanHideLoader = checkCanHideLoader;
 (function initLoadingImage() {
-    // 仅使用随机接口；不再进行本地（枚举）回退
-    const RANDOM_ENDPOINT = "https://random.ysy.146019.xyz/res/loading";
+    // 使用新的目录结构：bqb/AM（替换原：/res/loading）
+    const RANDOM_ENDPOINT = "https://rad.ysy.146019.xyz/bqb/AM";
     const imgEl = document.getElementById("loading-gif");
     if (!imgEl) return;
 

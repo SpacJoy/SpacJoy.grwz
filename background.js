@@ -1,12 +1,13 @@
 // 三张预取 + 多层淡入淡出实现
-const RANDOM_API_BASE = "https://random.ysy.146019.xyz/";
-function mapDir(layout, theme) {
-    if (layout === "desktop")
-        return theme === "dark" ? "dark_back" : "bright_back";
-    return theme === "dark" ? "mobile_dark_back" : "mobile_bright_back";
+const RANDOM_API_BASE = "https://rad.ysy.146019.xyz/";
+function mapDir(layout) {
+    // 新的目录结构：bz下按设备类型分类，不再区分深色模式
+    if (layout === "desktop") return "bz/hp"; // 横屏
+    if (layout === "tablet") return "bz/zfx"; // 正方形
+    return "bz/sp"; // 竖屏
 }
 function buildRandomDirUrl(dir) {
-    return `${RANDOM_API_BASE}res/${dir}?t=${Date.now()}_${Math.random()
+    return `${RANDOM_API_BASE}${dir}?t=${Date.now()}_${Math.random()
         .toString(36)
         .slice(2)}`;
 }
@@ -54,7 +55,7 @@ function ensureContainer() {
 
 function getRandomBackground() {
     try {
-        return buildRandomDirUrl(mapDir(detectLayout(), detectTheme()));
+        return buildRandomDirUrl(mapDir(detectLayout()));
     } catch (e) {
         console.warn("[Background] 构建随机URL失败", e);
         return null;
@@ -139,14 +140,13 @@ function _prefetchOne() {
     prefetchingNow = true;
 
     const layout = detectLayout();
-    const theme = detectTheme();
-    const url = buildRandomDirUrl(mapDir(layout, theme));
+    const url = buildRandomDirUrl(mapDir(layout));
     if (!url) {
         prefetchingNow = false;
         return;
     }
     console.log("[Background] 开始预取背景:", url);
-    const entry = { url, layout, theme, layer: null, loaded: false };
+    const entry = { url, layout, layer: null, loaded: false };
     queue.push(entry);
     const img = new Image();
     img.onload = () => {
@@ -239,12 +239,9 @@ function crossfadeToPrefetched() {
         return false; // 返回 false 触发 "预取中" 提示
     }
 
-    // 找一个已加载的（优先匹配当前布局+主题）
+    // 找一个已加载的（优先匹配当前布局）
     const layout = detectLayout();
-    const theme = detectTheme();
-    let idx = queue.findIndex(
-        (e) => e.loaded && e.layout === layout && e.theme === theme
-    );
+    let idx = queue.findIndex((e) => e.loaded && e.layout === layout);
     if (idx === -1) idx = queue.findIndex((e) => e.loaded);
 
     if (idx === -1) {
