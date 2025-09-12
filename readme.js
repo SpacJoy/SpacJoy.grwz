@@ -54,23 +54,6 @@ function renderMarkdown(markdownText) {
             links.forEach((link) => {
                 if (!link.hasAttribute("target"))
                     link.setAttribute("target", "_blank");
-
-                // 检查并过滤本地网络链接，防止触发权限请求
-                const href = link.getAttribute("href");
-                if (
-                    href &&
-                    (href.includes("127.0.0.1") ||
-                        href.includes("localhost") ||
-                        href.includes("192.168.") ||
-                        href.includes("10.0.") ||
-                        href.includes("172.16."))
-                ) {
-                    console.warn("[README] 检测到本地网络链接，已禁用:", href);
-                    link.removeAttribute("href");
-                    link.style.color = "#999";
-                    link.style.textDecoration = "line-through";
-                    link.title = "本地网络链接已禁用";
-                }
             });
             const images = markdownContent.querySelectorAll("img");
             images.forEach((img) => {
@@ -290,7 +273,3 @@ function showReadmeError() {
 }
 
 window.createReadmeSkeleton = createReadmeSkeleton;
-window.loadReadmeContent = loadReadmeContent;
-window.showReadmeError = showReadmeError;
-window.loadGithubReadme = loadGithubReadme;
-window.replaceLocalImagePaths = replaceLocalImagePaths;
