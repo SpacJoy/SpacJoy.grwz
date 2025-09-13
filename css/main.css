@@ -79,6 +79,13 @@ body {
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
+    /* 移除默认的 overflow 和 scroll-behavior 以让 Lenis 接管 */
+    overflow-x: hidden;
+}
+
+/* 确保有足够的滚动高度来测试平滑滚动 */
+main.container {
+    min-height: 200vh; /* 至少两倍屏幕高度 */
 }
 
 /* 深色模式下为body和背景层添加黑色底色 */

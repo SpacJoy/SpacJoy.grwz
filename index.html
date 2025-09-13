@@ -12,6 +12,8 @@
 	<link rel="stylesheet" type="text/css" href="css/index.css">
 	<!-- 引入 marked.js 用于 Markdown 渲染 -->
 	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<!-- 引入 Lenis 平滑滚动库 -->
+	<script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
 	<script>
 		// 备用marked.js加载
 		if (typeof marked === 'undefined') {
@@ -138,6 +140,30 @@
 	</main>
 	<footer>
 	<!-- 可在此放置其它底部信息 -->
+	<!-- 初始化 Lenis 平滑滚动效果 -->
+	<script>
+		// 内联测试 Lenis 是否加载
+		console.log('Checking Lenis:', typeof Lenis);
+		if (typeof Lenis !== 'undefined') {
+			console.log('Lenis found, initializing...');
+			const lenis = new Lenis({
+				smooth: true,
+				duration: 1.2,
+				direction: 'vertical',
+			});
+
+			function raf(time) {
+				lenis.raf(time);
+				requestAnimationFrame(raf);
+			}
+
+			requestAnimationFrame(raf);
+			console.log('Lenis initialized successfully!');
+		} else {
+			console.error('Lenis not found!');
+		}
+	</script>
+	<script src="./js/lenis-init.js"></script>
 	</footer>
 </body>
 
