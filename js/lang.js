@@ -9,6 +9,8 @@ function toggleLanguage() {
 	window.showLanguageChangeNotification &&
 		window.showLanguageChangeNotification();
 	window.checkAllServerStatus && window.checkAllServerStatus();
+	// 语言切换时重新启动打字效果
+	window.handleLanguageChange && window.handleLanguageChange();
 }
 
 function applyLanguage(lang) {
@@ -58,21 +60,21 @@ function updateNotificationTexts(lang) {
 }
 
 function initializeLanguage() {
-	const savedLanguage = localStorage.getItem("preferred-language");
-	if (savedLanguage && (savedLanguage === "zh" || savedLanguage === "en"))
-		window.currentLanguage = savedLanguage;
-	else {
-		const browserLang =
-			navigator.language ||
-			(navigator.languages && navigator.languages[0]) ||
-			"en";
-		window.currentLanguage = browserLang.startsWith("zh") ? "zh" : "en";
+	// 如果已经初始化过，不再重复初始化
+	if (window.languageInitialized) {
+		console.log("语言已经初始化过，跳过重复初始化");
+		return;
 	}
+	
+	// 强制默认使用中文，不自动检测语言
+	window.currentLanguage = "zh";
 	applyLanguage(window.currentLanguage);
 	const langText = document.getElementById("lang-text");
 	if (langText)
-		langText.textContent = window.currentLanguage === "zh" ? "EN" : "中文";
-	console.log("语言初始化完成", window.currentLanguage);
+		langText.textContent = "EN";
+	console.log("语言初始化完成，默认使用中文");
+	// 标记为已初始化
+	window.languageInitialized = true;
 }
 
 window.toggleLanguage = toggleLanguage;

@@ -1,10 +1,148 @@
 /* 设置整个网页背景样式 */
- body {
-	 overflow-y: scroll;
-	 scrollbar-width: auto;
- }
+/* ===== 全局CSS设置 ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-/* ==== Loader 覆盖层（提前放置，避免首屏未加载完样式时出现在左上角） ==== */
+/* ===== 蓝色主题色彩系统 ===== */
+:root {
+  --primary-blue: #0088ff;
+  --primary-blue-dark: #0066cc;
+  --primary-blue-light: #33a3ff;
+  --primary-blue-ultra-light: #e6f2ff;
+  --accent-blue: #0070cc;
+  --secondary-blue: #0055aa;
+  
+  /* 文本颜色 */
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-dark: rgba(0, 0, 0, 0.85);
+  
+  /* 背景与覆盖层 */
+  --bg-overlay: rgba(0, 0, 0, 0.3);
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-bg-hover: rgba(255, 255, 255, 0.25);
+  
+  /* 动画时长 */
+  --transition-normal: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-fast: 0.3s ease;
+}
+
+/* ===== 顶部导航栏样式 ===== */
+.top-nav {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	padding: 10px 0;
+}
+
+.nav-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: 100%;
+	width: 100%;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.nav-logo img {
+	width: 60px;
+	height: 60px;
+	border-radius: 8px;
+	object-fit: cover;
+	filter: drop-shadow(0 0 8px rgba(0, 136, 255, 0.5));
+	transition: transform 0.3s ease;
+}
+
+.nav-logo img:hover {
+	transform: scale(1.1);
+}
+
+.nav-controls {
+	display: flex;
+	gap: 15px;
+	align-items: center;
+}
+
+.nav-btn {
+	background: rgba(0, 136, 255, 0.4); /* 更淡的半透明蓝色背景 */
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	color: white;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	padding: 8px 16px;
+	border-radius: 20px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-size: 14px;
+	font-weight: 500;
+	min-width: 80px;
+	text-align: center;
+}
+
+.nav-btn:hover {
+	background: var(--glass-bg-hover);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 136, 255, 0.3);
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ===== 英雄区域样式 ===== */
+.hero-section {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	padding-top: 60px;
+	position: relative;
+	transform: translateY(-30%);
+}
+
+.typing-container {
+	text-align: center;
+	position: relative;
+	max-width: 100%;
+	width: 100%;
+	padding: 0 20px;
+}
+
+.typing-text {
+	/* 优化的自适应字体大小设置 */
+	font-size: clamp(1.5rem, 8vw, 5rem);
+	font-weight: 700;
+	letter-spacing: 2px;
+	text-shadow: 
+		0 0 10px rgba(0, 136, 255, 0.8),
+		0 0 20px rgba(0, 136, 255, 0.6),
+		0 0 40px rgba(0, 136, 255, 0.4);
+	font-family: 'MiSans', 'Microsoft YaHei', sans-serif;
+	/* 确保文本在容器内正确显示 */
+	max-width: 90vw;
+	word-wrap: break-word;
+	word-break: break-word;
+	line-height: 1.2;
+	/* 添加自动断字功能，优化文本分布，避免标点符号单独成行 */
+	hyphens: auto;
+	text-align: center;
+}
+
+/* ===== 逐字闪烁动画效果 ===== */
+@keyframes blink {
+	0%, 100% { opacity: 1; transform: scale(1); }
+	50% { opacity: 0.5; transform: scale(1.05); }
+}
+
+.char-blink {
+	display: inline-block;
+	animation: blink 0.8s ease-in-out;
+}
+
+/* ===== 加载覆盖层（提前放置，避免首屏未加载完样式时出现在左上角） ===== */
 .loader { 
 	position:fixed; 
 	top:0;left:0;right:0;bottom:0; 
@@ -35,40 +173,71 @@
  /* 隐藏Webkit浏览器的滚动条 */
  body::-webkit-scrollbar {
 	 display: none;
- } /* 右上角滑动提示通知样式 */
- .scroll-notification {
-	 position: fixed;
-	 top: 20px;
-	 right: 20px;
-	 background: linear-gradient(135deg, 
-		 rgba(0, 136, 255, 0.9) 0%, 
-		 rgba(0, 102, 204, 0.9) 100%);
-	 color: white;
-	 padding: 12px 20px;
-	 border-radius: 25px;     
-	 font-size: 16px;
-	 font-weight: 500;
-	 z-index: 99999;
-	 transform: translateX(120%);
-	 transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-	 backdrop-filter: blur(10px);
-	 box-shadow: 
-		 0 8px 32px rgba(0, 136, 255, 0.3),
-		 0 2px 8px rgba(0, 0, 0, 0.1),
-		 inset 0 1px 0 rgba(255, 255, 255, 0.2),         
-		 inset 0 -1px 0 rgba(255, 255, 255, 0.1);
-	 /* 玻璃效果增强 */
-	 border: 2px solid rgba(255, 255, 255, 0.2);
-	 cursor: pointer;
-	 user-select: none;
-	 pointer-events: auto;
-	 touch-action: manipulation;
-	 min-width: 120px;
-	 min-height: 44px;
-	 display: flex;
-	 align-items: center;
-	 justify-content: center;
- }
+ } /* ===== 系统颜色响应样式 ===== */
+/* 亮色模式 */
+[data-theme="light"] .typing-text {
+	color: var(--primary-blue-dark);
+	text-shadow: 
+		0 0 10px rgba(0, 136, 255, 0.6),
+		0 0 20px rgba(0, 136, 255, 0.4);
+}
+
+[data-theme="light"] .nav-btn {
+	color: var(--text-dark);
+	background: rgba(0, 136, 255, 0.3); /* 亮色模式下更淡的半透明蓝色背景 */
+	border: 1px solid rgba(0, 136, 255, 0.2);
+}
+
+[data-theme="light"] .top-nav {
+	background: transparent;
+	border-bottom: none;
+}
+
+/* 暗色模式 */
+[data-theme="dark"] .typing-text {
+	color: var(--primary-blue-light);
+	text-shadow: 
+		0 0 10px rgba(0, 136, 255, 0.8),
+		0 0 20px rgba(0, 136, 255, 0.6),
+		0 0 40px rgba(0, 136, 255, 0.4);
+}
+
+[data-theme="dark"] body {
+	background-color: #000000;
+}
+
+/* ===== 右上角滑动提示通知样式 ===== */
+.scroll-notification {
+	position: fixed;
+	top: 80px; /* 下移，避免被导航栏遮挡 */	right: 20px;
+	background: linear-gradient(135deg, 
+		rgba(0, 136, 255, 0.9) 0%, 
+		rgba(0, 102, 204, 0.9) 100%);
+	color: white;
+	padding: 12px 20px;
+	border-radius: 25px;     
+	font-size: 16px;
+	font-weight: 500;
+	z-index: 99999;
+	transform: translateX(120%);
+	transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	backdrop-filter: blur(10px);
+	box-shadow: 
+		0 8px 32px rgba(0, 136, 255, 0.3),
+		0 2px 8px rgba(0, 0, 0, 0.1),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2),         
+		inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+	/* 玻璃效果增强 */	border: 2px solid rgba(255, 255, 255, 0.2);
+	cursor: pointer;
+	user-select: none;
+	pointer-events: auto;
+	touch-action: manipulation;
+	min-width: 120px;
+	min-height: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
  /* 添加玻璃光泽效果 */
  .scroll-notification::after {
@@ -138,29 +307,71 @@
 	position: relative;
 	padding: 10px;
 	bottom: 0;
- } main {
-	margin-top: 0; /* 重置margin-top */
-	padding-top: 70%; /* 参考移动端做法，使用padding-top代替margin-top */
+ } /* ===== 响应式设计 ===== */
+@media (max-width: 768px) {
+	.nav-container {
+		padding: 0 15px;
+	}
+	
+	.nav-logo img {
+		width: 32px;
+		height: 32px;
+	}
+	
+	.nav-btn {
+		padding: 6px 12px;
+		font-size: 12px;
+	}
+	
+	.typing-text {
+		font-size: clamp(1.5rem, 6vw, 2.5rem);
+	}
+	
+	.hero-section {
+		min-height: 80vh;
+		padding-top: 70px;
+	}
+}
+
+@media (max-width: 480px) {
+	.nav-controls {
+		gap: 10px;
+	}
+	
+	.nav-btn {
+		padding: 5px 10px;
+		font-size: 11px;
+	}
+	
+	.typing-text {
+		font-size: 1.8rem;
+	}
+	
+	.hero-section {
+		min-height: 70vh;
+	}
+}
+
+/* 设置主要内容样式 - 默认Flexbox布局 */
+main {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-content: flex-start;
-	gap: 20px;
-	overflow-y: auto;
-	max-height: calc(100% - 60px);
+	--main-gap: 20px; /* 统一管理主容器间距变量 */
+	gap: var(--main-gap); /* 基础间距 */
+	z-index: 2;
 	max-width: 1400px; /* 限制最大宽度 */
-	margin-left: auto;
-	margin-right: auto;
-	padding: 20px; /* 保持四边padding一致 */
-	padding-top: 70%; /* 重申top padding设置 */
+	margin: 100px auto 0; /* 居中显示，并添加顶部间距（增大间距） */
+	padding: 20px;
 }
 
 /* 宽屏幕下的Flexbox特殊处理 */
 @media (min-width: 1200px) {
 	main {
 		justify-content: space-evenly; /* 宽屏幕下使用space-evenly分布 */
-		margin-top: 0; /* 重置margin-top */
-		padding-top: 60%; /* 宽屏幕使用稍小的padding-top */
+		margin-top: 80px; /* 保持顶部间距 */
+		padding-top: 20px; /* 恢复正常padding-top */
 	}
 }/* 设置文章样式 */
  article {

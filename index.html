@@ -25,35 +25,53 @@
 </head>
 
 <body>
-	<div class="blur-effect"></div>    <div class="loader">
+	<!-- 背景层容器 -->
+	<div class="bg-layer-stack"></div>
+	
+	<!-- 加载覆盖层 -->
+	<div class="loader">
 		<img id="loading-gif" src="" alt="Loading...">
 	</div>
-	<header>
-		<h1>
-			<div class="title-row">
+	
+	<!-- 模糊效果覆盖层 -->
+	<div class="blur-effect"></div>
+	
+	<!-- 顶部导航栏 -->
+	<header class="top-nav">
+		<div class="nav-container">
+			<!-- 左上角Logo -->
+			<div class="nav-logo">
 				<img src="https://ysy.146019.xyz/icon/top.webp" alt="Logo">
-				<div class="header-controls">
+			</div>
+			
+			<!-- 右上角控制按钮 -->
+			<div class="nav-controls">
+				<!-- 语言切换按钮 -->
 				<div class="language-switch">
-					<button id="lang-toggle" class="lang-btn" onclick="toggleLanguage()" title="切换语言 / Switch Language">
+					<button id="lang-toggle" class="nav-btn" onclick="toggleLanguage()" title="切换语言 / Switch Language">
 						<span id="lang-text">EN</span>
 					</button>
 				</div>
+				
+				<!-- 背景切换按钮 -->
 				<div class="change-bg">
-					<button id="bg-toggle" class="lang-btn change-bg-btn" onclick="changeRandomBackground()" 
-						data-zh-title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景" 
-						data-en-title="Change Background (Ctrl+B)\nEach device/window sees its own random background" 
-						title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景">
+					<button id="bg-toggle" class="nav-btn change-bg-btn" onclick="changeRandomBackground()" 
+					data-zh-title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景" 
+					data-en-title="Change Background (Ctrl+B)\nEach device/window sees its own random background" 
+					title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景">
 						<span data-zh="🎨 更换背景" data-en="🎨 Background">🎨 更换背景</span>
 					</button>
 				</div>
-				</div>
 			</div>
-			<span class="title-text" data-zh="记忆塑造灵魂，灵魂影响记忆！" data-en="Memory shapes the soul, the soul influences memory!">记忆塑造灵魂，灵魂影响记忆！
-			</span>
-		</h1>
-		<!-- <p>欢迎来到我的工具箱，这里有一些我常用的工具，欢迎大家提出宝贵意见。</p> -->
-		<!-- <p>对了！我主推天禄哦~！</p> -->
+		</div>
 	</header>
+	
+	<!-- 英雄区域 - 页面正中间标语 -->
+	<section class="hero-section">
+		<div class="typing-container">
+			<span class="typing-text" data-zh="记忆塑造灵魂，灵魂影响记忆！" data-en="Memory shapes the soul, the soul influences memory!"></span>
+		</div>
+	</section>
 	<script src="./js/globals.js" defer></script>
 	<script src="./js/background.js" defer></script>
 	<script src="./js/loader.js" defer></script>
@@ -62,8 +80,26 @@
 	<script src="./js/notifications.js" defer></script>
 	<script src="./js/lang.js" defer></script>
 	<script src="./js/ui.js" defer></script>
+	<!-- 打字效果和系统颜色响应 -->
+	<script src="./js/typing-effect.js" defer></script>
+	<!-- 功能测试脚本 -->
+	<script src="./js/test.js" defer></script>
 	<!-- legacy bootstrap (kept for compatibility) -->
 	<script src="./js/app.js" defer></script>
+	<script>
+		// 页面加载完成后初始化打字效果和系统颜色
+		document.addEventListener('DOMContentLoaded', function() {
+			// 初始化语言
+			if (window.initializeLanguage) {
+				window.initializeLanguage();
+			}
+							
+			// 初始化页面效果
+			if (window.initPageEffects) {
+				window.initPageEffects();
+			}
+		});
+	</script>
 	<main class="container">
 		<article>
 			<h2 data-zh="影视" data-en="Film(TV)">影视</h2>

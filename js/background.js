@@ -64,24 +64,44 @@ function getRandomBackground() {
 
 // 专门加载首张背景图的函数
 function loadFirstBackground() {
-    if (firstBackgroundLoaded) return;
+	if (firstBackgroundLoaded) return;
 
-    ensureContainer();
-    const url = getRandomBackground();
-    if (!url) return;
+	ensureContainer();
+	const url = getRandomBackground();
+	if (!url) return;
 
-    console.log("[Background] 开始加载首张背景:", url);
-    const layer = createLayer(url);
-    const img = new Image();
-    img.onload = () => {
-        activateLayer(layer, url);
-        console.log("[Background] 首张背景加载完成");
-    };
-    img.onerror = () => {
-        console.warn("[Background] 首张背景加载失败");
-        if (layer.parentNode) layer.parentNode.removeChild(layer);
-    };
-    img.src = url;
+	console.log("[Background] 开始加载首张背景:", url);
+	const layer = createLayer(url);
+	const img = new Image();
+	img.onload = () => {
+		activateLayer(layer, url);
+		console.log("[Background] 首张背景加载完成");
+		
+		// 初始状态：背景模糊
+		layer.style.filter = 'blur(20px)';
+		layer.style.transition = 'filter 2s ease-in-out';
+		
+		// 等待加载动画完成后再清晰背景
+		const loader = document.querySelector('.loader');
+		if (loader) {
+			const checkLoaderHidden = () => {
+				if (window.loaderHidden) {
+					// 加载器已隐藏，开始清晰背景
+					layer.style.filter = 'blur(0px)';
+				} else {
+					// 继续检查
+					setTimeout(checkLoaderHidden, 100);
+				}
+			};
+			
+			checkLoaderHidden();
+		}
+	};
+	img.onerror = () => {
+		console.warn("[Background] 首张背景加载失败");
+		if (layer.parentNode) layer.parentNode.removeChild(layer);
+	};
+	img.src = url;
 }
 
 // 检查是否可以开始预取（需要README和首张背景都完成）
