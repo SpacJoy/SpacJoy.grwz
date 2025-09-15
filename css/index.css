@@ -1785,15 +1785,32 @@ header h1 span.title-text {
     text-align: center;
 }
 
+/* 向下滚动动画 */
+@keyframes scroll-down {
+    0% {
+        opacity: 0.5;
+        transform: translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(8px);
+    }
+    100% {
+        opacity: 0.5;
+        transform: translateY(0);
+    }
+}
+
 /* 滚动箭头样式 */
 .scroll-indicator .scroll-arrow {
     width: 24px;
     height: 24px;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23333"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     opacity: 0.7;
+    animation: scroll-down 2s infinite ease-in-out;
 }
 
 .scroll-indicator svg {
