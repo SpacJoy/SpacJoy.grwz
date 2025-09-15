@@ -1431,6 +1431,14 @@ header h1 span.title-text {
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
+    justify-items: center;
+}
+
+/* ===== 横向项目容器包装器 ===== */
+.horizontal-projects-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
 }
 
 /* ===== 横向项目容器 ===== */
@@ -1697,6 +1705,7 @@ header h1 span.title-text {
     .projects-container {
         grid-template-columns: 1fr;
         gap: 20px;
+        justify-items: center;
     }
     
     .section-header h2 {
@@ -1719,14 +1728,16 @@ header h1 span.title-text {
         color: var(--text-dark-secondary);
     }
     
-    /* 横向项目列表在平板设备上的调整 */
+    /* 横向项目列表在平板设备上的调整 - 添加居中逻辑 */
     .horizontal-projects-container {
         gap: 20px;
         padding: 15px 0;
+        justify-content: center;
     }
     
     .horizontal-projects-container .project-card {
         min-width: 300px;
+        scroll-snap-align: center;
     }
 }
 
@@ -1747,14 +1758,31 @@ header h1 span.title-text {
         font-size: 0.85rem;
     }
     
-    /* 横向项目列表在手机设备上的调整 */
+    .projects-container {
+        justify-items: center;
+    }
+    
+    /* 横向项目列表在手机设备上的调整 - 添加居中逻辑 */
     .horizontal-projects-container {
         gap: 15px;
         padding: 10px 0;
+        justify-content: center;
     }
     
     .horizontal-projects-container .project-card {
         min-width: 280px;
         padding: 15px;
+        scroll-snap-align: center;
+    }
+    
+    /* 为单列卡片场景添加额外的居中微调 */
+    .horizontal-projects-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .horizontal-projects-container {
+        width: auto;
+        max-width: 100%;
     }
 }
