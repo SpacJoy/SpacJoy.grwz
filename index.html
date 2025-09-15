@@ -97,12 +97,7 @@
 	<script>
 		// 页面加载完成后初始化打字效果和系统颜色
 		document.addEventListener('DOMContentLoaded', function() {
-			// 初始化语言
-			if (window.initializeLanguage) {
-				window.initializeLanguage();
-			}
-							
-			// 初始化页面效果
+			// 初始化页面效果 - 语言初始化已在ui.js的load事件中处理
 			if (window.initPageEffects) {
 				window.initPageEffects();
 			}

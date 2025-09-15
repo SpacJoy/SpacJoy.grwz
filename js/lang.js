@@ -76,13 +76,18 @@ function initializeLanguage() {
 		return;
 	}
 	
-	// 强制默认使用中文，不自动检测语言
-	window.currentLanguage = "zh";
-	applyLanguage(window.currentLanguage);
-	const langText = document.getElementById("lang-text");
-	if (langText)
-		langText.textContent = "EN";
-	console.log("语言初始化完成，默认使用中文");
+	try {
+		// 强制默认使用中文，不自动检测语言
+		window.currentLanguage = "zh";
+		applyLanguage(window.currentLanguage);
+		const langText = document.getElementById("lang-text");
+		if (langText) {
+			langText.textContent = "EN";
+		}
+		console.log("语言初始化完成，默认使用中文");
+	} catch (error) {
+		console.error("语言初始化出错：", error);
+	}
 	// 标记为已初始化
 	window.languageInitialized = true;
 }

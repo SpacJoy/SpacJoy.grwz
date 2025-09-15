@@ -38,11 +38,7 @@ function startTypingEffect() {
     
     if (!text) return;
     
-    // 确保英文文本中单词间有正确的空格
-    if (currentLang === 'en') {
-        // 将多个空格替换为单个空格
-        text = text.replace(/\s+/g, ' ').trim();
-    }
+    // 英文文本的空格已在lang.js中处理，这里不再重复处理
     
     // 清空原内容
     typingText.innerHTML = '';
