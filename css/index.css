@@ -1629,10 +1629,22 @@ header h1 span.title-text {
     
     .section-header h2 {
         font-size: 2rem;
+        color: var(--text-dark); /* 保持与PC端一致的黑色文字 */
     }
     
     .project-card {
         padding: 20px;
+    }
+    
+    /* 平板设备上项目卡片文字颜色调整 */
+    .projects-container .project-card h3,
+    .horizontal-projects-container .project-card h3 {
+        color: var(--text-dark);
+    }
+    
+    .projects-container .project-card p,
+    .horizontal-projects-container .project-card p {
+        color: var(--text-dark-secondary);
     }
     
     /* 横向项目列表在平板设备上的调整 */
@@ -1653,6 +1665,7 @@ header h1 span.title-text {
     
     .section-header h2 {
         font-size: 1.75rem;
+        color: var(--text-dark); /* 保持与PC端一致的黑色文字 */
     }
     
     .btn.modern-btn {
