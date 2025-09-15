@@ -1017,6 +1017,8 @@ header h1 span.title-text {
 	text-shadow:0 0 8px rgba(0,136,255,.30), 0 4px 10px rgba(0,0,0,.35);
 }
 
+
+
 /* 控件行：居中排列，紧凑布局 */
 .title-row { display:flex; align-items:center; justify-content:center; gap:32px; flex:0 0 100%; flex-wrap:wrap; }
 .header-controls { display:flex; align-items:center; gap:16px; padding:0; justify-content:center; flex:0 0 auto; }
@@ -1452,6 +1454,8 @@ header h1 span.title-text {
     width: 100%;
     max-width: 100%;
 }
+
+
 
 /* 隐藏滚动条但保持功能 */
 .horizontal-projects-container::-webkit-scrollbar {
