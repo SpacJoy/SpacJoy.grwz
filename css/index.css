@@ -1532,11 +1532,13 @@ header h1 span.title-text {
     font-family: 'MiSans', 'Microsoft YaHei', sans-serif;
 }
 
+/* 项目卡片中的段落文本样式 */
 .project-card p {
     color: var(--text-secondary);
     margin-bottom: 10px;
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     line-height: 1.5;
+    font-weight: 500;
 }
 
 /* ===== 现代化按钮样式 ===== */
@@ -1601,11 +1603,12 @@ header h1 span.title-text {
     user-select: none;
 }
 
+/* 滚动指示器中的文本样式 */
 .scroll-indicator span {
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     margin-bottom: 10px;
-    opacity: 0.7;
+    opacity: 0.8;
     font-weight: 500;
 }
 
