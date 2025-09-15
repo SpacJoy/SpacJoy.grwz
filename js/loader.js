@@ -46,7 +46,8 @@ function hideLoader() {
         "animationend",
         () => {
             if (loaderEl) loaderEl.style.display = "none";
-            if (blurEl) blurEl.style.display = "none";
+            // 调用模糊转清晰动画，而不是直接隐藏模糊层
+            if (window.animateBlurToClear) window.animateBlurToClear();
             setTimeout(() => {
                 if (window.showScrollNotification)
                     window.showScrollNotification();

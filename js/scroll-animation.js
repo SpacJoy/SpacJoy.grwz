@@ -4,16 +4,21 @@
 function isElementInViewport(el) {
     const rect = el.getBoundingClientRect();
     return (
-        rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.85 &&
-        rect.left >= 0 &&
+        rect.top <=
+            (window.innerHeight || document.documentElement.clientHeight) *
+                0.85 &&
+        rect.left >= -rect.width * 0.2 && // 允许部分超出左侧
         rect.bottom >= 0 &&
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        rect.right <=
+            (window.innerWidth || document.documentElement.clientWidth) * 1.2 // 允许部分超出右侧
     );
 }
 
 // 检查并激活元素动画
 function checkAndAnimateElements() {
-    const articles = document.querySelectorAll('article:not(.animate-in)');
+    const articles = document.querySelectorAll(
+        "article:not(.animate-in), .project-card:not(.animate-in)"
+    );
     
     articles.forEach((article, index) => {
         if (isElementInViewport(article)) {
