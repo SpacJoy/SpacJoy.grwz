@@ -95,6 +95,92 @@ body {
 	align-items: center;
 }
 
+/* 移动端语言和背景切换按钮适配 */
+@media (max-width: 800px) {
+	/* 修复语言切换按钮太靠上的问题 */
+	.nav-controls, .modern-controls {
+		display: flex;
+		gap: 8px;
+		padding: 6px 0;
+		align-items: center;
+		margin-top: 8px; /* 添加一些顶部间距，防止按钮太靠上 */
+		justify-content: flex-end; /* 确保在右侧对齐 */
+	}
+	
+	/* 语言按钮样式优化 */
+	.nav-controls .lang-btn, .modern-controls .lang-btn {
+		padding: 6px 10px;
+		font-size: 12px;
+		margin-top: 2px; /* 微调语言按钮向下移动 */
+	}
+	
+	/* 背景切换按钮样式优化 */
+	.nav-controls .change-bg-btn, .modern-controls .change-bg-btn {
+		padding: 6px 10px !important;
+		font-size: 12px !important;
+	}
+	
+	/* 语言按钮分隔调整 */
+	.nav-controls .language-switch, .modern-controls .language-switch {
+		margin-right: 6px;
+		padding-right: 8px;
+	}
+	
+	/* 确保header在移动端有足够高度 */
+	.nav-container {
+		padding: 15px 10px;
+		min-height: 90px;
+		display: flex;
+		align-items: center;
+	}
+	
+	/* 固定header样式优化 */
+	.fixed-header {
+		display: flex;
+		align-items: center;
+	}
+}
+
+@media (max-width: 700px) {
+	.nav-controls {
+		gap: 10px;
+		margin-top: 6px;
+	}
+	
+	.nav-container {
+		padding: 12px 8px;
+	}
+}
+
+/* 针对小型手机屏幕的特殊优化 */
+@media (max-width: 480px) {
+	.nav-controls, .modern-controls {
+		gap: 6px;
+		margin-top: 4px;
+	}
+	
+	.nav-controls .lang-btn, .modern-controls .lang-btn {
+		padding: 5px 8px;
+		font-size: 11px;
+		margin-top: 3px; /* 进一步微调语言按钮向下移动 */
+	}
+	
+	.nav-controls .change-bg-btn, .modern-controls .change-bg-btn {
+		padding: 5px 8px !important;
+		font-size: 11px !important;
+	}
+	
+	.nav-container {
+		padding: 10px 6px;
+		min-height: 85px;
+	}
+	
+	/* 确保按钮文本正确显示 */
+	#bg-toggle span, .change-bg-btn span {
+		font-size: 11px !important;
+	}
+}
+
 .nav-btn {
 	background: rgba(0, 136, 255, 0.4); /* 更淡的半透明蓝色背景 */
 	backdrop-filter: blur(10px);
@@ -169,6 +255,8 @@ body {
 	/* 添加自动断字功能，优化文本分布，避免标点符号单独成行 */
 	hyphens: auto;
 	text-align: center;
+	/* 确保空格正确显示 */
+	white-space: pre-wrap;
 }
 
 /* ===== 逐字闪烁动画效果 ===== */

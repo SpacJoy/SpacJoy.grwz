@@ -34,9 +34,15 @@ function startTypingEffect() {
     
     // 获取当前语言的文本
     const currentLang = window.currentLanguage || 'zh';
-    const text = typingText.getAttribute(currentLang === 'zh' ? 'data-zh' : 'data-en');
+    let text = typingText.getAttribute(currentLang === 'zh' ? 'data-zh' : 'data-en');
     
     if (!text) return;
+    
+    // 确保英文文本中单词间有正确的空格
+    if (currentLang === 'en') {
+        // 将多个空格替换为单个空格
+        text = text.replace(/\s+/g, ' ').trim();
+    }
     
     // 清空原内容
     typingText.innerHTML = '';

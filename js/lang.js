@@ -14,12 +14,18 @@ function toggleLanguage() {
 }
 
 function applyLanguage(lang) {
+	// 处理所有多语言元素
 	const elements = document.querySelectorAll("[data-zh][data-en]");
 	elements.forEach((element) => {
 		const zhText = element.getAttribute("data-zh");
-		const enText = element.getAttribute("data-en");
-		if (zhText && enText)
+		let enText = element.getAttribute("data-en");
+		if (zhText && enText) {
+			// 确保英文文本中单词间有正确的空格
+			if (lang === "en" && enText) {
+				enText = enText.replace(/\s+/g, ' ').trim();
+			}
 			element.textContent = lang === "zh" ? zhText : enText;
+		}
 	});
 	// 按钮 title 多语言
 	const bgBtn = document.getElementById("bg-toggle");
@@ -28,12 +34,16 @@ function applyLanguage(lang) {
 		const enT = bgBtn.getAttribute("data-en-title");
 		if (zhT && enT) bgBtn.title = lang === "zh" ? zhT : enT;
 	}
+	// 页面标题多语言
 	const titleTag = document.querySelector("title");
 	if (titleTag) {
 		const zhTitle = titleTag.getAttribute("data-zh");
 		const enTitle = titleTag.getAttribute("data-en");
-		if (lang === "zh" && zhTitle) document.title = zhTitle;
-		else if (lang === "en" && enTitle) document.title = enTitle;
+		if (lang === "zh" && zhTitle) {
+			document.title = zhTitle;
+		} else if (lang === "en" && enTitle) {
+			document.title = enTitle;
+		}
 	}
 	updateStatusLanguage(lang);
 	updateNotificationTexts(lang);
