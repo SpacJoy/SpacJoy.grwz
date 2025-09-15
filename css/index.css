@@ -6,6 +6,21 @@
   box-sizing: border-box;
 }
 
+/* 提高渲染性能 */
+body {
+  will-change: background-color;
+  transition: background-color 0.5s ease;
+}
+
+/* 全局动画变量 */
+:root {
+  /* 原有变量... */
+  --transition-normal: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-fast: 0.3s ease;
+  --transition-smooth: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-elastic: 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
 /* ===== 蓝色主题色彩系统 ===== */
 :root {
   --primary-blue: #0088ff;
@@ -111,7 +126,21 @@
 	min-height: 100vh;
 	padding-top: 60px;
 	position: relative;
-	transform: translateY(-30%);
+}
+
+/* ===== Markdown显示区域样式 ===== */
+.markdown-display-section {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	max-width: 1200px;
+	margin: 40px auto;
+	padding: 0 20px;
+}
+
+.markdown-content {
+	width: 100%;
+	text-align: center;
 }
 
 .typing-container {
@@ -151,6 +180,25 @@
 .char-blink {
 	display: inline-block;
 	animation: blink 0.8s ease-in-out;
+	will-change: opacity, transform;
+}
+
+/* ===== 打字光标样式 ===== */
+.typing-cursor {
+	display: inline-block;
+	font-size: inherit;
+	color: var(--primary-blue-light);
+	animation: cursorBlink 1s infinite;
+	margin-left: 4px;
+	vertical-align: text-bottom;
+	text-shadow: 
+		0 0 10px rgba(0, 136, 255, 0.8),
+		0 0 20px rgba(0, 136, 255, 0.6);
+}
+
+@keyframes cursorBlink {
+	0%, 50% { opacity: 1; }
+	51%, 100% { opacity: 0; }
 }
 
 /* ===== 加载覆盖层（提前放置，避免首屏未加载完样式时出现在左上角） ===== */
@@ -377,6 +425,20 @@ main {
 	padding: 20px;
 }
 
+/* ===== 滚动动画效果 ===== */
+/* 默认隐藏卡片，等待滚动时显示 */
+article {
+	opacity: 0;
+	transform: translateY(30px) scale(0.95);
+	transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 当卡片进入视口时显示 */
+article.animate-in {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+}
+
 /* 宽屏幕下的Flexbox特殊处理 */
 @media (min-width: 1200px) {
 	main {
@@ -389,7 +451,7 @@ main {
 	 flex: 1 0 320px; /* 增加最小宽度到320px */
 	 max-width: 400px; /* 添加最大宽度限制 */
 	 margin: 0; /* 移除margin，使用gap代替 */
-	 background: var(--card-bg);
+	 background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.5) 100%);
 	 border-radius: 24px;
 	 backdrop-filter: blur(10px);
 	 box-shadow: 
@@ -412,6 +474,7 @@ main {
 	 min-height: 280px;
 	 box-sizing: border-box; /* 确保边距计算正确 */
 	 overflow: hidden;
+	 /* 添加伪元素来创建微妙的背景动效 */
  }
 
 /* 中等屏幕下的article样式优化 */
@@ -430,23 +493,24 @@ main {
 	 margin: 8px 0;
 	 font-size: 16px;
 	 font-weight: 500;
-	 color: var(--btn-text-color);
-	 background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-	 border: 1px solid rgba(255, 255, 255, 0.2);
+	 color: white;
+	 background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+	 border: 1px solid rgba(255, 255, 255, 0.3);
 	 border-radius: 12px;
 	 cursor: pointer;
 	 transition: var(--transition-smooth);
 	 backdrop-filter: blur(5px);
 	 box-shadow: 
-		 0 4px 12px rgba(0, 136, 255, 0.2),
+		 0 4px 12px rgba(0, 136, 255, 0.3),
 		 0 1px 3px rgba(0, 0, 0, 0.1),
-		 inset 0 1px 0 rgba(255, 255, 255, 0.3);
+		 inset 0 1px 0 rgba(255, 255, 255, 0.4);
 	 position: relative;
 	 overflow: hidden;
 	 display: flex;
 	 align-items: center;
 	 justify-content: center;
 	 text-decoration: none;
+	 will-change: transform, box-shadow;
  }
 
  /* 按钮光泽效果 */
@@ -483,16 +547,16 @@ main {
  } /* 设置文章悬浮效果 - 增强视觉效果 */
  article:hover {
 	 background: linear-gradient(135deg, 
-		 rgba(0, 136, 255, 0.8) 0%, 
-		 rgba(0, 102, 204, 0.8) 100%);
+		 rgba(0, 136, 255, 0.9) 0%, 
+		 rgba(0, 102, 204, 0.9) 100%);
 	 backdrop-filter: blur(12px);
 	 box-shadow: 
-		 0 20px 50px rgba(0, 136, 255, 0.4),
+		 0 20px 50px rgba(0, 136, 255, 0.5),
 		 0 10px 30px rgba(0, 0, 0, 0.15),
-		 inset 0 2px 0 rgba(255, 255, 255, 0.5);
-	 transform: translateY(-5px) scale(1.02);
+		 inset 0 2px 0 rgba(255, 255, 255, 0.6);
+	 transform: translateY(-8px) scale(1.03);
 	 /* 悬浮时增强玻璃边框效果 */
-	 border: 1px solid rgba(255, 255, 255, 0.4);
+	 border: 1px solid rgba(255, 255, 255, 0.5);
  }
 
  /* 悬浮时增强文章光泽效果 */
@@ -532,14 +596,14 @@ main {
 		 inset 0 1px 0 rgba(255, 255, 255, 0.5);
  }
 
- /* 文章悬浮时按钮的悬浮效果 - 增强交互体验 */
+ /* 文章悬浮时按钮悬浮效果 - 增强交互体验 */
  article:hover .btn:hover {
 	 background: linear-gradient(135deg, #00aaff, #0088cc);
-	 transform: translateY(-3px) scale(1.03);
+	 transform: translateY(-5px) scale(1.05);
 	 box-shadow: 
-		 0 8px 20px rgba(0, 136, 255, 0.4),
-		 0 4px 8px rgba(0, 0, 0, 0.2),
-		 inset 0 1px 0 rgba(255, 255, 255, 0.6);
+		 0 12px 25px rgba(0, 136, 255, 0.5),
+		 0 6px 12px rgba(0, 0, 0, 0.2),
+		 inset 0 1px 0 rgba(255, 255, 255, 0.8);
  }
 
  /* 按钮悬浮时激活光泽动画 */
@@ -552,10 +616,57 @@ main {
 	 font-size: 160%;
 	 text-align: center;
 	 text-shadow: 
-		 0 0 10px rgba(0, 136, 255, 0.5),
-		 0 2px 4px rgba(255, 255, 255, 0.8);
-	 font-weight: 600;
+		 0 0 12px rgba(0, 136, 255, 0.6),
+		 0 2px 6px rgba(255, 255, 255, 0.9);
+	 font-weight: 700;
 	 margin: 15px 0;
+	 position: relative;
+	 transition: all var(--transition-smooth);
+	 display: inline-block;
+ }
+ 
+ /* 标题下方添加装饰性下划线 */
+ h2::after {
+	 content: '';
+	 position: absolute;
+	 bottom: -6px;
+	 left: 50%;
+	 transform: translateX(-50%);
+	 width: 60px;
+	 height: 3px;
+	 background: linear-gradient(90deg, transparent, var(--primary-blue), transparent);
+	 border-radius: 3px;
+	 opacity: 0.7;
+	 transition: all var(--transition-smooth);
+ }
+ 
+ /* 悬浮时加强下划线效果 */
+ article:hover h2::after {
+	 width: 80px;
+	 opacity: 1;
+	 background: linear-gradient(90deg, transparent, white, transparent);
+ }
+ 
+ /* 添加卡片内呼吸灯效果 */
+ article::before {
+	 content: '';
+	 position: absolute;
+	 top: -50%;
+	 left: -50%;
+	 width: 200%;
+	 height: 200%;
+	 background: radial-gradient(circle, 
+		 rgba(0, 136, 255, 0.1) 0%, 
+		 transparent 70%);
+	 transform: rotate(30deg);
+	 opacity: 0;
+	 transition: all 1.5s ease;
+	 pointer-events: none;
+ }
+ 
+ article:hover::before {
+	 opacity: 1;
+	 transform: rotate(0deg) scale(1.1);
  }
 
  /* 设置段落文字样式 - 增强可读性 */

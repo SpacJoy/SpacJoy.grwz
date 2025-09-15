@@ -41,6 +41,12 @@ function startTypingEffect() {
     // 清空原内容
     typingText.innerHTML = '';
     
+    // 添加光标效果
+    const cursor = document.createElement('span');
+    cursor.className = 'typing-cursor';
+    cursor.textContent = '|';
+    typingText.appendChild(cursor);
+    
     // 逐字添加并应用闪烁动画
     let index = 0;
     
@@ -51,15 +57,43 @@ function startTypingEffect() {
             charSpan.className = 'char-blink';
             charSpan.textContent = text[index];
             
-            // 添加到容器
-            typingText.appendChild(charSpan);
+            // 添加打字声音效果（如果浏览器支持）
+            try {
+                if (Math.random() > 0.7 && window.AudioContext) {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(200 + Math.random() * 300, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.02, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                }
+            } catch (e) {
+                // 忽略声音效果错误
+            }
+            
+            // 在光标前插入字符
+            typingText.insertBefore(charSpan, cursor);
             
             // 移动到下一个字符
             index++;
             
             // 设置下一个字符的延迟时间（随机延迟增加自然感）
-            const delay = Math.random() * 150 + 100; // 100-250ms随机延迟
+            const delay = Math.random() * 150 + 80; // 80-230ms随机延迟
             window.typingTimer = setTimeout(addNextChar, delay);
+        } else {
+            // 打字完成后隐藏光标
+            setTimeout(() => {
+                cursor.style.opacity = '0';
+                cursor.style.transition = 'opacity 0.3s ease';
+            }, 1000);
         }
     }
     

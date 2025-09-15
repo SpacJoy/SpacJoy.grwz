@@ -140,6 +140,8 @@ function activateLayer(layer, url) {
     if (old && old !== layer) {
         old.classList.remove("active");
         old.classList.add("fading");
+        old.style.opacity = "0";
+        old.style.filter = "blur(10px) brightness(0.8)";
         old.addEventListener(
             "transitionend",
             () => {
@@ -148,7 +150,18 @@ function activateLayer(layer, url) {
             { once: true }
         );
     }
+    // 新层先模糊，然后在过渡到清晰
+    layer.style.opacity = "0";
+    layer.style.filter = "blur(10px)";
     layer.classList.add("active");
+    
+    // 使用requestAnimationFrame确保样式应用
+    requestAnimationFrame(() => {
+        layer.style.transition = "opacity 1.2s ease, filter 1.5s ease";
+        layer.style.opacity = "1";
+        layer.style.filter = "blur(0px)";
+    });
+    
     activeLayer = layer;
     window._backgroundLoadedOnce = true;
     console.log("[Background] 激活背景:", url);
@@ -281,6 +294,12 @@ function crossfadeToPrefetched() {
 
     const entry = queue[idx];
     activateLayer(entry.layer, entry.url);
+    
+    // 添加背景切换时的额外动画效果
+    if (window.showNotification) {
+        window.showNotification("背景已更换", "成功切换到新的背景图片");
+    }
+    
     queue.splice(idx, 1);
     prefetchNextBackground(); // 补一张
     return true;
