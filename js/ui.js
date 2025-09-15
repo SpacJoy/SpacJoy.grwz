@@ -7,25 +7,28 @@ function addEventListeners() {
 	// 为滚动指示器添加点击滚动到下一个屏幕的功能
 	const scrollIndicator = document.getElementById('scroll-indicator');
 	if (scrollIndicator) {
+		// 简化的点击事件处理函数，使用更直接和可靠的方法
 		scrollIndicator.addEventListener('click', function() {
-			// 获取hero-section后的下一个section
-			const heroSection = document.getElementById('hero-section');
-			if (heroSection && heroSection.nextElementSibling) {
-				const nextSection = heroSection.nextElementSibling;
+			// 直接使用原生JavaScript滚动到特定位置
+			try {
+				// 获取下一个屏幕元素
+				const nextSection = document.getElementById('blank-section') || 
+					document.getElementById('hero-section')?.nextElementSibling;
 				
-				// 使用Lenis平滑滚动
-				if (window.lenis) {
-					window.lenis.scrollTo(nextSection, {
-						duration: 1.2,
-						easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+				if (nextSection) {
+					// 计算目标位置
+					const targetPosition = nextSection.offsetTop;
+					
+					// 使用最简单的平滑滚动方法
+					window.scrollTo({
+						top: targetPosition,
+						behavior: 'smooth'
 					});
 				} else {
-					// 备用方案：使用原生滚动
-					nextSection.scrollIntoView({
-						behavior: 'smooth',
-						block: 'start'
-					});
+					console.warn('未找到下一个屏幕元素');
 				}
+			} catch (error) {
+				console.error('滚动指示器点击错误:', error);
 			}
 		});
 	}
@@ -69,7 +72,9 @@ function initializePageComplete() {
     window.createReadmeSkeleton && window.createReadmeSkeleton();
 
     try {
-        window.addEventListeners && window.addEventListeners();
+        // 直接调用addEventListeners函数，不依赖window对象引用
+        addEventListeners();
+        console.log("事件监听器添加成功");
     } catch (e) {
         console.error("addEventListeners 失败", e);
     }
