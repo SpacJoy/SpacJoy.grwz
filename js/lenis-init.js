@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (typeof Lenis !== "undefined") {
         console.log("Lenis loaded, initializing smooth scroll...");
 
-        const lenis = new Lenis({
+        // 将lenis实例暴露到window对象上，以便在其他脚本中使用
+        window.lenis = new Lenis({
             smooth: true,
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

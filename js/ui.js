@@ -3,6 +3,32 @@ function addEventListeners() {
 	if (window.eventListenersAdded) return;
 	window.eventListenersAdded = true;
 	console.log("添加事件监听器");
+	
+	// 为滚动指示器添加点击滚动到下一个屏幕的功能
+	const scrollIndicator = document.getElementById('scroll-indicator');
+	if (scrollIndicator) {
+		scrollIndicator.addEventListener('click', function() {
+			// 获取hero-section后的下一个section
+			const heroSection = document.getElementById('hero-section');
+			if (heroSection && heroSection.nextElementSibling) {
+				const nextSection = heroSection.nextElementSibling;
+				
+				// 使用Lenis平滑滚动
+				if (window.lenis) {
+					window.lenis.scrollTo(nextSection, {
+						duration: 1.2,
+						easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+					});
+				} else {
+					// 备用方案：使用原生滚动
+					nextSection.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start'
+					});
+				}
+			}
+		});
+	}
 	const debouncedLayoutAdjust = debounce(() => {
 		window.checkLayoutAndSwitchBackground &&
 			window.checkLayoutAndSwitchBackground(false);
