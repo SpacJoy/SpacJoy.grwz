@@ -1777,7 +1777,7 @@ header h1 span.title-text {
 
 /* 滚动指示器中的文本样式 */
 .scroll-indicator .scroll-text {
-    color: var(--text-primary);
+    color: var(--text-dark) !important;
     font-size: 1.1rem;
     margin-bottom: 10px;
     opacity: 0.8;
