@@ -1162,55 +1162,6 @@ header h1 span.title-text {
 	display: inline-flex; 
 	margin-left: 10px; 
 	}
-	.change-bg-btn { 
-	background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1)); 
-	border: 1px solid rgba(255,255,255,0.3); 
-	padding: 8px 16px; 
-	font-size: 14px; 
-	font-weight: 500; 
-	cursor: pointer; 
-	border-radius: 12px; 
-	color: white; 
-	backdrop-filter: blur(10px); 
-	transition: var(--transition-smooth); 
-	box-shadow: 
-		0 4px 12px rgba(0, 0, 0, 0.2),
-		0 1px 3px rgba(0, 0, 0, 0.1); 
-	position: relative; 
-	overflow: hidden; 
-	}
-	
-	/* 背景按钮光泽效果 */
-	.change-bg-btn::after {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: -100%;
-	width: 100%;
-	height: 100%;
-	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-	transition: var(--transition-smooth);
-	}
-	
-	.change-bg-btn:hover { 
-	background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.2)); 
-	transform: translateY(-3px); 
-	box-shadow: 
-		0 6px 16px rgba(0, 0, 0, 0.25),
-		0 2px 6px rgba(0, 0, 0, 0.15); 
-	border-color: rgba(255,255,255,0.4); 
-	}
-	
-	.change-bg-btn:hover::after {
-	left: 100%;
-	}
-	
-	.change-bg-btn:active {
-	transform: translateY(-1px);
-	box-shadow: 
-		0 3px 8px rgba(0, 0, 0, 0.2),
-		0 1px 3px rgba(0, 0, 0, 0.1);
-	}
 	/* 浅色模式下的文本颜色变量 */
 	@media (prefers-color-scheme: light) {
 		:root {
@@ -1232,13 +1183,18 @@ header h1 span.title-text {
 			.lang-btn:hover {
 				background: rgba(0, 136, 255, 0.3);
 			}
-			.change-bg-btn {
-				background: rgba(255,255,255,0.35);
-				color: var(--text-dark);
-				border: 1px solid rgba(0,0,0,0.12);
+			/* 浅色模式下的背景更换按钮统一样式 */
+			#bg-toggle, .nav-btn.modern-btn.change-bg-btn {
+				background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.4)) !important;
+				color: var(--text-dark) !important;
+				text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2) !important;
+				border: 1px solid rgba(0,0,0,0.12) !important;
 			}
-			.change-bg-btn:hover {
-				background: rgba(255,255,255,0.75);
+			#bg-toggle:hover, .nav-btn.modern-btn.change-bg-btn:hover {
+				background: linear-gradient(135deg, rgba(79, 140, 255, 0.5), rgba(59, 130, 255, 0.6)) !important;
+				color: var(--text-dark) !important;
+				text-shadow: 0 0 8px rgba(255, 255, 255, 0.3) !important;
+				border: 1px solid rgba(0, 136, 255, 0.3) !important;
 			}
 		}
 		
@@ -1253,14 +1209,28 @@ header h1 span.title-text {
 				background: linear-gradient(135deg, rgba(0, 136, 255, 0.5), rgba(0, 102, 204, 0.5));
 				border-color: rgba(255, 255, 255, 0.4);
 			}
-			.change-bg-btn {
-				background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-				border-color: rgba(255,255,255,0.3);
-				color: var(--text-light);
+			/* 平板和移动端浅色模式下的背景更换按钮统一样式 */
+			#bg-toggle, .nav-btn.modern-btn.change-bg-btn {
+				background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.4)) !important;
+				color: var(--text-light) !important;
+				text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+				border: 1px solid rgba(255,255,255,0.3) !important;
 			}
-			.change-bg-btn:hover {
-				background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.2));
-				border-color: rgba(255,255,255,0.4);
+			#bg-toggle:hover, .nav-btn.modern-btn.change-bg-btn:hover {
+				background: linear-gradient(135deg, rgba(79, 140, 255, 0.5), rgba(59, 130, 255, 0.6)) !important;
+				color: var(--text-light) !important;
+				text-shadow: 0 0 8px rgba(255, 255, 255, 0.3) !important;
+				border-color: rgba(255,255,255,0.4) !important;
+			}
+			
+			/* 平板和移动端浅色模式下的背景更换按钮点击状态样式 */
+			#bg-toggle:active, .nav-btn.modern-btn.change-bg-btn:active {
+				background: linear-gradient(135deg, rgba(59, 130, 246, 0.6), rgba(37, 99, 235, 0.7)) !important;
+				color: var(--text-light) !important;
+				transform: translateY(1px) !important;
+				box-shadow: 
+					0 2px 4px rgba(0, 0, 0, 0.1),
+					0 1px 2px rgba(0, 0, 0, 0.05) !important;
 			}
 		}
 	}
@@ -1590,6 +1560,76 @@ header h1 span.title-text {
     overflow: hidden;
     z-index: 1;
     box-shadow: 0 4px 12px rgba(0, 136, 255, 0.2);
+}
+
+/* ===== 背景更换按钮统一样式 (解决样式冲突) ===== */
+/* 默认样式 - 移动端和PC端通用 */
+#bg-toggle, .nav-btn.modern-btn.change-bg-btn {
+    /* 重置并统一按钮样式 */
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(37, 99, 235, 0.5)) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    padding: 8px 16px !important;
+    border-radius: 12px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    min-width: auto !important;
+    margin: 0 !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    transition: var(--transition-smooth) !important;
+}
+
+#bg-toggle:hover, .nav-btn.modern-btn.change-bg-btn:hover {
+    background: linear-gradient(135deg, rgba(79, 140, 255, 0.6), rgba(59, 130, 255, 0.7)) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 136, 255, 0.2),
+        0 2px 6px rgba(0, 0, 0, 0.15) !important;
+    border-color: rgba(255,255,255,0.4) !important;
+}
+
+#bg-toggle:active, .nav-btn.modern-btn.change-bg-btn:active {
+    transform: translateY(1px) !important;
+    box-shadow: 
+        0 3px 8px rgba(0, 0, 0, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 显式深色模式下的背景更换按钮样式强化 */
+[data-theme="dark"] #bg-toggle,
+[data-theme="dark"] .nav-btn.modern-btn.change-bg-btn {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(37, 99, 235, 0.5)) !important;
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    /* 深色模式下增强按钮可见性 */
+    box-shadow: 
+        0 4px 12px rgba(0, 136, 255, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="dark"] #bg-toggle:hover,
+[data-theme="dark"] .nav-btn.modern-btn.change-bg-btn:hover {
+    background: linear-gradient(135deg, rgba(79, 140, 255, 0.6), rgba(59, 130, 255, 0.7)) !important;
+    border-color: rgba(255,255,255,0.4) !important;
+    /* 深色模式下增强悬浮效果 */
+    box-shadow: 
+        0 6px 16px rgba(0, 136, 255, 0.2),
+        0 2px 6px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="dark"] #bg-toggle:active,
+[data-theme="dark"] .nav-btn.modern-btn.change-bg-btn:active {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.6), rgba(37, 99, 235, 0.7)) !important;
+    transform: translateY(1px) !important;
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 .btn.modern-btn::before {
