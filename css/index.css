@@ -15,19 +15,30 @@
   --accent-blue: #0070cc;
   --secondary-blue: #0055aa;
   
-  /* 文本颜色 */
-  --text-primary: rgba(255, 255, 255, 0.95);
-  --text-secondary: rgba(255, 255, 255, 0.8);
+  /* 文本颜色 - 基础定义 */
+  --text-light: rgba(255, 255, 255, 0.95);
+  --text-light-secondary: rgba(255, 255, 255, 0.8);
   --text-dark: rgba(0, 0, 0, 0.85);
+  --text-dark-secondary: rgba(0, 0, 0, 0.65);
+  
+  /* 根据主题自动切换的文本颜色变量 */
+  --text-primary: var(--text-dark);
+  --text-secondary: var(--text-dark-secondary);
+  
+  /* 卡片文本和按钮同步颜色变量 */
+  --card-text-color: var(--text-primary);
+  --btn-text-color: var(--card-text-color);
   
   /* 背景与覆盖层 */
   --bg-overlay: rgba(0, 0, 0, 0.3);
   --glass-bg: rgba(255, 255, 255, 0.15);
   --glass-bg-hover: rgba(255, 255, 255, 0.25);
+  --card-bg: rgba(255, 255, 255, 0.65);
   
   /* 动画时长 */
   --transition-normal: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --transition-fast: 0.3s ease;
+  --transition-smooth: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ===== 顶部导航栏样式 ===== */
@@ -378,20 +389,19 @@ main {
 	 flex: 1 0 320px; /* 增加最小宽度到320px */
 	 max-width: 400px; /* 添加最大宽度限制 */
 	 margin: 0; /* 移除margin，使用gap代替 */
-	 background-color: rgba(255, 255, 255, 0.55);
-	 border-radius: 20px;
-	 backdrop-filter: blur(8px);
+	 background: var(--card-bg);
+	 border-radius: 24px;
+	 backdrop-filter: blur(10px);
 	 box-shadow: 
-		 0 8px 32px rgba(0, 0, 0, 0.1),
-		 0 4px 16px rgba(0, 0, 0, 0.1),
-		 inset 0 1px 0 rgba(255, 255, 255, 0.3),
-		 inset 0 -1px 0 rgba(255, 255, 255, 0.1);
-	 padding: 20px;
+		 0 10px 35px rgba(0, 0, 0, 0.1),
+		 0 5px 15px rgba(0, 0, 0, 0.05),
+		 inset 0 1px 0 rgba(255, 255, 255, 0.4);
+	 padding: 24px;
 	 /* 添加悬浮效果 */
-	 transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	 transition: all var(--transition-smooth);
 	 cursor: pointer;
-	 /* 玻璃效果增强 - 移除边框，使用阴影效果 */
-	 border: 1px solid rgba(255, 255, 255, 0.2);
+	 /* 玻璃效果增强 */
+	 border: 1px solid rgba(255, 255, 255, 0.3);
 	 position: relative;
 	 /* 垂直居中内容 */
 	 display: flex;
@@ -399,8 +409,9 @@ main {
 	 justify-content: center;
 	 align-items: center;
 	 text-align: center;
-	 min-height: 250px;
+	 min-height: 280px;
 	 box-sizing: border-box; /* 确保边距计算正确 */
+	 overflow: hidden;
  }
 
 /* 中等屏幕下的article样式优化 */
@@ -411,11 +422,50 @@ main {
 	}
 }
 
+ /* 统一按钮基础样式 - 现代化设计 */
+ .btn {
+	 width: 90%;
+	 max-width: 300px;
+	 padding: 12px 24px;
+	 margin: 8px 0;
+	 font-size: 16px;
+	 font-weight: 500;
+	 color: var(--btn-text-color);
+	 background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+	 border: 1px solid rgba(255, 255, 255, 0.2);
+	 border-radius: 12px;
+	 cursor: pointer;
+	 transition: var(--transition-smooth);
+	 backdrop-filter: blur(5px);
+	 box-shadow: 
+		 0 4px 12px rgba(0, 136, 255, 0.2),
+		 0 1px 3px rgba(0, 0, 0, 0.1),
+		 inset 0 1px 0 rgba(255, 255, 255, 0.3);
+	 position: relative;
+	 overflow: hidden;
+	 display: flex;
+	 align-items: center;
+	 justify-content: center;
+	 text-decoration: none;
+ }
+
+ /* 按钮光泽效果 */
+ .btn::after {
+	 content: '';
+	 position: absolute;
+	 top: 0;
+	 left: -100%;
+	 width: 100%;
+	 height: 100%;
+	 background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+	 transition: var(--transition-smooth);
+ }
+
  /* 按钮在垂直居中布局中的样式调整 */
  article .btn {
 	 width: 90%;
 	 max-width: 300px;
-	 margin: 5px 0;
+	 margin: 8px 0;
  } /* 添加文章玻璃光泽效果 */
  article::after {
 	 content: '';
@@ -430,20 +480,19 @@ main {
 		 transparent 100%);
 	 border-radius: 19px 19px 8px 8px;
 	 pointer-events: none;
- } /* 设置文章悬浮效果 - 减小放大比例避免重叠 */
+ } /* 设置文章悬浮效果 - 增强视觉效果 */
  article:hover {
 	 background: linear-gradient(135deg, 
-		 rgba(0, 136, 255, 0.75) 0%, 
-		 rgba(0, 102, 204, 0.75) 100%);
-	 backdrop-filter: blur(10px);
+		 rgba(0, 136, 255, 0.8) 0%, 
+		 rgba(0, 102, 204, 0.8) 100%);
+	 backdrop-filter: blur(12px);
 	 box-shadow: 
-		 0 16px 48px rgba(0, 136, 255, 0.3),
-		 0 8px 24px rgba(0, 0, 0, 0.15),
-		 inset 0 2px 0 rgba(255, 255, 255, 0.4),
-		 inset 0 -2px 0 rgba(255, 255, 255, 0.1);
-	 transform: scale(1.02); /* 减小放大比例从1.05到1.02，避免重叠 */
+		 0 20px 50px rgba(0, 136, 255, 0.4),
+		 0 10px 30px rgba(0, 0, 0, 0.15),
+		 inset 0 2px 0 rgba(255, 255, 255, 0.5);
+	 transform: translateY(-5px) scale(1.02);
 	 /* 悬浮时增强玻璃边框效果 */
-	 border: 1px solid rgba(255, 255, 255, 0.3);
+	 border: 1px solid rgba(255, 255, 255, 0.4);
  }
 
  /* 悬浮时增强文章光泽效果 */
@@ -454,28 +503,48 @@ main {
 		 transparent 100%);
  }
 
+ article:hover h2 {
+	 color: white;
+	 text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+ }
+
  /* 悬浮时调整内部文字颜色 */
+ article:hover {
+	 --card-text-color: rgba(255, 255, 255, 0.95);
+ }
+
  article:hover h2 {
 	 color: white;
 	 text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
  }
 
  article:hover p {
-	 color: rgba(255, 255, 255, 0.95);
 	 text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
  }
 
+ /* 文章悬浮时按钮样式 - 增强视觉对比 */
  article:hover .btn {
-	 background-color: rgba(255, 255, 255, 0.2);
-	 color: white;
-	 border: 1px solid rgba(255, 255, 255, 0.3);
-	 backdrop-filter: blur(5px);
+	 background: linear-gradient(135deg, var(--primary-color-light), var(--secondary-color-light));
+	 border: 1px solid rgba(255, 255, 255, 0.4);
+	 box-shadow: 
+		 0 6px 16px rgba(0, 136, 255, 0.3),
+		 0 2px 6px rgba(0, 0, 0, 0.15),
+		 inset 0 1px 0 rgba(255, 255, 255, 0.5);
  }
 
+ /* 文章悬浮时按钮的悬浮效果 - 增强交互体验 */
  article:hover .btn:hover {
-	 background-color: rgba(255, 255, 255, 0.3);
-	 transform: translateY(-2px);
-	 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	 background: linear-gradient(135deg, #00aaff, #0088cc);
+	 transform: translateY(-3px) scale(1.03);
+	 box-shadow: 
+		 0 8px 20px rgba(0, 136, 255, 0.4),
+		 0 4px 8px rgba(0, 0, 0, 0.2),
+		 inset 0 1px 0 rgba(255, 255, 255, 0.6);
+ }
+
+ /* 按钮悬浮时激活光泽动画 */
+ .btn:hover::after {
+	 left: 100%;
  }
  /* 设置h2标题样式 */
  h2 {
@@ -491,7 +560,7 @@ main {
 
  /* 设置段落文字样式 - 增强可读性 */
  article p {
-	 color: rgba(0, 0, 0, 0.85);
+	 color: var(--card-text-color);
 	 font-size: 16px;
 	 line-height: 1.6;
 	 text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
@@ -592,10 +661,10 @@ main {
 			 transparent 100%);
 	 }
 
-	 /* 移动端悬浮时调整内部文字颜色 */
-	 article:hover h2 {
-		 color: white;
-		 text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+	 /* 悬浮时调整内部文字颜色 */
+ article:hover {
+	 --card-text-color: white;
+ }
 	 }
 
 	 article:hover p {
@@ -625,7 +694,7 @@ main {
 		 width: 101%;
 		 margin-left: -2%;
 	 }
- }/* 移除所有固定背景设置，改用JavaScript随机背景功能 */
+/* 移除所有固定背景设置，改用JavaScript随机背景功能 */
 
 /* 通用通知样式（统一，不重复定义） */
 .copy-notification {
@@ -751,7 +820,7 @@ main {
 	 margin: 0;
  }
 
-/* 语言切换按钮样式 */
+/* 语言切换按钮样式 - 现代化设计 */
 .language-switch {
 	display: inline-flex;
 	align-items: center;
@@ -760,28 +829,54 @@ main {
 }
 
 .lang-btn {
-	background: rgba(0, 136, 255, 0.2);
-	border: 1px solid rgba(0, 136, 255, 0.3);
-	border-radius: 8px;
-	color: rgba(255, 255, 255, 0.9);
-	padding: 8px 12px;
+	background: linear-gradient(135deg, rgba(0, 136, 255, 0.3), rgba(0, 102, 204, 0.3));
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 12px;
+	color: white;
+	padding: 8px 16px;
 	font-size: 14px;
 	font-weight: 500;
 	cursor: pointer;
-	transition: all 0.3s ease;
+	transition: var(--transition-smooth);
 	backdrop-filter: blur(10px);
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+	box-shadow: 
+		0 4px 12px rgba(0, 136, 255, 0.25),
+		0 1px 3px rgba(0, 0, 0, 0.15);
 	min-width: 50px;
+	position: relative;
+	overflow: hidden;
+}
+
+/* 语言按钮光泽效果 */
+.lang-btn::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+	transition: var(--transition-smooth);
 }
 
 .lang-btn:hover {
-	background: rgba(0, 136, 255, 0.4);
-	transform: translateY(-2px);
-	box-shadow: 0 4px 12px rgba(0, 136, 255, 0.3);
+	background: linear-gradient(135deg, rgba(0, 136, 255, 0.5), rgba(0, 102, 204, 0.5));
+	transform: translateY(-3px);
+	box-shadow: 
+		0 6px 16px rgba(0, 136, 255, 0.4),
+		0 2px 6px rgba(0, 0, 0, 0.2);
+	border-color: rgba(255, 255, 255, 0.4);
+}
+
+.lang-btn:hover::after {
+	left: 100%;
 }
 
 .lang-btn:active {
-	transform: translateY(0);
+	transform: translateY(-1px);
+	box-shadow: 
+		0 3px 8px rgba(0, 136, 255, 0.3),
+		0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 /* 确保h1能容纳内联的语言切换按钮 */
@@ -866,8 +961,24 @@ header h1 span.title-text {
 
 	/* 平板端语言按钮适配 */
 	/* ================= 手动主题覆盖（优先于 prefers-color-scheme） ================= */
+	[data-theme="dark"] {
+		/* 深色主题下的文本颜色变量 */
+		--text-primary: var(--text-light);
+		--text-secondary: var(--text-light-secondary);
+	}
+	
 	[data-theme="dark"] body, [data-theme="dark"] .markdown-display-section {
-		color: rgba(255,255,255,0.9);
+		color: var(--text-primary);
+	}
+	
+	/* 深色主题下调整卡片文本和按钮颜色 */
+	[data-theme="dark"] article {
+		--card-text-color: var(--text-primary);
+	}
+	
+	/* 浅色主题下调整卡片文本和按钮颜色 */
+	[data-theme="light"] article {
+		--card-text-color: var(--text-primary);
 	}
 	[data-theme="dark"] .copy-notification:not(.success):not(.error):not(.scroll-tip) {
 		background: linear-gradient(135deg, rgba(70,70,78,.86), rgba(40,40,48,.86));
@@ -918,47 +1029,135 @@ header h1 span.title-text {
 	margin-left: 10px; 
 	}
 	.change-bg-btn { 
-	background: rgba(255,255,255,0.15); 
-	border: 1px solid rgba(255,255,255,0.25); 
-	padding: 8px 12px; 
+	background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1)); 
+	border: 1px solid rgba(255,255,255,0.3); 
+	padding: 8px 16px; 
 	font-size: 14px; 
+	font-weight: 500; 
 	cursor: pointer; 
-	border-radius: 8px; 
-	color: rgba(255,255,255,0.9); 
+	border-radius: 12px; 
+	color: white; 
 	backdrop-filter: blur(10px); 
-	transition: all .3s ease; 
+	transition: var(--transition-smooth); 
+	box-shadow: 
+		0 4px 12px rgba(0, 0, 0, 0.2),
+		0 1px 3px rgba(0, 0, 0, 0.1); 
+	position: relative; 
+	overflow: hidden; 
 	}
+	
+	/* 背景按钮光泽效果 */
+	.change-bg-btn::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+	transition: var(--transition-smooth);
+	}
+	
 	.change-bg-btn:hover { 
-	background: rgba(255,255,255,0.3); 
-	transform: translateY(-2px); 
+	background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.2)); 
+	transform: translateY(-3px); 
+	box-shadow: 
+		0 6px 16px rgba(0, 0, 0, 0.25),
+		0 2px 6px rgba(0, 0, 0, 0.15); 
+	border-color: rgba(255,255,255,0.4); 
 	}
-	/* 浅色模式下按钮文字变深以保证可读性 */
+	
+	.change-bg-btn:hover::after {
+	left: 100%;
+	}
+	
+	.change-bg-btn:active {
+	transform: translateY(-1px);
+	box-shadow: 
+		0 3px 8px rgba(0, 0, 0, 0.2),
+		0 1px 3px rgba(0, 0, 0, 0.1);
+	}
+	/* 浅色模式下的文本颜色变量 */
 	@media (prefers-color-scheme: light) {
-		.change-bg-btn {
-			background: rgba(255,255,255,0.35);
-			color: #222;
-			border: 1px solid rgba(0,0,0,0.12);
+		:root {
+			--text-primary: var(--text-dark);
+			--text-secondary: var(--text-dark-secondary);
 		}
-		.change-bg-btn:hover {
-			background: rgba(255,255,255,0.75);
+		
+		article {
+			--card-text-color: var(--text-primary);
+		}
+		
+		/* 大屏幕（PC）浅色模式下按钮样式 */
+		@media (min-width: 1025px) {
+			.lang-btn {
+				background: rgba(0, 136, 255, 0.2);
+				border-color: rgba(0, 136, 255, 0.3);
+				color: var(--text-dark);
+			}
+			.lang-btn:hover {
+				background: rgba(0, 136, 255, 0.3);
+			}
+			.change-bg-btn {
+				background: rgba(255,255,255,0.35);
+				color: var(--text-dark);
+				border: 1px solid rgba(0,0,0,0.12);
+			}
+			.change-bg-btn:hover {
+				background: rgba(255,255,255,0.75);
+			}
+		}
+		
+		/* 平板和移动端浅色模式下保持原有按钮样式 */
+		@media (max-width: 1024px) {
+			.lang-btn {
+				background: linear-gradient(135deg, rgba(0, 136, 255, 0.3), rgba(0, 102, 204, 0.3));
+				border-color: rgba(255, 255, 255, 0.3);
+				color: var(--text-light);
+			}
+			.lang-btn:hover {
+				background: linear-gradient(135deg, rgba(0, 136, 255, 0.5), rgba(0, 102, 204, 0.5));
+				border-color: rgba(255, 255, 255, 0.4);
+			}
+			.change-bg-btn {
+				background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+				border-color: rgba(255,255,255,0.3);
+				color: var(--text-light);
+			}
+			.change-bg-btn:hover {
+				background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.2));
+				border-color: rgba(255,255,255,0.4);
+			}
 		}
 	}
 	@media (max-width:800px){
 		.change-bg { margin-left:0; margin-top:8px; }
 		header h1 { flex-direction: column; align-items: flex-start; }
-		/* README 骨架屏 */
+		/* README 骨架屏 - 现代化设计 */
 		.readme-skeleton { 
-			display:grid; gap:14px; padding:10px 4px; 
+			display:grid; 
+			gap:14px; 
+			padding:20px; 
+			background: rgba(255,255,255,0.05);
+			border-radius:16px;
+			backdrop-filter:blur(8px);
+			border:1px solid rgba(255,255,255,0.1);
 		}
 		.readme-skeleton .line { 
-			height:14px; border-radius:7px; 
-			background: linear-gradient(100deg, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0.25) 40%, rgba(255,255,255,0.1) 60%); 
+			height:16px;
+			border-radius:8px; 
+			background: linear-gradient(90deg, 
+				rgba(255,255,255,0.1) 0%,
+				rgba(255,255,255,0.2) 50%,
+				rgba(255,255,255,0.1) 100%); 
 			background-size:200% 100%; 
-			animation: skeletonShine 1.2s ease-in-out infinite; 
+			animation: skeletonShine 1.5s ease-in-out infinite; 
+			box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
 		}
 		.readme-skeleton .line.short { width:40%; }
 		.readme-skeleton .line.mid { width:65%; }
 		.readme-skeleton .line.long { width:90%; }
+		.readme-skeleton .line.thick { height:24px; }
 		@keyframes skeletonShine { 
 			0% { background-position:200% 0; } 
 			100% { background-position:-200% 0; } 
