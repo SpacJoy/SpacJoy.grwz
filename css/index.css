@@ -276,9 +276,10 @@ body {
 	font-weight: 700;
 	letter-spacing: 2px;
 	text-shadow: 
-		0 0 10px rgba(0, 136, 255, 0.8),
-		0 0 20px rgba(0, 136, 255, 0.6),
-		0 0 40px rgba(0, 136, 255, 0.4);
+		0 0 10px rgba(0, 136, 255, 0.9),
+		0 0 20px rgba(0, 136, 255, 0.7),
+		0 0 40px rgba(0, 136, 255, 0.5),
+		0 0 60px rgba(0, 136, 255, 0.3);
 	font-family: 'MiSans', 'Microsoft YaHei', sans-serif;
 	/* 确保文本在容器内正确显示 */
 	max-width: 90vw;
@@ -356,11 +357,12 @@ body {
  } /* ===== 系统颜色响应样式 ===== */
 /* 亮色模式 */
 [data-theme="light"] .typing-text {
-	/* 保留文字颜色，添加柔和光晕效果 */
+	/* 保留文字颜色，增强光晕效果以提高清晰度 */
 	color: var(--primary-blue-dark) !important;
 	text-shadow: 
-		0 0 8px rgba(0, 136, 255, 0.2),
-		0 0 16px rgba(0, 136, 255, 0.1) !important;
+		0 0 8px rgba(0, 136, 255, 0.4),
+		0 0 16px rgba(0, 136, 255, 0.3),
+		0 0 32px rgba(0, 136, 255, 0.2) !important;
 }
 
 [data-theme="light"] .nav-btn {
@@ -376,11 +378,12 @@ body {
 
 /* 暗色模式 */
 [data-theme="dark"] .typing-text {
-	/* 保留文字颜色，添加柔和光晕效果 */
+	/* 保留文字颜色，增强光晕效果以提高清晰度 */
 	color: var(--primary-blue-light) !important;
 	text-shadow: 
-		0 0 10px rgba(0, 136, 255, 0.3),
-		0 0 20px rgba(0, 136, 255, 0.2) !important;
+		0 0 10px rgba(0, 136, 255, 0.5),
+		0 0 20px rgba(0, 136, 255, 0.4),
+		0 0 40px rgba(0, 136, 255, 0.3) !important;
 }
 
 [data-theme="dark"] body {
