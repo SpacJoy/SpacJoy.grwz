@@ -1871,13 +1871,13 @@ header h1 span.title-text {
     transform: translateY(-50%) translateX(20px);
 }
 
-/* 仅在前两页显示 */
+/* 当添加visible类时显示元素 */
 .page-indicator.visible {
     opacity: 1;
     transform: translateY(-50%) translateX(0);
 }
 
-/* 静止状态下自动隐藏 */
+/* 当添加idle类时隐藏元素 */
 .page-indicator.idle {
     opacity: 0;
     transform: translateY(-50%) translateX(20px);
