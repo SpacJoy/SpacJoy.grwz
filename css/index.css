@@ -6,6 +6,38 @@
   box-sizing: border-box;
 }
 
+/* 修复竖屏文本颜色问题 - 强制所有屏幕方向都显示黑色文本 */
+h2, h3, p {
+  color: var(--text-dark) !important;
+  text-shadow: none !important;
+}
+
+/* 覆盖markdown内容区域的文本颜色 */
+.markdown-content h2, .markdown-content h3, .markdown-content p {
+  color: var(--text-dark) !important;
+  text-shadow: none !important;
+}
+
+/* 确保在所有主题下都是黑色文本 */
+[data-theme="light"] h2, [data-theme="light"] h3, [data-theme="light"] p {
+  color: var(--text-dark) !important;
+}
+
+[data-theme="dark"] h2, [data-theme="dark"] h3, [data-theme="dark"] p {
+  color: var(--text-dark) !important;
+}
+
+/* 覆盖悬停效果的文本颜色 */
+article:hover h2, article:hover h3, .project-card:hover h2, .project-card:hover h3 {
+  color: var(--text-dark) !important;
+  text-shadow: none !important;
+}
+
+article:hover p, .project-card:hover p {
+  color: var(--text-dark) !important;
+  text-shadow: none !important;
+}
+
 /* 提高渲染性能 */
 body {
   will-change: background-color;
@@ -1818,6 +1850,102 @@ header h1 span.title-text {
     height: 24px;
     fill: var(--text-primary);
     opacity: 0.7;
+}
+
+/* ===== 页面指示器样式 ===== */
+.page-indicator {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s var(--transition-smooth), transform 0.5s var(--transition-smooth);
+    transform: translateY(-50%) translateX(20px);
+}
+
+/* 仅在前两页显示 */
+.page-indicator.visible {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+/* 静止状态下自动隐藏 */
+.page-indicator.idle {
+    opacity: 0;
+    transform: translateY(-50%) translateX(20px);
+}
+
+/* 鼠标悬停到页面指示器容器上时，强制显示 */
+.page-indicator:hover {
+    opacity: 1 !important;
+    transform: translateY(-50%) translateX(0) !important;
+}
+
+.indicator-item {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.3s var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+    color: transparent;
+    font-size: 0;
+    line-height: 0;
+}
+
+/* 鼠标悬停时的效果 */
+.indicator-item:hover {
+    width: 14px;
+    height: 14px;
+    background-color: rgba(255, 255, 255, 0.9);
+    transform: translateX(-2px);
+}
+
+/* 当前激活的指示器 */
+.indicator-item.active {
+    width: 16px;
+    height: 16px;
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue-light);
+    box-shadow: 0 0 10px rgba(0, 136, 255, 0.6);
+}
+
+/* 悬停提示信息 */
+.indicator-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-10px);
+    padding: 4px 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--transition-fast), transform 0.3s var(--transition-fast);
+    z-index: 10000;
+}
+
+.indicator-item:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-5px);
+}
+
+/* 响应式设计 - 移动端隐藏页面指示器 */
+@media (max-width: 768px) {
+    .page-indicator {
+        display: none;
+    }
 }
 
 /* ===== 响应式设计调整 ===== */
