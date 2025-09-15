@@ -1755,26 +1755,45 @@ header h1 span.title-text {
 
 /* ===== 滚动指示器 ===== */
 .scroll-indicator {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    animation: bounce 2s infinite;
-    cursor: pointer;
-    z-index: 100;
-    user-select: none;
+    position: absolute !important;
+    bottom: 30px !important;
+    left: 50% !important;
+    right: auto !important;
+    top: auto !important;
+    transform: translateX(-50%) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    animation: bounce 2s infinite !important;
+    cursor: pointer !important;
+    z-index: 9999 !important;
+    user-select: none !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* 滚动指示器中的文本样式 */
-.scroll-indicator span {
+.scroll-indicator .scroll-text {
     color: var(--text-primary);
     font-size: 1.1rem;
     margin-bottom: 10px;
     opacity: 0.8;
     font-weight: 500;
+    text-align: center;
+}
+
+/* 滚动箭头样式 */
+.scroll-indicator .scroll-arrow {
+    width: 24px;
+    height: 24px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.7;
 }
 
 .scroll-indicator svg {
@@ -1798,22 +1817,22 @@ header h1 span.title-text {
     
     .section-header h2 {
         font-size: 2rem;
-        color: var(--text-dark); /* 保持与PC端一致的黑色文字 */
+        color: var(--text-primary);
     }
     
     .project-card {
         padding: 20px;
     }
     
-    /* 平板设备上项目卡片文字颜色调整 */
+    /* 平板设备上项目卡片文字颜色保持一致 */
     .projects-container .project-card h3,
     .horizontal-projects-container .project-card h3 {
-        color: var(--text-dark);
+        color: var(--card-text-color);
     }
     
     .projects-container .project-card p,
     .horizontal-projects-container .project-card p {
-        color: var(--text-dark-secondary);
+        color: var(--text-secondary);
     }
     
     /* 横向项目列表在平板设备上的调整 - 添加居中逻辑 */
@@ -1836,7 +1855,7 @@ header h1 span.title-text {
     
     .section-header h2 {
         font-size: 1.75rem;
-        color: var(--text-dark); /* 保持与PC端一致的黑色文字 */
+        color: var(--text-primary);
     }
     
     .btn.modern-btn {
