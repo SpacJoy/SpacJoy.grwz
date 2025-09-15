@@ -28,14 +28,15 @@ h2, h3, p {
 }
 
 /* 覆盖悬停效果的文本颜色 */
+/* 恢复卡片悬停时的白色文本效果 */
 article:hover h2, article:hover h3, .project-card:hover h2, .project-card:hover h3 {
-  color: var(--text-dark) !important;
-  text-shadow: none !important;
+  color: white !important;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5) !important;
 }
 
 article:hover p, .project-card:hover p {
-  color: var(--text-dark) !important;
-  text-shadow: none !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
 /* 提高渲染性能 */
