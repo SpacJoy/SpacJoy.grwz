@@ -235,10 +235,11 @@ body {
  } /* ===== 系统颜色响应样式 ===== */
 /* 亮色模式 */
 [data-theme="light"] .typing-text {
-	color: var(--primary-blue-dark);
+	/* 保留文字颜色，添加柔和光晕效果 */
+	color: var(--primary-blue-dark) !important;
 	text-shadow: 
-		0 0 10px rgba(0, 136, 255, 0.6),
-		0 0 20px rgba(0, 136, 255, 0.4);
+		0 0 8px rgba(0, 136, 255, 0.2),
+		0 0 16px rgba(0, 136, 255, 0.1) !important;
 }
 
 [data-theme="light"] .nav-btn {
@@ -254,11 +255,11 @@ body {
 
 /* 暗色模式 */
 [data-theme="dark"] .typing-text {
-	color: var(--primary-blue-light);
+	/* 保留文字颜色，添加柔和光晕效果 */
+	color: var(--primary-blue-light) !important;
 	text-shadow: 
-		0 0 10px rgba(0, 136, 255, 0.8),
-		0 0 20px rgba(0, 136, 255, 0.6),
-		0 0 40px rgba(0, 136, 255, 0.4);
+		0 0 10px rgba(0, 136, 255, 0.3),
+		0 0 20px rgba(0, 136, 255, 0.2) !important;
 }
 
 [data-theme="dark"] body {
@@ -404,6 +405,17 @@ body {
 	
 	.typing-text {
 		font-size: 1.8rem;
+		/* 保留文字颜色，添加柔和光晕效果 */
+		color: var(--primary-blue);
+		text-shadow: 
+			0 0 8px rgba(0, 136, 255, 0.2),
+			0 0 16px rgba(0, 136, 255, 0.1);
+		font-weight: 700;
+		/* 添加!important确保样式优先级 */
+		color: var(--primary-blue) !important;
+		text-shadow: 
+			0 0 8px rgba(0, 136, 255, 0.2),
+			0 0 16px rgba(0, 136, 255, 0.1) !important;
 	}
 	
 	.hero-section {
@@ -446,14 +458,14 @@ article.animate-in {
 		margin-top: 80px; /* 保持顶部间距 */
 		padding-top: 20px; /* 恢复正常padding-top */
 	}
-}/* 设置文章样式 */
- article {
+}/* 设置文章样式 - 项目卡片基础样式 */
+ article, .project-card {
 	 flex: 1 0 320px; /* 增加最小宽度到320px */
 	 max-width: 400px; /* 添加最大宽度限制 */
 	 margin: 0; /* 移除margin，使用gap代替 */
 	 background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.5) 100%);
 	 border-radius: 24px;
-	 backdrop-filter: blur(10px);
+	 backdrop-filter: blur(12px);
 	 box-shadow: 
 		 0 10px 35px rgba(0, 0, 0, 0.1),
 		 0 5px 15px rgba(0, 0, 0, 0.05),
@@ -462,8 +474,11 @@ article.animate-in {
 	 /* 添加悬浮效果 */
 	 transition: all var(--transition-smooth);
 	 cursor: pointer;
-	 /* 玻璃效果增强 */
-	 border: 1px solid rgba(255, 255, 255, 0.3);
+	 /* 玻璃效果增强 - 添加边缘折射效果 */
+	 border: 1px solid rgba(255, 255, 255, 0.1);
+	 /* 玻璃边缘折射效果 */
+	 mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
+	 -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
 	 position: relative;
 	 /* 垂直居中内容 */
 	 display: flex;
@@ -476,6 +491,8 @@ article.animate-in {
 	 overflow: hidden;
 	 /* 添加伪元素来创建微妙的背景动效 */
  }
+
+
 
 /* 中等屏幕下的article样式优化 */
 @media (min-width: 1041px) and (max-width: 1199px) {
@@ -545,18 +562,22 @@ article.animate-in {
 	 border-radius: 19px 19px 8px 8px;
 	 pointer-events: none;
  } /* 设置文章悬浮效果 - 增强视觉效果 */
- article:hover {
+ article:hover, .project-card:hover {
 	 background: linear-gradient(135deg, 
 		 rgba(0, 136, 255, 0.9) 0%, 
 		 rgba(0, 102, 204, 0.9) 100%);
-	 backdrop-filter: blur(12px);
+	 backdrop-filter: blur(15px);
 	 box-shadow: 
 		 0 20px 50px rgba(0, 136, 255, 0.5),
 		 0 10px 30px rgba(0, 0, 0, 0.15),
-		 inset 0 2px 0 rgba(255, 255, 255, 0.6);
+		 inset 0 2px 0 rgba(255, 255, 255, 0.6),
+		 0 0 20px rgba(255, 255, 255, 0.2);
 	 transform: translateY(-8px) scale(1.03);
 	 /* 悬浮时增强玻璃边框效果 */
 	 border: 1px solid rgba(255, 255, 255, 0.5);
+	 /* 悬浮时增强玻璃边缘折射效果 */
+	 mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
+	 -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
  }
 
  /* 悬浮时增强文章光泽效果 */
@@ -648,7 +669,7 @@ article.animate-in {
  }
  
  /* 添加卡片内呼吸灯效果 */
- article::before {
+ article::after, .project-card::after {
 	 content: '';
 	 position: absolute;
 	 top: -50%;
@@ -664,7 +685,7 @@ article.animate-in {
 	 pointer-events: none;
  }
  
- article:hover::before {
+ article:hover::after, .project-card:hover::after {
 	 opacity: 1;
 	 transform: rotate(0deg) scale(1.1);
  }
@@ -1481,14 +1502,20 @@ header h1 span.title-text {
     background: var(--card-bg);
     border-radius: 16px;
     padding: 30px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transition: all var(--transition-fast);
+    box-shadow: 
+        0 10px 35px rgba(0, 0, 0, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transition: all var(--transition-smooth);
     position: relative;
     overflow: hidden;
     will-change: transform, box-shadow;
+    /* 玻璃边缘折射效果 */
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
 }
 
 /* ===== 横向容器中的项目卡片样式 ===== */
@@ -1499,6 +1526,9 @@ header h1 span.title-text {
     opacity: 0;
     transform: translateY(30px) scale(0.95);
     transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* 保留玻璃边缘折射效果 */
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
 }
 
 /* 横向项目卡片进入视口时的动画 */
@@ -1507,21 +1537,20 @@ header h1 span.title-text {
     transform: translateY(0) scale(1);
 }
 
-.project-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, var(--primary-blue), var(--primary-blue-light));
-}
-
 .project-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 20px 50px rgba(0, 136, 255, 0.5),
+        0 10px 30px rgba(0, 0, 0, 0.15),
+        inset 0 2px 0 rgba(255, 255, 255, 0.6),
+        0 0 20px rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
     background: var(--glass-bg-hover);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    /* 悬浮时增强玻璃边缘折射效果 */
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
 }
 
 .project-card h3 {
