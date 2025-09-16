@@ -94,19 +94,14 @@ window.checkCanHideLoader = checkCanHideLoader;
 
         setLoadingState("loadingImageReady", true);
 
-        // Loading图加载完后，开始加载首张背景图和README
+        // Loading图加载完后，同时开始加载首张背景图、README和服务器检查
         setTimeout(() => {
             console.log(
                 "[Loader] Loading图加载完成，开始加载首张背景图和README"
             );
-
-            // 同时启动背景图和README加载
-            if (window.loadFirstBackground) {
-                window.loadFirstBackground();
-            }
-            if (window.loadReadmeContent) {
-                window.loadReadmeContent();
-            }
+            if (window.loadFirstBackground) window.loadFirstBackground();
+            if (window.loadReadmeContent) window.loadReadmeContent();
+            if (window.checkAllServerStatus) window.checkAllServerStatus();
         }, 50);
     };
     imgEl.onerror = () => {

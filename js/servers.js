@@ -1,6 +1,9 @@
 // 服务器检测
 async function checkServerStatus(url, timeout = 8000) {
-	return await checkServerWithImage(url, timeout);
+	console.log(`[Server Check] 开始检测服务器: ${url}`);
+	const result = await checkServerWithImage(url, timeout);
+	console.log(`[Server Check] 服务器检测结果 - ${url}: ${result.online ? '在线' : '离线'} (状态: ${result.status})${result.loadTime ? `, 响应时间: ${result.loadTime}ms` : ''}`);
+	return result;
 }
 
 function checkServerWithImage(url, timeout) {
@@ -93,6 +96,7 @@ function checkServerWithImage(url, timeout) {
 }
 
 function updateServerStatusDisplay(serviceId, status) {
+	console.log(`[Server Status Display] 更新服务状态 - ${serviceId}: ${status.online ? '在线' : '离线'} (状态: ${status.status})`);
 	const statusElement = document.getElementById(`${serviceId}-status`);
 	if (!statusElement) return;
 	let statusIcon, statusText, statusColor, tooltipText;
@@ -179,6 +183,7 @@ function updateServerStatusDisplay(serviceId, status) {
 
 async function checkAllServerStatus() {
 	if (window.isCheckingServers) return;
+	console.log(`[Server Check] 开始批量检测所有服务器状态`);
 	window.isCheckingServers = true;
 	const servers = [
 		{
@@ -188,7 +193,6 @@ async function checkAllServerStatus() {
 		},
 		{ id: "photo", url: "https://photo.146019.xyz", name: "相册服务" },
 		{ id: "fnos", url: "https://fn.146019.xyz/v", name: "飞牛服务" },
-		{ id: "libretv", url: "https://libretv.oni.li", name: "LibreTV" },
 		{ id: "moontv", url: "https://moontv.146019.xyz", name: "MoonTV" },
 		{ id: "moon-primary", url: "https://moon.146019.xyz", name: "MoonTV主站" },
 	];
@@ -214,25 +218,41 @@ async function checkAllServerStatus() {
 	});
 	try {
 		const results = await Promise.all(promises);
+		console.log(`[Server Check] 所有服务器检测完成，共检测 ${results.length} 个服务器`);
+		// 汇总在线和离线数量
+		const onlineCount = results.filter(r => r.online).length;
+		const offlineCount = results.length - onlineCount;
+		console.log(`[Server Check] 检测结果汇总: 在线 ${onlineCount} 个, 离线 ${offlineCount} 个`);
 		window.isCheckingServers = false;
+		// 标记服务器检查已完成
+		if (window.loadingStates) {
+			window.loadingStates.serversChecked = true;
+			console.log(`[Server Check] 服务器状态已标记为检查完成`);
+		}
 	} catch (e) {
+		console.error(`[Server Check] 批量检测服务器过程中发生错误:`, e);
 		window.isCheckingServers = false;
+		// 即使发生错误也标记检查完成
+		if (window.loadingStates) {
+			window.loadingStates.serversChecked = true;
+		}
 	}
 }
 
 function recheckServerStatus() {
+	console.log(`[Server Check] 用户触发重新检测服务器状态`);
 	const openlistStatus = document.getElementById("openlist-status");
 	const photoStatus = document.getElementById("photo-status");
 	const fnosStatus = document.getElementById("fnos-status");
-	const libretvStatus = document.getElementById("libretv-status");
+
 	const moontvStatus = document.getElementById("moontv-status");
 	const moonPrimaryStatus = document.getElementById("moon-primary-status");
-	const checkingText =
+	const checkingText = 
 		window.currentLanguage === "zh" ? "🔄 检测中..." : "🔄 Checking...";
 	if (openlistStatus) openlistStatus.innerHTML = checkingText;
 	if (photoStatus) photoStatus.innerHTML = checkingText;
 	if (fnosStatus) fnosStatus.innerHTML = checkingText;
-	if (libretvStatus) libretvStatus.innerHTML = checkingText;
+
 	if (moontvStatus) moontvStatus.innerHTML = checkingText;
 	if (moonPrimaryStatus) moonPrimaryStatus.innerHTML = checkingText;
 	showServerCheckNotification();
@@ -240,11 +260,12 @@ function recheckServerStatus() {
 }
 
 function showServerCheckNotification() {
+	console.log(`[Server Check Notification] 显示服务器检测通知`);
 	const notification = document.createElement("div");
 	notification.className = "copy-notification success";
-	notification.innerHTML =
-		window.currentLanguage === "zh"
-			? "🔍 正在重新检测服务器状态..."
+	notification.innerHTML = 
+		window.currentLanguage === "zh" 
+			? "🔍 正在重新检测服务器状态..." 
 			: "🔍 Rechecking server status...";
 	notification.style.background = "rgba(76, 175, 80, 0.9)";
 	document.body.appendChild(notification);
