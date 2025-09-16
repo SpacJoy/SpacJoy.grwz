@@ -190,6 +190,7 @@ async function checkAllServerStatus() {
 		{ id: "fnos", url: "https://fn.146019.xyz/v", name: "飞牛服务" },
 		{ id: "libretv", url: "https://libretv.oni.li", name: "LibreTV" },
 		{ id: "moontv", url: "https://moontv.146019.xyz", name: "MoonTV" },
+		{ id: "moon-primary", url: "https://moon.146019.xyz", name: "MoonTV主站" },
 	];
 	const promises = servers.map(async (server) => {
 		try {
@@ -225,6 +226,7 @@ function recheckServerStatus() {
 	const fnosStatus = document.getElementById("fnos-status");
 	const libretvStatus = document.getElementById("libretv-status");
 	const moontvStatus = document.getElementById("moontv-status");
+	const moonPrimaryStatus = document.getElementById("moon-primary-status");
 	const checkingText =
 		window.currentLanguage === "zh" ? "🔄 检测中..." : "🔄 Checking...";
 	if (openlistStatus) openlistStatus.innerHTML = checkingText;
@@ -232,6 +234,7 @@ function recheckServerStatus() {
 	if (fnosStatus) fnosStatus.innerHTML = checkingText;
 	if (libretvStatus) libretvStatus.innerHTML = checkingText;
 	if (moontvStatus) moontvStatus.innerHTML = checkingText;
+	if (moonPrimaryStatus) moonPrimaryStatus.innerHTML = checkingText;
 	showServerCheckNotification();
 	setTimeout(checkAllServerStatus, 200);
 }
