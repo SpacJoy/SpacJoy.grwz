@@ -41,7 +41,7 @@ function initScrollAnimation() {
     // 窗口大小改变时检查
     window.addEventListener('resize', checkAndAnimateElements);
     
-    console.log('滚动动画初始化完成');
+    (window.logger || console).debug("[Scroll] 滚动动画初始化完成");
 }
 
 // 导出函数供外部调用

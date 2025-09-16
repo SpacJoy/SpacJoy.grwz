@@ -30,7 +30,7 @@ window.readmeLoaded = false; // 是否已成功渲染完成
 function renderMarkdown(markdownText) {
     // 使用本地解析器 LocalMD
     if (!window.LocalMD || typeof window.LocalMD.parse !== "function") {
-        console.error("[README] LocalMD 未就绪，1s后重试...");
+        (window.logger || console).warn("[README] LocalMD 未就绪，1s后重试...");
         setTimeout(() => renderMarkdown(markdownText), 1000);
         return;
     }
@@ -119,7 +119,7 @@ function renderMarkdown(markdownText) {
                             window.netUtils
                                 .loadImageWithTimeout(img, 5000)
                                 .catch(() => {
-                                    console.warn(
+                                    (window.logger || console).warn(
                                         "[README] GitHub 原始文件加载失败:",
                                         img.src
                                     );
@@ -134,7 +134,7 @@ function renderMarkdown(markdownText) {
                                 });
                         } else {
                             img.addEventListener("error", () => {
-                                console.warn(
+                                (window.logger || console).warn(
                                     "[README] GitHub 原始文件加载失败:",
                                     img.src
                                 );
@@ -191,7 +191,7 @@ function renderMarkdown(markdownText) {
             });
         }
     } catch (error) {
-        console.error("[README] markdown渲染失败:", error);
+        (window.logger || console).error("[README] markdown渲染失败:", error);
         const markdownContent = document.getElementById("markdown-content");
         if (markdownContent) {
             const zh = {
@@ -255,13 +255,13 @@ function replaceLocalImagePaths(markdownText) {
         'src="https://ysy.146019.xyz/bqb/AM/$1"'
     );
 
-    console.log("[README] 图片路径替换完成");
+    (window.logger || console).debug("[README] 图片路径替换完成");
     return processedText;
 }
 
 // 从GitHub加载备用README
 function loadGithubReadme() {
-    console.log("[README] 尝试从GitHub加载备用README...");
+    (window.logger || console).info("[README] 尝试从GitHub加载备用README...");
     const githubUrl =
         "https://raw.githubusercontent.com/chen6019/chen6019/main/README.md";
 
@@ -277,7 +277,9 @@ function loadGithubReadme() {
         .then((markdownText) => {
             // 替换本地图片路径为存储桶链接
             const processedText = replaceLocalImagePaths(markdownText);
-            console.log("[README] GitHub备用README加载成功");
+            (window.logger || console).info(
+                "[README] GitHub备用README加载成功"
+            );
             return processedText;
         });
 }
@@ -288,7 +290,7 @@ function loadReadmeContent() {
 
     // 检查本地解析器
     if (!window.LocalMD || typeof window.LocalMD.parse !== "function") {
-        console.warn("[README] LocalMD 未加载，延迟重试...");
+        (window.logger || console).warn("[README] LocalMD 未加载，延迟重试...");
         setTimeout(loadReadmeContent, 500);
         return;
     }
@@ -306,12 +308,17 @@ function loadReadmeContent() {
             return r.text();
         })
         .then((markdownText) => {
-            console.log("[README] 本地README加载成功");
+            (window.logger || console).info("[README] 本地README加载成功");
             renderMarkdown(markdownText);
         })
         .catch((e) => {
-            console.error("加载本地 README 失败", e);
-            console.log("[README] 尝试从GitHub加载备用README...");
+            (window.logger || console).error(
+                "[README] 加载本地 README 失败",
+                e
+            );
+            (window.logger || console).info(
+                "[README] 尝试从GitHub加载备用README..."
+            );
 
             // 本地加载失败，尝试从GitHub加载
             return loadGithubReadme()
@@ -319,7 +326,10 @@ function loadReadmeContent() {
                     renderMarkdown(processedText);
                 })
                 .catch((githubError) => {
-                    console.error("GitHub备用README也加载失败", githubError);
+                    (window.logger || console).error(
+                        "[README] GitHub备用README也加载失败",
+                        githubError
+                    );
                     window.showReadmeError && window.showReadmeError();
                 });
         })

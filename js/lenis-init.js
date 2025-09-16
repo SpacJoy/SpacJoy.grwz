@@ -2,24 +2,24 @@
 // 用于初始化 Lenis 平滑滚动
 
 // 测试函数，用于验证滚动功能
-window.testScrollFunction = function() {
-    console.log('测试滚动功能');
-    const heroSection = document.getElementById('hero-section');
+window.testScrollFunction = function () {
+    (window.logger || console).debug("[Lenis] 测试滚动功能");
+    const heroSection = document.getElementById("hero-section");
     if (heroSection && heroSection.nextElementSibling) {
         const nextSection = heroSection.nextElementSibling;
-        console.log('找到下一个section:', nextSection);
-        
+        (window.logger || console).debug("[Lenis] 找到下一个section");
+
         if (window.lenis) {
-            console.log('使用Lenis进行测试滚动');
+            (window.logger || console).debug("[Lenis] 使用Lenis进行测试滚动");
             window.lenis.scrollTo(nextSection, {
                 duration: 1.2,
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             });
         } else {
-            console.log('使用原生滚动进行测试');
+            (window.logger || console).debug("[Lenis] 使用原生滚动进行测试");
             nextSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
+                behavior: "smooth",
+                block: "start",
             });
         }
     }
@@ -29,7 +29,7 @@ window.testScrollFunction = function() {
 document.addEventListener("DOMContentLoaded", function () {
     // 检查 Lenis 是否已加载
     if (typeof Lenis !== "undefined") {
-        console.log("Lenis loaded, initializing smooth scroll...");
+        (window.logger || console).info("[Lenis] 初始化平滑滚动...");
 
         // 将lenis实例暴露到window对象上，以便在其他脚本中使用
         window.lenis = new Lenis({
@@ -49,8 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         requestAnimationFrame(raf);
 
-        console.log("Lenis smooth scroll initialized successfully");
+        (window.logger || console).info("[Lenis] 平滑滚动初始化成功");
     } else {
-        console.error("Lenis 未加载，无法启用平滑滚动");
+        (window.logger || console).error("[Lenis] 未加载，无法启用平滑滚动");
     }
 });

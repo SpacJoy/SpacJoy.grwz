@@ -57,7 +57,7 @@ function getRandomBackground() {
     try {
         return buildRandomDirUrl(mapDir(detectLayout()));
     } catch (e) {
-        console.warn("[Background] 构建随机URL失败", e);
+        (window.logger || console).warn("[Background] 构建随机URL失败", e);
         return null;
     }
 }
@@ -70,14 +70,14 @@ function loadFirstBackground() {
     const url = getRandomBackground();
     if (!url) return;
 
-    console.log("[Background] 开始加载首张背景:", url);
+    (window.logger || console).info("[Background] 开始加载首张背景:", url);
     const layer = createLayer(url);
     const img = new Image();
     img.decoding = "async";
     img.loading = "eager";
     const finalizeSuccess = () => {
         activateLayer(layer, url);
-        console.log("[Background] 首张背景加载完成");
+        (window.logger || console).info("[Background] 首张背景加载完成");
         // 初始状态：背景模糊
         layer.style.filter = "blur(20px)";
         layer.style.transition = "filter 2s ease-in-out";
@@ -97,7 +97,7 @@ function loadFirstBackground() {
         }
     };
     const finalizeFail = () => {
-        console.warn("[Background] 首张背景加载失败");
+        (window.logger || console).warn("[Background] 首张背景加载失败");
         if (layer.parentNode) layer.parentNode.removeChild(layer);
     };
     if (window.netUtils && window.netUtils.loadImageWithTimeout) {
@@ -127,7 +127,9 @@ function checkCanStartPrefetch() {
         /^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname);
 
     if (isPrivateNetwork) {
-        console.log("[Background] 内网环境，禁用背景图预加载");
+        (window.logger || console).info(
+            "[Background] 内网环境，禁用背景图预加载"
+        );
         return;
     }
 
@@ -139,7 +141,7 @@ function checkCanStartPrefetch() {
         window.loadingStates &&
         window.loadingStates.serversChecked
     ) {
-        console.log(
+        (window.logger || console).info(
             "[Background] README、首张背景和服务器检测都已完成，开始预取"
         );
         prefetchNextBackground();
@@ -185,7 +187,7 @@ function activateLayer(layer, url) {
 
     activeLayer = layer;
     window._backgroundLoadedOnce = true;
-    console.log("[Background] 激活背景:", url);
+    (window.logger || console).debug("[Background] 激活背景:", url);
 
     // 如果这是首张背景图，更新状态
     if (!firstBackgroundLoaded) {
@@ -208,7 +210,7 @@ function _prefetchOne() {
         prefetchingNow = false;
         return;
     }
-    console.log("[Background] 开始预取背景:", url);
+    (window.logger || console).debug("[Background] 开始预取背景:", url);
     const entry = { url, layout, layer: null, loaded: false };
     queue.push(entry);
     const img = new Image();
@@ -218,7 +220,10 @@ function _prefetchOne() {
         entry.loaded = true;
         if (!entry.layer) {
             entry.layer = createLayer(entry.url);
-            console.log("[Background] 预取完成并入栈:", entry.url);
+            (window.logger || console).debug(
+                "[Background] 预取完成并入栈:",
+                entry.url
+            );
             // 若尚无激活层，立即使用这一张作为首张背景
             if (!activeLayer) {
                 activateLayer(entry.layer, entry.url);
@@ -232,7 +237,7 @@ function _prefetchOne() {
         setTimeout(() => prefetchNextBackground(), 100);
     };
     const onFail = () => {
-        console.warn("[Background] 预取失败移除:", url);
+        (window.logger || console).warn("[Background] 预取失败移除:", url);
         const i = queue.indexOf(entry);
         if (i >= 0) queue.splice(i, 1);
         prefetchingNow = false;
@@ -261,7 +266,9 @@ function prefetchNextBackground() {
             !window.loadingStates ||
             !window.loadingStates.readmeLoaded
         ) {
-            console.log("[Background] 等待首张背景和README都完成再预取");
+            (window.logger || console).debug(
+                "[Background] 等待首张背景和README都完成再预取"
+            );
             return;
         }
 
@@ -277,11 +284,14 @@ function prefetchNextBackground() {
             !prefetchingNow &&
             queue.length < PREFETCH_TARGET
         ) {
-            console.log("[Background] 紧急补充预取，当前可用:", loadedCount);
+            (window.logger || console).debug(
+                "[Background] 紧急补充预取，当前可用:",
+                loadedCount
+            );
             setTimeout(() => _prefetchOne(), 50); // 快速补充
         }
     } catch (e) {
-        console.warn("预取出错", e);
+        (window.logger || console).warn("[Background] 预取出错", e);
     }
 }
 function applyPrefetchedBackgroundOrRandom() {
@@ -308,7 +318,10 @@ function crossfadeToPrefetched() {
 
     // 如果可用预取少于3张，提示预取中（避免用完最后一张时白屏）
     if (loadedCount < 3) {
-        console.log("[Background] 预取队列不足，剩余可用:", loadedCount);
+        (window.logger || console).debug(
+            "[Background] 预取队列不足，剩余可用:",
+            loadedCount
+        );
         prefetchNextBackground(); // 尝试补充
         return false; // 返回 false 触发 "预取中" 提示
     }
@@ -319,19 +332,21 @@ function crossfadeToPrefetched() {
     if (idx === -1) idx = queue.findIndex((e) => e.loaded);
 
     if (idx === -1) {
-        console.log("[Background] 没有可切换的预取，补充中");
+        (window.logger || console).debug(
+            "[Background] 没有可切换的预取，补充中"
+        );
         prefetchNextBackground();
         return false;
     }
 
     const entry = queue[idx];
     activateLayer(entry.layer, entry.url);
-    
+
     // 添加背景切换时的额外动画效果
     if (window.showNotification) {
         window.showNotification("背景已更换", "成功切换到新的背景图片");
     }
-    
+
     queue.splice(idx, 1);
     prefetchNextBackground(); // 补一张
     return true;

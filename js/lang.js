@@ -72,22 +72,24 @@ function updateNotificationTexts(lang) {
 function initializeLanguage() {
 	// 如果已经初始化过，不再重复初始化
 	if (window.languageInitialized) {
-		console.log("语言已经初始化过，跳过重复初始化");
-		return;
-	}
-	
-	try {
-		// 强制默认使用中文，不自动检测语言
-		window.currentLanguage = "zh";
-		applyLanguage(window.currentLanguage);
-		const langText = document.getElementById("lang-text");
-		if (langText) {
-			langText.textContent = "EN";
-		}
-		console.log("语言初始化完成，默认使用中文");
-	} catch (error) {
-		console.error("语言初始化出错：", error);
-	}
+        (window.logger || console).debug(
+            "[Lang] 语言已经初始化过，跳过重复初始化"
+        );
+        return;
+    }
+
+    try {
+        // 强制默认使用中文，不自动检测语言
+        window.currentLanguage = "zh";
+        applyLanguage(window.currentLanguage);
+        const langText = document.getElementById("lang-text");
+        if (langText) {
+            langText.textContent = "EN";
+        }
+        (window.logger || console).info("[Lang] 语言初始化完成，默认使用中文");
+    } catch (error) {
+        (window.logger || console).error("[Lang] 语言初始化出错：", error);
+    }
 	// 标记为已初始化
 	window.languageInitialized = true;
 }
