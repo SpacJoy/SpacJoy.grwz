@@ -28,25 +28,17 @@ window.isLoadingReadme = false; // 对外暴露以便其他模块判断
 window.readmeLoaded = false; // 是否已成功渲染完成
 
 function renderMarkdown(markdownText) {
-    // 检查marked.js是否已加载
-    if (typeof marked === "undefined") {
-        console.error("[README] marked.js未加载，等待后重试...");
-        // 等待1秒后重试
-        setTimeout(() => {
-            renderMarkdown(markdownText);
-        }, 1000);
+    // 使用本地解析器 LocalMD
+    if (!window.LocalMD || typeof window.LocalMD.parse !== "function") {
+        console.error("[README] LocalMD 未就绪，1s后重试...");
+        setTimeout(() => renderMarkdown(markdownText), 1000);
         return;
     }
 
-    // 不再删除前几行，直接渲染完整内容
     try {
-        marked.setOptions({
-            breaks: true,
-            gfm: true,
-            headerIds: false,
-            mangle: false,
-        });
-        let htmlContent = marked.parse(markdownText);
+        // 可根据需要设置选项（占位，保持 API 一致）
+        window.LocalMD.setOptions && window.LocalMD.setOptions({});
+        let htmlContent = window.LocalMD.parse(markdownText);
         const markdownContent = document.getElementById("markdown-content");
         if (markdownContent) {
             markdownContent.innerHTML = htmlContent;
@@ -115,15 +107,25 @@ function renderMarkdown(markdownText) {
         }
     } catch (error) {
         console.error("[README] markdown渲染失败:", error);
-        // 显示错误信息
         const markdownContent = document.getElementById("markdown-content");
         if (markdownContent) {
+            const zh = {
+                title: "📝 Markdown渲染失败",
+                msg: "请检查本地解析器是否正确加载",
+                retry: "🔄 重新加载页面",
+            };
+            const en = {
+                title: "📝 Markdown render failed",
+                msg: "Please check if the local parser is loaded",
+                retry: "🔄 Reload page",
+            };
+            const t = window.currentLanguage === "en" ? en : zh;
             markdownContent.innerHTML = `
                 <div style="text-align: center; padding: 20px; color: #666;">
-                    <h3>📝 Markdown渲染失败</h3>
-                    <p>请检查marked.js是否正确加载</p>
+                    <h3>${t.title}</h3>
+                    <p>${t.msg}</p>
                     <button onclick="location.reload()" style="margin-top: 10px; padding: 5px 15px;">
-                        🔄 重新加载页面
+                        ${t.retry}
                     </button>
                 </div>
             `;
@@ -195,18 +197,15 @@ function loadReadmeContent() {
     if (window.readmeLoaded) return; // 已加载则直接返回
     if (isLoadingReadme || window.isLoadingReadme) return; // 正在加载中
 
-    // 检查marked.js是否可用
-    if (typeof marked === "undefined") {
-        console.warn("[README] marked.js未加载，延迟重试...");
-        setTimeout(() => {
-            loadReadmeContent();
-        }, 500);
+    // 检查本地解析器
+    if (!window.LocalMD || typeof window.LocalMD.parse !== "function") {
+        console.warn("[README] LocalMD 未加载，延迟重试...");
+        setTimeout(loadReadmeContent, 500);
         return;
     }
 
     isLoadingReadme = true;
     window.isLoadingReadme = true;
-
 
     // 加载本地README.md文件（与网站文件一起部署到服务器）
     fetch("/README.md")
