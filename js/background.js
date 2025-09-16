@@ -64,57 +64,68 @@ function getRandomBackground() {
 
 // 专门加载首张背景图的函数
 function loadFirstBackground() {
-	if (firstBackgroundLoaded) return;
+    if (firstBackgroundLoaded) return;
 
-	ensureContainer();
-	const url = getRandomBackground();
-	if (!url) return;
+    ensureContainer();
+    const url = getRandomBackground();
+    if (!url) return;
 
-	console.log("[Background] 开始加载首张背景:", url);
-	const layer = createLayer(url);
-	const img = new Image();
-	img.onload = () => {
-		activateLayer(layer, url);
-		console.log("[Background] 首张背景加载完成");
-		
-		// 初始状态：背景模糊
-		layer.style.filter = 'blur(20px)';
-		layer.style.transition = 'filter 2s ease-in-out';
-		
-		// 等待加载动画完成后再清晰背景
-		const loader = document.querySelector('.loader');
-		if (loader) {
-			const checkLoaderHidden = () => {
-				if (window.loaderHidden) {
-					// 加载器已隐藏，开始清晰背景
-					layer.style.filter = 'blur(0px)';
-				} else {
-					// 继续检查
-					setTimeout(checkLoaderHidden, 100);
-				}
-			};
-			
-			checkLoaderHidden();
-		}
-	};
-	img.onerror = () => {
-		console.warn("[Background] 首张背景加载失败");
-		if (layer.parentNode) layer.parentNode.removeChild(layer);
-	};
-	img.src = url;
+    console.log("[Background] 开始加载首张背景:", url);
+    const layer = createLayer(url);
+    const img = new Image();
+    img.decoding = "async";
+    img.loading = "eager";
+    const finalizeSuccess = () => {
+        activateLayer(layer, url);
+        console.log("[Background] 首张背景加载完成");
+        // 初始状态：背景模糊
+        layer.style.filter = "blur(20px)";
+        layer.style.transition = "filter 2s ease-in-out";
+        // 等待加载动画完成后再清晰背景
+        const loader = document.querySelector(".loader");
+        if (loader) {
+            const checkLoaderHidden = () => {
+                if (window.loaderHidden) {
+                    // 加载器已隐藏，开始清晰背景
+                    layer.style.filter = "blur(0px)";
+                } else {
+                    // 继续检查
+                    setTimeout(checkLoaderHidden, 100);
+                }
+            };
+            checkLoaderHidden();
+        }
+    };
+    const finalizeFail = () => {
+        console.warn("[Background] 首张背景加载失败");
+        if (layer.parentNode) layer.parentNode.removeChild(layer);
+    };
+    if (window.netUtils && window.netUtils.loadImageWithTimeout) {
+        window.netUtils
+            .loadImageWithTimeout(img, 8000)
+            .then(finalizeSuccess)
+            .catch(() => {
+                finalizeFail();
+            });
+        img.src = url;
+    } else {
+        img.onload = finalizeSuccess;
+        img.onerror = finalizeFail;
+        img.src = url;
+    }
 }
 
 // 检查是否可以开始预取（需要README和首张背景都完成）
 function checkCanStartPrefetch() {
     // 检查是否为内网地址，如果是则禁用预加载
     const hostname = window.location.hostname;
-    const isPrivateNetwork = 
+    const isPrivateNetwork =
         hostname === "localhost" ||
         hostname === "127.0.0.1" ||
         /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
         /^172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
         /^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname);
-    
+
     if (isPrivateNetwork) {
         console.log("[Background] 内网环境，禁用背景图预加载");
         return;
@@ -128,7 +139,9 @@ function checkCanStartPrefetch() {
         window.loadingStates &&
         window.loadingStates.serversChecked
     ) {
-        console.log("[Background] README、首张背景和服务器检测都已完成，开始预取");
+        console.log(
+            "[Background] README、首张背景和服务器检测都已完成，开始预取"
+        );
         prefetchNextBackground();
     }
 }
@@ -162,14 +175,14 @@ function activateLayer(layer, url) {
     layer.style.opacity = "0";
     layer.style.filter = "blur(10px)";
     layer.classList.add("active");
-    
+
     // 使用requestAnimationFrame确保样式应用
     requestAnimationFrame(() => {
         layer.style.transition = "opacity 1.2s ease, filter 1.5s ease";
         layer.style.opacity = "1";
         layer.style.filter = "blur(0px)";
     });
-    
+
     activeLayer = layer;
     window._backgroundLoadedOnce = true;
     console.log("[Background] 激活背景:", url);
@@ -199,7 +212,9 @@ function _prefetchOne() {
     const entry = { url, layout, layer: null, loaded: false };
     queue.push(entry);
     const img = new Image();
-    img.onload = () => {
+    img.decoding = "async";
+    img.loading = "eager";
+    const onSuccess = () => {
         entry.loaded = true;
         if (!entry.layer) {
             entry.layer = createLayer(entry.url);
@@ -216,7 +231,7 @@ function _prefetchOne() {
         // 完成一张后尝试预取下一张
         setTimeout(() => prefetchNextBackground(), 100);
     };
-    img.onerror = () => {
+    const onFail = () => {
         console.warn("[Background] 预取失败移除:", url);
         const i = queue.indexOf(entry);
         if (i >= 0) queue.splice(i, 1);
@@ -224,9 +239,18 @@ function _prefetchOne() {
         // 失败后也要继续尝试下一张
         setTimeout(() => prefetchNextBackground(), 100);
     };
-    img.decoding = "async";
-    img.loading = "eager";
-    img.src = url;
+
+    if (window.netUtils && window.netUtils.loadImageWithTimeout) {
+        window.netUtils
+            .loadImageWithTimeout(img, 8000)
+            .then(onSuccess)
+            .catch(onFail);
+        img.src = url;
+    } else {
+        img.onload = onSuccess;
+        img.onerror = onFail;
+        img.src = url;
+    }
 }
 
 function prefetchNextBackground() {

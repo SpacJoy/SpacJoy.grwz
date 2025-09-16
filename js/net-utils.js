@@ -24,36 +24,85 @@
     function loadImageWithTimeout(imgEl, timeout = 8000) {
         return new Promise((resolve, reject) => {
             if (!imgEl) return reject(new Error("no-image"));
+
+            const isString = typeof imgEl === "string";
+            let img = null;
+            let created = false;
+            try {
+                if (isString) {
+                    img = new Image();
+                    created = true;
+                } else {
+                    img = imgEl;
+                }
+            } catch (e) {
+                return reject(new Error("invalid-image"));
+            }
+
             let finished = false;
+            const cleanup = () => {
+                try {
+                    img.removeEventListener("load", onLoad);
+                    img.removeEventListener("error", onErr);
+                } catch (_) {}
+                clearTimeout(timer);
+            };
+
             const onLoad = () => {
                 if (finished) return;
+                // Some browsers report load even when naturalWidth is 0 for broken images
+                if (img && img.naturalWidth === 0) {
+                    onErr();
+                    return;
+                }
                 finished = true;
                 cleanup();
                 resolve();
             };
+
             const onErr = () => {
                 if (finished) return;
                 finished = true;
                 cleanup();
                 reject(new Error("error"));
             };
+
             const onTimeout = () => {
                 if (finished) return;
                 finished = true;
                 cleanup();
+                // try to cancel if we created the Image
+                try {
+                    if (created) img.src = "";
+                } catch (_) {}
                 reject(new Error("timeout"));
             };
 
-            const cleanup = () => {
-                imgEl.removeEventListener("load", onLoad);
-                imgEl.removeEventListener("error", onErr);
-                clearTimeout(timer);
-            };
+            // If the element is already complete, resolve/reject immediately
+            try {
+                if (!isString && img.complete) {
+                    if (img.naturalWidth && img.naturalWidth > 0) {
+                        return resolve();
+                    } else {
+                        return reject(new Error("error"));
+                    }
+                }
+            } catch (_) {}
 
-            imgEl.addEventListener("load", onLoad);
-            imgEl.addEventListener("error", onErr);
+            img.addEventListener("load", onLoad);
+            img.addEventListener("error", onErr);
 
             const timer = setTimeout(onTimeout, timeout);
+
+            // If a URL string was provided, start loading it
+            if (isString) {
+                try {
+                    img.src = imgEl;
+                } catch (e) {
+                    // assign error
+                    onErr();
+                }
+            }
         });
     }
 

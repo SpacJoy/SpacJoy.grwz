@@ -148,6 +148,45 @@ function renderMarkdown(markdownText) {
                             });
                         }
                     }
+
+                    // 对其他外部图片提供通用超时保护（用于 badges、shields 等）
+                    try {
+                        const isOtherExternal =
+                            isExternal &&
+                            !/github-readme-stats\.vercel\.app/.test(u.host) &&
+                            !/raw\.githubusercontent\.com/.test(u.host);
+                        if (
+                            isOtherExternal &&
+                            window.netUtils &&
+                            window.netUtils.loadImageWithTimeout
+                        ) {
+                            if (img.complete) {
+                                if (
+                                    !(img.naturalWidth && img.naturalWidth > 0)
+                                ) {
+                                    const fallback =
+                                        document.createElement("span");
+                                    fallback.className =
+                                        "external-img-fallback";
+                                    fallback.innerHTML =
+                                        '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
+                                    img.replaceWith(fallback);
+                                }
+                            } else {
+                                window.netUtils
+                                    .loadImageWithTimeout(img, 5000)
+                                    .catch(() => {
+                                        const fallback =
+                                            document.createElement("span");
+                                        fallback.className =
+                                            "external-img-fallback";
+                                        fallback.innerHTML =
+                                            '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
+                                        img.replaceWith(fallback);
+                                    });
+                            }
+                        }
+                    } catch (_) {}
                 } catch (_) {}
             });
         }
