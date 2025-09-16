@@ -43,20 +43,20 @@ function hideLoader() {
 
     loaderEl.classList.add("loader-fade-out");
     loaderEl.addEventListener(
-        "animationend",
-        () => {
-            if (loaderEl) loaderEl.style.display = "none";
-            // 调用模糊转清晰动画，而不是直接隐藏模糊层
-            if (window.animateBlurToClear) window.animateBlurToClear();
-            setTimeout(() => {
-                if (window.showScrollNotification)
-                    window.showScrollNotification();
-                if (window.checkAllServerStatus) window.checkAllServerStatus();
-            }, 100);
-            console.log("Loader hidden");
-        },
-        { once: true }
-    );
+                "animationend",
+                () => {
+                    if (loaderEl) loaderEl.style.display = "none";
+                    // 调用模糊转清晰动画，而不是直接隐藏模糊层
+                    if (window.animateBlurToClear) window.animateBlurToClear();
+                    setTimeout(() => {
+                        if (window.showScrollNotification)
+                            window.showScrollNotification();
+                        // 移除重复的服务器检查调用
+                    }, 100);
+                    console.log("Loader hidden");
+                },
+                { once: true }
+            );
 }
 
 // 设置状态并检查隐藏条件
