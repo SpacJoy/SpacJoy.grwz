@@ -28,17 +28,42 @@ window.isLoadingReadme = false; // 对外暴露以便其他模块判断
 window.readmeLoaded = false; // 是否已成功渲染完成
 
 function renderMarkdown(markdownText) {
-    // 使用本地解析器 LocalMD
-    if (!window.LocalMD || typeof window.LocalMD.parse !== "function") {
-        (window.logger || console).warn("[README] LocalMD 未就绪，1s后重试...");
+    // 优先使用 marked.js，如果加载失败或超时则使用本地解析器
+    const useMarked =
+        window.markedLoaded &&
+        window.marked &&
+        typeof window.marked.parse === "function";
+    const useLocalMD =
+        !window.markedLoadFailed &&
+        (!window.LocalMD || typeof window.LocalMD.parse !== "function");
+
+    if (!useMarked && useLocalMD) {
+        (window.logger || console).warn(
+            "[README] marked.js 未就绪，1s后重试..."
+        );
         setTimeout(() => renderMarkdown(markdownText), 1000);
         return;
     }
 
     try {
-        // 可根据需要设置选项（占位，保持 API 一致）
-        window.LocalMD.setOptions && window.LocalMD.setOptions({});
-        let htmlContent = window.LocalMD.parse(markdownText);
+        let htmlContent;
+
+        if (useMarked) {
+            // 使用 marked.js
+            (window.logger || console).debug(
+                "[README] 使用 marked.js 解析 Markdown"
+            );
+            htmlContent = window.marked.parse(markdownText);
+        } else {
+            // 使用本地解析器 LocalMD
+            (window.logger || console).debug(
+                "[README] 使用本地解析器 LocalMD 解析 Markdown"
+            );
+            // 可根据需要设置选项（占位，保持 API 一致）
+            window.LocalMD.setOptions && window.LocalMD.setOptions({});
+            htmlContent = window.LocalMD.parse(markdownText);
+        }
+
         const markdownContent = document.getElementById("markdown-content");
         if (markdownContent) {
             markdownContent.innerHTML = htmlContent;
@@ -196,12 +221,16 @@ function renderMarkdown(markdownText) {
         if (markdownContent) {
             const zh = {
                 title: "📝 Markdown渲染失败",
-                msg: "请检查本地解析器是否正确加载",
+                msg: useMarked
+                    ? "请检查 marked.js 是否正确加载"
+                    : "请检查本地解析器是否正确加载",
                 retry: "🔄 重新加载页面",
             };
             const en = {
                 title: "📝 Markdown render failed",
-                msg: "Please check if the local parser is loaded",
+                msg: useMarked
+                    ? "Please check if marked.js is loaded correctly"
+                    : "Please check if the local parser is loaded correctly",
                 retry: "🔄 Reload page",
             };
             const t = window.currentLanguage === "en" ? en : zh;
@@ -288,9 +317,16 @@ function loadReadmeContent() {
     if (window.readmeLoaded) return; // 已加载则直接返回
     if (isLoadingReadme || window.isLoadingReadme) return; // 正在加载中
 
-    // 检查本地解析器
-    if (!window.LocalMD || typeof window.LocalMD.parse !== "function") {
-        (window.logger || console).warn("[README] LocalMD 未加载，延迟重试...");
+    // 检查是否有可用的解析器（优先 marked.js，其次 LocalMD）
+    const hasMarked =
+        window.markedLoaded &&
+        window.marked &&
+        typeof window.marked.parse === "function";
+    const hasLocalMD =
+        window.LocalMD && typeof window.LocalMD.parse === "function";
+
+    if (!hasMarked && !hasLocalMD) {
+        (window.logger || console).warn("[README] 等待 Markdown 解析器加载...");
         setTimeout(loadReadmeContent, 500);
         return;
     }
