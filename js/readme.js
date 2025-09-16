@@ -68,39 +68,85 @@ function renderMarkdown(markdownText) {
                             img.parentNode.insertBefore(placeholder, img);
                             img.__statsPlaceholderInserted = true;
                         }
-                        // 加载成功后移除占位
-                        img.addEventListener("load", () => {
-                            placeholder.classList.add("fade-out");
-                            setTimeout(() => placeholder.remove(), 300);
-                        });
-                        img.addEventListener("error", () => {
-                            const fail = Object.assign(
-                                document.createElement("div"),
-                                {
-                                    className: "external-img-fallback",
-                                    innerHTML:
-                                        '📊 <span data-zh="与Github失去链接，统计卡片加载失败" data-en="Stats card failed">与Github失去链接，统计卡片加载失败</span>',
-                                }
-                            );
-                            placeholder.replaceWith(fail);
-                            img.remove();
-                        });
+                        // 使用带超时的图片加载，如果不可用则回退到原生事件
+                        if (
+                            window.netUtils &&
+                            window.netUtils.loadImageWithTimeout
+                        ) {
+                            window.netUtils
+                                .loadImageWithTimeout(img, 5000)
+                                .then(() => {
+                                    placeholder.classList.add("fade-out");
+                                    setTimeout(() => placeholder.remove(), 300);
+                                })
+                                .catch(() => {
+                                    const fail = Object.assign(
+                                        document.createElement("div"),
+                                        {
+                                            className: "external-img-fallback",
+                                            innerHTML:
+                                                '📊 <span data-zh="与Github失去链接，统计卡片加载失败" data-en="Stats card failed">与Github失去链接，统计卡片加载失败</span>',
+                                        }
+                                    );
+                                    placeholder.replaceWith(fail);
+                                    img.remove();
+                                });
+                        } else {
+                            // 加载成功后移除占位
+                            img.addEventListener("load", () => {
+                                placeholder.classList.add("fade-out");
+                                setTimeout(() => placeholder.remove(), 300);
+                            });
+                            img.addEventListener("error", () => {
+                                const fail = Object.assign(
+                                    document.createElement("div"),
+                                    {
+                                        className: "external-img-fallback",
+                                        innerHTML:
+                                            '📊 <span data-zh="与Github失去链接，统计卡片加载失败" data-en="Stats card failed">与Github失去链接，统计卡片加载失败</span>',
+                                    }
+                                );
+                                placeholder.replaceWith(fail);
+                                img.remove();
+                            });
+                        }
                     } else if (/raw\.githubusercontent\.com/.test(u.host)) {
                         // 处理 GitHub 原始文件（如 GIF）
-                        img.addEventListener("error", () => {
-                            console.warn(
-                                "[README] GitHub 原始文件加载失败:",
-                                img.src
-                            );
-                            // 创建失败提示，但不显眼
-                            const fallback = document.createElement("span");
-                            fallback.className = "github-raw-fallback";
-                            fallback.style.cssText =
-                                "font-size:0.8em;color:#666;opacity:0.7;";
-                            fallback.innerHTML =
-                                '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
-                            img.replaceWith(fallback);
-                        });
+                        if (
+                            window.netUtils &&
+                            window.netUtils.loadImageWithTimeout
+                        ) {
+                            window.netUtils
+                                .loadImageWithTimeout(img, 5000)
+                                .catch(() => {
+                                    console.warn(
+                                        "[README] GitHub 原始文件加载失败:",
+                                        img.src
+                                    );
+                                    const fallback =
+                                        document.createElement("span");
+                                    fallback.className = "github-raw-fallback";
+                                    fallback.style.cssText =
+                                        "font-size:0.8em;color:#666;opacity:0.7;";
+                                    fallback.innerHTML =
+                                        '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
+                                    img.replaceWith(fallback);
+                                });
+                        } else {
+                            img.addEventListener("error", () => {
+                                console.warn(
+                                    "[README] GitHub 原始文件加载失败:",
+                                    img.src
+                                );
+                                const fallback = document.createElement("span");
+                                fallback.className = "github-raw-fallback";
+                                fallback.style.cssText =
+                                    "font-size:0.8em;color:#666;opacity:0.7;";
+                                fallback.innerHTML =
+                                    '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
+                                img.replaceWith(fallback);
+                            });
+                        }
                     }
                 } catch (_) {}
             });
@@ -180,7 +226,11 @@ function loadGithubReadme() {
     const githubUrl =
         "https://raw.githubusercontent.com/chen6019/chen6019/main/README.md";
 
-    return fetch(githubUrl)
+    return (
+        window.netUtils && window.netUtils.fetchWithTimeout
+            ? window.netUtils.fetchWithTimeout(githubUrl, {}, 8000)
+            : fetch(githubUrl)
+    )
         .then((r) => {
             if (!r.ok) throw new Error(`GitHub README HTTP ${r.status}`);
             return r.text();
@@ -208,7 +258,10 @@ function loadReadmeContent() {
     window.isLoadingReadme = true;
 
     // 加载本地README.md文件（与网站文件一起部署到服务器）
-    fetch("/README.md")
+    (window.netUtils && window.netUtils.fetchWithTimeout
+        ? window.netUtils.fetchWithTimeout("/README.md", {}, 4000)
+        : fetch("/README.md")
+    )
         .then((r) => {
             if (!r.ok) throw new Error(`HTTP ${r.status}`);
             return r.text();
