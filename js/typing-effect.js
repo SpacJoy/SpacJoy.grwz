@@ -54,23 +54,7 @@ function startTypingEffect() {
     // 逐字添加并应用闪烁动画
     let index = 0;
 
-    // 音频：仅在用户手势后启用，并复用单例
-    function getTypingAudioContext() {
-        try {
-            if (!window._typingAudio) {
-                window._typingAudio = {
-                    ctx: null,
-                    enabled: false,
-                    locked: true,
-                };
-            }
-            const store = window._typingAudio;
-            if (!store.enabled) return null; // 只有在用户解锁后才可用
-            return store.ctx || null;
-        } catch (_) {
-            return null;
-        }
-    }
+    // 打字音效已彻底移除（相关音频函数已删除）
 
     function addNextChar() {
         if (index < text.length) {
@@ -85,33 +69,7 @@ function startTypingEffect() {
             charSpan.className = "char-blink";
             charSpan.textContent = text[index];
 
-            // 添加打字声音效果（如果浏览器支持）
-            try {
-                // 仅在已解锁且上下文运行时播放极短提示音（随机触发，避免噪音）
-                const ctx =
-                    Math.random() > 0.7 ? getTypingAudioContext() : null;
-                if (ctx && ctx.state === "running") {
-                    const oscillator = ctx.createOscillator();
-                    const gainNode = ctx.createGain();
-                    oscillator.type = "sine";
-                    const now = ctx.currentTime;
-                    oscillator.frequency.setValueAtTime(
-                        200 + Math.random() * 300,
-                        now
-                    );
-                    gainNode.gain.setValueAtTime(0.02, now);
-                    gainNode.gain.exponentialRampToValueAtTime(
-                        0.001,
-                        now + 0.1
-                    );
-                    oscillator.connect(gainNode);
-                    gainNode.connect(ctx.destination);
-                    oscillator.start();
-                    oscillator.stop(now + 0.1);
-                }
-            } catch (_) {
-                /* 忽略声音效果错误 */
-            }
+            // 打字音效已移除：此处保留空白/注释以便仅保留视觉效果
 
             // 在光标前插入字符
             // 确保光标仍在容器中，若不在则重建或退化为 append
@@ -192,50 +150,8 @@ function adjustFontSize() {
 function initPageEffects() {
     // 初始化系统颜色主题
     initializeTheme();
-    // 设置音频解锁：首次用户手势后初始化/恢复 AudioContext（单例）
-    (function initTypingAudioUnlock() {
-        try {
-            if (!window._typingAudio) {
-                window._typingAudio = {
-                    ctx: null,
-                    enabled: false,
-                    locked: true,
-                };
-            }
-            const store = window._typingAudio;
-            if (store._installedUnlock) return;
-            
-            // 创建一个快速执行的事件处理程序
-            const unlockHandler = () => {
-                // 立即移除事件监听器以避免重复调用
-                window.removeEventListener("pointerdown", unlockHandler);
-                window.removeEventListener("keydown", unlockHandler);
-                
-                // 使用setTimeout将实际的音频初始化移到事件循环的下一个周期
-                setTimeout(async () => {
-                    try {
-                        if (!store.ctx) {
-                            const Ctor = 
-                                window.AudioContext || window.webkitAudioContext;
-                            if (!Ctor) return;
-                            store.ctx = new Ctor();
-                        }
-                        if (store.ctx.state === "suspended") {
-                            await store.ctx.resume().catch(() => {});
-                        }
-                        store.enabled = store.ctx && store.ctx.state === "running";
-                        store.locked = !store.enabled;
-                    } catch (_) {
-                        // 保持静默，初始化失败不是关键问题
-                    }
-                }, 0);
-            };
-            
-            window.addEventListener("pointerdown", unlockHandler, { passive: true, once: true });
-            window.addEventListener("keydown", unlockHandler, { passive: true, once: true });
-            store._installedUnlock = true;
-        } catch (_) {}
-    })();
+    // Typing audio unlock disabled (audio removed). No-op kept intentionally to avoid
+    // installing any audio-related event listeners or creating AudioContext.
 
     // 添加窗口大小变化事件监听器
     window.addEventListener("resize", adjustFontSize);
