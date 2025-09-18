@@ -11,7 +11,16 @@
     }
 
     function getInitialLevel() {
-        // priority: URL ?log= > localStorage.logLevel > default
+        // 检查是否为内网地址
+        const hostname = window.location.hostname;
+        const isPrivateNetwork = 
+            hostname === "localhost" ||
+            hostname === "127.0.0.1" ||
+            /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
+            /^172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
+            /^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname);
+
+        // priority: URL ?log= > localStorage.logLevel > 内网检测 > default
         try {
             const params = new URLSearchParams(location.search);
             const fromUrl = parseLevel(params.get("log"));
@@ -24,7 +33,13 @@
             const fromStorage = parseLevel(localStorage.getItem("logLevel"));
             if (fromStorage) return fromStorage;
         } catch (_) {}
-        // Default to 'warn' for concise output
+        
+        // 内网环境默认显示所有日志
+        if (isPrivateNetwork) {
+            return "debug";
+        }
+        
+        // 非内网环境默认显示警告及以上级别的日志
         return "warn";
     }
 

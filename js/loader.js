@@ -4,6 +4,7 @@ window.loadingStates = {
     loadingImageReady: false,
     firstBackgroundLoaded: false,
     readmeLoaded: false,
+    serversChecked: false, // 服务器检查状态，默认false
 };
 
 // 防止重复调用隐藏逻辑的标志

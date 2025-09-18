@@ -118,33 +118,46 @@ function loadFirstBackground() {
 // 检查是否可以开始预取（需要README和首张背景都完成）
 function checkCanStartPrefetch() {
     // 检查是否为内网地址，如果是则禁用预加载
-    const hostname = window.location.hostname;
-    const isPrivateNetwork =
-        hostname === "localhost" ||
-        hostname === "127.0.0.1" ||
-        /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
-        /^172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
-        /^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname);
+    // const hostname = window.location.hostname;
+    // const isPrivateNetwork = 
+    //     hostname === "localhost" ||
+    //     hostname === "127.0.0.1" ||
+    //     /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
+    //     /^172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
+    //     /^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname);
 
-    if (isPrivateNetwork) {
-        (window.logger || console).info(
-            "[Background] 内网环境，禁用背景图预加载"
-        );
-        return;
-    }
+    // if (isPrivateNetwork) {
+    //     (window.logger || console).info(
+    //         "[Background] 内网环境，禁用背景图预加载"
+    //     );
+    //     return;
+    // }
+
+    // 记录当前各状态值以便调试
+    (window.logger || console).debug(
+        "[Background] 当前状态: firstBackgroundLoaded=", firstBackgroundLoaded,
+        ", readmeLoaded=", window.loadingStates?.readmeLoaded,
+        ", serversChecked=", window.loadingStates?.serversChecked
+    );
 
     // 确保在背景图、README和服务器检测都完成后才开始预取
     if (
         firstBackgroundLoaded &&
         window.loadingStates &&
         window.loadingStates.readmeLoaded &&
-        window.loadingStates &&
         window.loadingStates.serversChecked
     ) {
         (window.logger || console).info(
             "[Background] README、首张背景和服务器检测都已完成，开始预取"
         );
         prefetchNextBackground();
+    } else {
+        (window.logger || console).debug(
+            "[Background] 预取条件未满足，缺少以下条件：",
+            !firstBackgroundLoaded ? "firstBackgroundLoaded " : "",
+            !window.loadingStates?.readmeLoaded ? "readmeLoaded " : "",
+            !window.loadingStates?.serversChecked ? "serversChecked" : ""
+        );
     }
 }
 
