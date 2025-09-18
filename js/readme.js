@@ -111,10 +111,11 @@ function renderMarkdown(markdownText) {
                                             className: "external-img-fallback",
                                             innerHTML:
                                                 '📊 <span data-zh="与Github失去链接，统计卡片加载失败" data-en="Stats card failed">与Github失去链接，统计卡片加载失败</span>',
+                                            style: "min-height: 120px; display: flex; align-items: center; justify-content: center; padding: 20px; margin: 10px 0; border: 2px dashed rgba(255,255,255,0.3); border-radius: 8px; background: rgba(255,255,255,0.05);",
                                         }
                                     );
                                     placeholder.replaceWith(fail);
-                                    img.remove();
+                                    img.style.display = "none"; // 隐藏而不删除，保持布局稳定
                                 });
                         } else {
                             // 加载成功后移除占位
@@ -129,10 +130,11 @@ function renderMarkdown(markdownText) {
                                         className: "external-img-fallback",
                                         innerHTML:
                                             '📊 <span data-zh="与Github失去链接，统计卡片加载失败" data-en="Stats card failed">与Github失去链接，统计卡片加载失败</span>',
+                                        style: "min-height: 120px; display: flex; align-items: center; justify-content: center; padding: 20px; margin: 10px 0; border: 2px dashed rgba(255,255,255,0.3); border-radius: 8px; background: rgba(255,255,255,0.05);",
                                     }
                                 );
                                 placeholder.replaceWith(fail);
-                                img.remove();
+                                img.style.display = "none"; // 隐藏而不删除，保持布局稳定
                             });
                         }
                     } else if (/raw\.githubusercontent\.com/.test(u.host)) {
@@ -152,10 +154,11 @@ function renderMarkdown(markdownText) {
                                         document.createElement("span");
                                     fallback.className = "github-raw-fallback";
                                     fallback.style.cssText =
-                                        "font-size:0.8em;color:#666;opacity:0.7;";
+                                        "font-size:0.8em;color:#666;opacity:0.7;display:inline-block;padding:10px;border:1px dashed rgba(255,255,255,0.2);border-radius:4px;margin:5px;";
                                     fallback.innerHTML =
                                         '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
-                                    img.replaceWith(fallback);
+                                    img.style.display = "none"; // 隐藏原图片
+                                    img.parentNode.insertBefore(fallback, img);
                                 });
                         } else {
                             img.addEventListener("error", () => {
@@ -166,10 +169,11 @@ function renderMarkdown(markdownText) {
                                 const fallback = document.createElement("span");
                                 fallback.className = "github-raw-fallback";
                                 fallback.style.cssText =
-                                    "font-size:0.8em;color:#666;opacity:0.7;";
+                                    "font-size:0.8em;color:#666;opacity:0.7;display:inline-block;padding:10px;border:1px dashed rgba(255,255,255,0.2);border-radius:4px;margin:5px;";
                                 fallback.innerHTML =
                                     '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
-                                img.replaceWith(fallback);
+                                img.style.display = "none"; // 隐藏原图片
+                                img.parentNode.insertBefore(fallback, img);
                             });
                         }
                     }
@@ -193,9 +197,12 @@ function renderMarkdown(markdownText) {
                                         document.createElement("span");
                                     fallback.className =
                                         "external-img-fallback";
+                                    fallback.style.cssText =
+                                        "display:inline-block;padding:10px;border:1px dashed rgba(255,255,255,0.2);border-radius:4px;margin:5px;color:#888;";
                                     fallback.innerHTML =
                                         '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
-                                    img.replaceWith(fallback);
+                                    img.style.display = "none"; // 隐藏而不删除
+                                    img.parentNode.insertBefore(fallback, img);
                                 }
                             } else {
                                 window.netUtils
@@ -205,9 +212,15 @@ function renderMarkdown(markdownText) {
                                             document.createElement("span");
                                         fallback.className =
                                             "external-img-fallback";
+                                        fallback.style.cssText =
+                                            "display:inline-block;padding:10px;border:1px dashed rgba(255,255,255,0.2);border-radius:4px;margin:5px;color:#888;";
                                         fallback.innerHTML =
                                             '🌐 <span data-zh="网络图片加载失败" data-en="Network image failed">网络图片加载失败</span>';
-                                        img.replaceWith(fallback);
+                                        img.style.display = "none"; // 隐藏而不删除
+                                        img.parentNode.insertBefore(
+                                            fallback,
+                                            img
+                                        );
                                     });
                             }
                         }
