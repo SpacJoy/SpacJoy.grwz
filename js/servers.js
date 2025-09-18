@@ -248,6 +248,10 @@ async function checkAllServerStatus() {
             (window.logger || console).debug(
                 `[Server Check] 服务器状态已标记为检查完成`
             );
+            // 检查是否可以开始预加载背景图
+            if (window.checkCanStartPrefetch) {
+                window.checkCanStartPrefetch();
+            }
         }
     } catch (e) {
         (window.logger || console).error(

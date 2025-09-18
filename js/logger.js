@@ -12,7 +12,9 @@
 
     function getInitialLevel() {
         // 检查是否为内网地址
-        const hostname = window.location.hostname;
+        // 提取主机名（不包含端口号）
+        const url = new URL(window.location.href);
+        const hostname = url.hostname;
         const isPrivateNetwork = 
             hostname === "localhost" ||
             hostname === "127.0.0.1" ||

@@ -204,29 +204,35 @@ function initPageEffects() {
             }
             const store = window._typingAudio;
             if (store._installedUnlock) return;
-            const unlock = async () => {
-                try {
-                    if (!store.ctx) {
-                        const Ctor =
-                            window.AudioContext || window.webkitAudioContext;
-                        if (!Ctor) return;
-                        store.ctx = new Ctor();
+            
+            // 创建一个快速执行的事件处理程序
+            const unlockHandler = () => {
+                // 立即移除事件监听器以避免重复调用
+                window.removeEventListener("pointerdown", unlockHandler);
+                window.removeEventListener("keydown", unlockHandler);
+                
+                // 使用setTimeout将实际的音频初始化移到事件循环的下一个周期
+                setTimeout(async () => {
+                    try {
+                        if (!store.ctx) {
+                            const Ctor = 
+                                window.AudioContext || window.webkitAudioContext;
+                            if (!Ctor) return;
+                            store.ctx = new Ctor();
+                        }
+                        if (store.ctx.state === "suspended") {
+                            await store.ctx.resume().catch(() => {});
+                        }
+                        store.enabled = store.ctx && store.ctx.state === "running";
+                        store.locked = !store.enabled;
+                    } catch (_) {
+                        // 保持静默，初始化失败不是关键问题
                     }
-                    if (store.ctx.state === "suspended") {
-                        await store.ctx.resume();
-                    }
-                    store.enabled = store.ctx.state === "running";
-                    store.locked = !store.enabled;
-                    if (store.enabled) {
-                        window.removeEventListener("pointerdown", unlock);
-                        window.removeEventListener("keydown", unlock);
-                    }
-                } catch (_) {
-                    // 保持静默，等待下一次手势
-                }
+                }, 0);
             };
-            window.addEventListener("pointerdown", unlock, { passive: true });
-            window.addEventListener("keydown", unlock, { passive: true });
+            
+            window.addEventListener("pointerdown", unlockHandler, { passive: true, once: true });
+            window.addEventListener("keydown", unlockHandler, { passive: true, once: true });
             store._installedUnlock = true;
         } catch (_) {}
     })();

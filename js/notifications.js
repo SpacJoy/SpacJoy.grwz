@@ -1,6 +1,27 @@
 // 通知与复制相关
 let currentNotification = null; // 跟踪当前显示的通知
 
+// 显示背景预加载完成通知
+function showBackgroundPrefetchNotification() {
+    hideCurrentNotification(); // 覆盖前一条通知
+    const notification = document.createElement("div");
+    notification.className = "copy-notification success";
+    notification.innerHTML = 
+        window.currentLanguage === "zh" 
+            ? "✨ 背景图预加载完成" 
+            : "✨ Background image preloaded";
+    document.body.appendChild(notification);
+    currentNotification = notification;
+    setTimeout(() => notification.classList.add("show"), 100);
+    setTimeout(() => {
+        hideCopyNotification(notification);
+        if (currentNotification === notification) currentNotification = null;
+    }, 2000);
+}
+
+// 导出通知函数到window对象
+window.showBackgroundPrefetchNotification = showBackgroundPrefetchNotification;
+
 function hideCurrentNotification() {
     if (currentNotification) {
         hideCopyNotification(currentNotification);

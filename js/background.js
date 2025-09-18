@@ -161,6 +161,9 @@ function checkCanStartPrefetch() {
     }
 }
 
+// 将函数暴露到window对象，便于其他模块调用
+window.checkCanStartPrefetch = checkCanStartPrefetch;
+
 function createLayer(url) {
     ensureContainer();
     const layer = document.createElement("div");
@@ -246,6 +249,23 @@ function _prefetchOne() {
             }
         }
         prefetchingNow = false;
+        
+        // 当预取队列达到目标大小时显示通知并记录日志
+        const loadedCount = queue.filter((e) => e.loaded).length;
+        if (loadedCount >= PREFETCH_TARGET) {
+            // 记录预加载成功完成的日志
+            (window.logger || console).info(
+                "[Background] 预加载成功完成: 已预加载 ", loadedCount, " 张背景图"
+            );
+            
+            // 显示通知
+            if (window.showBackgroundPrefetchNotification) {
+                setTimeout(() => {
+                    window.showBackgroundPrefetchNotification();
+                }, 500);
+            }
+        }
+        
         // 完成一张后尝试预取下一张
         setTimeout(() => prefetchNextBackground(), 100);
     };
