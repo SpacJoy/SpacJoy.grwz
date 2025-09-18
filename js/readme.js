@@ -1,7 +1,55 @@
 // README 加载与骨架屏
+// 动态加载 marked.js（原本内联在 index.html）
+(function() {
+    try {
+        var markedScript = document.createElement('script');
+        markedScript.src = 'https://cdn.jsdelivr.net/npm/marked@12.0.0/lib/marked.umd.js';
+        markedScript.onload = function() {
+            window.markedLoaded = true;
+            // 配置 marked.js
+            if (window.marked) {
+                try {
+                    window.marked.setOptions({
+                        breaks: true,
+                        gfm: true,
+                        headerIds: true,
+                        mangle: false,
+                    });
+                } catch (e) {
+                    (window.logger || console).warn('[Markdown] marked.setOptions 失败', e);
+                }
+            }
+            (window.logger || console).debug('[Markdown] marked.js 加载成功并已配置');
+        };
+        markedScript.onerror = function() {
+            window.markedLoaded = false;
+            window.markedLoadFailed = true;
+            (window.logger || console).warn('[Markdown] marked.js 加载失败，将使用本地解析器');
+        };
+        document.head.appendChild(markedScript);
+
+        // 6秒超时检测
+        setTimeout(function() {
+            if (!window.markedLoaded && !window.markedLoadFailed) {
+                window.markedLoadFailed = true;
+                (window.logger || console).warn('[Markdown] marked.js 加载超时（6秒），将使用本地解析器');
+            }
+        }, 6000);
+    } catch (e) {
+        (window.logger || console).warn('[Markdown] marked.js 加载器初始化失败', e);
+    }
+})();
+
+// 初始化标志，确保其它模块读取时不会得到 undefined
+if (typeof window.markedLoaded === 'undefined') window.markedLoaded = false;
+if (typeof window.markedLoadFailed === 'undefined') window.markedLoadFailed = false;
+
 function createReadmeSkeleton() {
     const container = document.getElementById("markdown-content");
-    if (!container || container.dataset.filled === "1") return;
+    if (!container) return;
+    // 仅当容器内无实际内容时添加骨架
+    if (container.dataset.filled === "1" || container.children.length > 0)
+        return;
     const skeleton = document.createElement("div");
     skeleton.className = "readme-skeleton";
     const pattern = [
@@ -23,23 +71,37 @@ function createReadmeSkeleton() {
     container.dataset.filled = "1";
 }
 
+function removeReadmeSkeleton() {
+    const container = document.getElementById("markdown-content");
+    // 安全检查
+    if (!container) return;
+    const skel = container.querySelector(".readme-skeleton");
+    // 仅当骨架存在时才移除
+    if (skel) skel.remove();
+    try {
+        delete container.dataset.filled;
+        window.logger || console.debug("[Markdown] 移除骨架屏");
+        // 删除 data-filled 属性以便未来重新创建骨架
+    } catch (_) {}
+}
+
 let isLoadingReadme = false; // 内部加载中标记
 window.isLoadingReadme = false; // 对外暴露以便其他模块判断
 window.readmeLoaded = false; // 是否已成功渲染完成
 
 function renderMarkdown(markdownText) {
-    // 优先使用 marked.js，如果加载失败或超时则使用本地解析器
-    const useMarked =
+    // 选择 Markdown 解析器：优先 marked.js，其次 LocalMD；如果都不可用则重试
+    const canUseMarked =
         window.markedLoaded &&
         window.marked &&
         typeof window.marked.parse === "function";
-    const useLocalMD =
-        !window.markedLoadFailed &&
-        (!window.LocalMD || typeof window.LocalMD.parse !== "function");
+    const canUseLocal =
+        window.LocalMD && typeof window.LocalMD.parse === "function";
 
-    if (!useMarked && useLocalMD) {
+    if (!canUseMarked && !canUseLocal) {
+        // 两个解析器都不可用，等待并重试
         (window.logger || console).warn(
-            "[README] marked.js 未就绪，1s后重试..."
+            "[Markdown] 等待 Markdown 解析器加载，1s后重试..."
         );
         setTimeout(() => renderMarkdown(markdownText), 1000);
         return;
@@ -48,16 +110,16 @@ function renderMarkdown(markdownText) {
     try {
         let htmlContent;
 
-        if (useMarked) {
+        if (canUseMarked) {
             // 使用 marked.js
             (window.logger || console).debug(
-                "[README] 使用 marked.js 解析 Markdown"
+                "[Markdown] 使用 marked.js 解析 Markdown"
             );
             htmlContent = window.marked.parse(markdownText);
         } else {
             // 使用本地解析器 LocalMD
             (window.logger || console).debug(
-                "[README] 使用本地解析器 LocalMD 解析 Markdown"
+                "[Markdown] 使用本地解析器 LocalMD 解析 Markdown"
             );
             // 可根据需要设置选项（占位，保持 API 一致）
             window.LocalMD.setOptions && window.LocalMD.setOptions({});
@@ -67,6 +129,8 @@ function renderMarkdown(markdownText) {
         const markdownContent = document.getElementById("markdown-content");
         if (markdownContent) {
             markdownContent.innerHTML = htmlContent;
+            // 渲染完成后移除骨架（如果存在），确保布局恢复正常
+            removeReadmeSkeleton();
             const links = markdownContent.querySelectorAll("a");
             links.forEach((link) => {
                 if (!link.hasAttribute("target"))
@@ -147,7 +211,7 @@ function renderMarkdown(markdownText) {
                                 .loadImageWithTimeout(img, 5000)
                                 .catch(() => {
                                     (window.logger || console).warn(
-                                        "[README] GitHub 原始文件加载失败:",
+                                        "[Markdown] GitHub 原始文件加载失败:",
                                         img.src
                                     );
                                     const fallback =
@@ -163,7 +227,7 @@ function renderMarkdown(markdownText) {
                         } else {
                             img.addEventListener("error", () => {
                                 (window.logger || console).warn(
-                                    "[README] GitHub 原始文件加载失败:",
+                                    "[Markdown] GitHub 原始文件加载失败:",
                                     img.src
                                 );
                                 const fallback = document.createElement("span");
@@ -229,21 +293,21 @@ function renderMarkdown(markdownText) {
             });
         }
     } catch (error) {
-        (window.logger || console).error("[README] markdown渲染失败:", error);
+        (window.logger || console).error("[Markdown] markdown渲染失败:", error);
         const markdownContent = document.getElementById("markdown-content");
         if (markdownContent) {
             const zh = {
                 title: "📝 Markdown渲染失败",
-                msg: useMarked
-                    ? "请检查 marked.js 是否正确加载"
-                    : "请检查本地解析器是否正确加载",
+                    msg: window.markedLoaded
+                        ? "请检查 marked.js 是否正确加载"
+                        : "请检查本地解析器是否正确加载",
                 retry: "🔄 重新加载页面",
             };
             const en = {
                 title: "📝 Markdown render failed",
-                msg: useMarked
-                    ? "Please check if marked.js is loaded correctly"
-                    : "Please check if the local parser is loaded correctly",
+                    msg: window.markedLoaded
+                        ? "Please check if marked.js is loaded correctly"
+                        : "Please check if the local parser is loaded correctly",
                 retry: "🔄 Reload page",
             };
             const t = window.currentLanguage === "en" ? en : zh;
@@ -297,13 +361,13 @@ function replaceLocalImagePaths(markdownText) {
         'src="https://ysy.146019.xyz/bqb/AM/$1"'
     );
 
-    (window.logger || console).debug("[README] 图片路径替换完成");
+    (window.logger || console).debug("[Markdown] 图片路径替换完成");
     return processedText;
 }
 
 // 从GitHub加载备用README
 function loadGithubReadme() {
-    (window.logger || console).info("[README] 尝试从GitHub加载备用README...");
+    (window.logger || console).info("[Markdown] 尝试从GitHub加载备用README...");
     const githubUrl =
         "https://raw.githubusercontent.com/chen6019/chen6019/main/README.md";
 
@@ -320,7 +384,7 @@ function loadGithubReadme() {
             // 替换本地图片路径为存储桶链接
             const processedText = replaceLocalImagePaths(markdownText);
             (window.logger || console).info(
-                "[README] GitHub备用README加载成功"
+                "[Markdown] GitHub备用README加载成功"
             );
             return processedText;
         });
@@ -339,7 +403,7 @@ function loadReadmeContent() {
         window.LocalMD && typeof window.LocalMD.parse === "function";
 
     if (!hasMarked && !hasLocalMD) {
-        (window.logger || console).warn("[README] 等待 Markdown 解析器加载...");
+        (window.logger || console).warn("[Markdown] 等待 Markdown 解析器加载...");
         setTimeout(loadReadmeContent, 500);
         return;
     }
@@ -357,16 +421,16 @@ function loadReadmeContent() {
             return r.text();
         })
         .then((markdownText) => {
-            (window.logger || console).info("[README] 本地README加载成功");
+            (window.logger || console).info("[Markdown] 本地README加载成功");
             renderMarkdown(markdownText);
         })
         .catch((e) => {
             (window.logger || console).error(
-                "[README] 加载本地 README 失败",
+                "[Markdown] 加载本地 README 失败",
                 e
             );
             (window.logger || console).info(
-                "[README] 尝试从GitHub加载备用README..."
+                "[Markdown] 尝试从GitHub加载备用README..."
             );
 
             // 本地加载失败，尝试从GitHub加载
@@ -376,7 +440,7 @@ function loadReadmeContent() {
                 })
                 .catch((githubError) => {
                     (window.logger || console).error(
-                        "[README] GitHub备用README也加载失败",
+                        "[Markdown] GitHub备用README也加载失败",
                         githubError
                     );
                     window.showReadmeError && window.showReadmeError();
@@ -386,6 +450,11 @@ function loadReadmeContent() {
             isLoadingReadme = false;
             window.isLoadingReadme = false;
         });
+
+        // 在真正开始加载 README 前确保显示骨架占位，减少闪烁
+        try {
+            createReadmeSkeleton && createReadmeSkeleton();
+        } catch (_) {}
 }
 
 function showReadmeError() {
