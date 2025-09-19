@@ -220,26 +220,75 @@ body {
 }
 
 .nav-btn {
-	background: rgba(0, 136, 255, 0.4); /* 更淡的半透明蓝色背景 */
-	backdrop-filter: blur(10px);
-	-webkit-backdrop-filter: blur(10px);
+	background: linear-gradient(135deg, rgba(0, 136, 255, 0.45), rgba(0, 102, 204, 0.45));
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
 	color: white;
-	border: 1px solid rgba(255, 255, 255, 0.3);
-	padding: 8px 16px;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	padding: 9px 18px;
 	border-radius: 20px;
 	cursor: pointer;
-	transition: all 0.3s ease;
+	transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 	font-size: 14px;
-	font-weight: 500;
-	min-width: 80px;
+	font-weight: 600;
+	min-width: 85px;
 	text-align: center;
+	box-shadow: 
+		0 5px 16px rgba(0, 136, 255, 0.3),
+		0 2px 6px rgba(0, 0, 0, 0.2),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
+	position: relative;
+	overflow: hidden;
+	font-family: 'MiSans', 'Microsoft YaHei', sans-serif;
+	letter-spacing: 0.5px;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* 导航按钮光泽效果 */
+.nav-btn::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+	transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 导航按钮顶部光泽效果 */
+.nav-btn::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.25), transparent 40%);
+	opacity: 0.7;
 }
 
 .nav-btn:hover {
-	background: var(--glass-bg-hover);
-	transform: translateY(-2px);
-	box-shadow: 0 4px 12px rgba(0, 136, 255, 0.3);
-	border-color: rgba(255, 255, 255, 0.3);
+	background: linear-gradient(135deg, rgba(0, 136, 255, 0.65), rgba(0, 102, 204, 0.65));
+	transform: translateY(-4px) scale(1.03);
+	box-shadow: 
+		0 8px 22px rgba(0, 136, 255, 0.45),
+		0 4px 12px rgba(0, 0, 0, 0.25),
+		inset 0 1px 0 rgba(255, 255, 255, 0.3);
+	border-color: rgba(255, 255, 255, 0.5);
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.nav-btn:hover::before {
+	left: 100%;
+}
+
+.nav-btn:active {
+	transform: translateY(-1px) scale(0.98);
+	box-shadow: 
+		0 4px 12px rgba(0, 136, 255, 0.35),
+		0 2px 6px rgba(0, 0, 0, 0.18),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* ===== 英雄区域样式 ===== */
@@ -1090,22 +1139,26 @@ article.animate-in {
 }
 
 .lang-btn {
-	background: linear-gradient(135deg, rgba(0, 136, 255, 0.3), rgba(0, 102, 204, 0.3));
-	border: 1px solid rgba(255, 255, 255, 0.3);
-	border-radius: 12px;
+	background: linear-gradient(135deg, rgba(0, 136, 255, 0.35), rgba(0, 102, 204, 0.35));
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-radius: 20px;
 	color: white;
-	padding: 8px 16px;
+	padding: 9px 18px;
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 600;
 	cursor: pointer;
-	transition: var(--transition-smooth);
-	backdrop-filter: blur(10px);
+	transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	backdrop-filter: blur(12px);
 	box-shadow: 
-		0 4px 12px rgba(0, 136, 255, 0.25),
-		0 1px 3px rgba(0, 0, 0, 0.15);
-	min-width: 50px;
+		0 5px 16px rgba(0, 136, 255, 0.3),
+		0 2px 6px rgba(0, 0, 0, 0.18),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
+	min-width: 55px;
 	position: relative;
 	overflow: hidden;
+	text-align: center;
+	font-family: 'MiSans', 'Microsoft YaHei', sans-serif;
+	letter-spacing: 0.5px;
 }
 
 /* 语言按钮光泽效果 */
@@ -1116,17 +1169,30 @@ article.animate-in {
 	left: -100%;
 	width: 100%;
 	height: 100%;
-	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-	transition: var(--transition-smooth);
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+	transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 语言按钮内部光效 */
+.lang-btn::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.2), transparent 40%);
+	opacity: 0.6;
 }
 
 .lang-btn:hover {
-	background: linear-gradient(135deg, rgba(0, 136, 255, 0.5), rgba(0, 102, 204, 0.5));
-	transform: translateY(-3px);
+	background: linear-gradient(135deg, rgba(0, 136, 255, 0.55), rgba(0, 102, 204, 0.55));
+	transform: translateY(-4px) scale(1.03);
 	box-shadow: 
-		0 6px 16px rgba(0, 136, 255, 0.4),
-		0 2px 6px rgba(0, 0, 0, 0.2);
-	border-color: rgba(255, 255, 255, 0.4);
+		0 8px 22px rgba(0, 136, 255, 0.45),
+		0 4px 12px rgba(0, 0, 0, 0.25),
+		inset 0 1px 0 rgba(255, 255, 255, 0.3);
+	border-color: rgba(255, 255, 255, 0.5);
 }
 
 .lang-btn:hover::after {
@@ -1134,10 +1200,23 @@ article.animate-in {
 }
 
 .lang-btn:active {
-	transform: translateY(-1px);
+	transform: translateY(-1px) scale(0.98);
 	box-shadow: 
-		0 3px 8px rgba(0, 136, 255, 0.3),
-		0 1px 3px rgba(0, 0, 0, 0.15);
+		0 4px 12px rgba(0, 136, 255, 0.35),
+		0 2px 6px rgba(0, 0, 0, 0.18),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* 语言文本样式增强 */
+.lang-btn #lang-text {
+	display: inline-block;
+	transition: transform 0.3s ease, text-shadow 0.3s ease;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.lang-btn:hover #lang-text {
+	transform: scale(1.1);
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 8px rgba(255, 255, 255, 0.4);
 }
 
 /* 确保h1能容纳内联的语言切换按钮 */
@@ -1703,70 +1782,112 @@ header h1 span.title-text {
 /* 默认样式 - 移动端和PC端通用 */
 #bg-toggle, .nav-btn.modern-btn.change-bg-btn {
     /* 重置并统一按钮样式 */
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(37, 99, 235, 0.5)) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(37, 99, 235, 0.6)) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
     color: white !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
-    border: 1px solid rgba(255,255,255,0.3) !important;
-    padding: 8px 16px !important;
-    border-radius: 12px !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
+    padding: 9px 18px !important;
+    border-radius: 20px !important;
     font-size: 14px !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
     min-width: auto !important;
     margin: 0 !important;
     box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.15),
-        0 1px 3px rgba(0, 0, 0, 0.1) !important;
-    transition: var(--transition-smooth) !important;
+        0 5px 16px rgba(0, 136, 255, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    font-family: 'MiSans', 'Microsoft YaHei', sans-serif !important;
+    letter-spacing: 0.5px !important;
+    text-align: center !important;
+}
+
+/* 浅色模式按钮内部光效 */
+#bg-toggle::before, .nav-btn.modern-btn.change-bg-btn::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) !important;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    z-index: 1 !important;
+}
+
+/* 浅色模式按钮顶部光泽效果 */
+#bg-toggle::after, .nav-btn.modern-btn.change-bg-btn::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.25), transparent 40%) !important;
+    opacity: 0.7 !important;
+    z-index: 1 !important;
 }
 
 #bg-toggle:hover, .nav-btn.modern-btn.change-bg-btn:hover {
-    background: linear-gradient(135deg, rgba(79, 140, 255, 0.6), rgba(59, 130, 255, 0.7)) !important;
-    transform: translateY(-3px) !important;
+    background: linear-gradient(135deg, rgba(79, 140, 255, 0.7), rgba(59, 130, 255, 0.8)) !important;
+    transform: translateY(-4px) scale(1.03) !important;
     box-shadow: 
-        0 6px 16px rgba(0, 136, 255, 0.2),
-        0 2px 6px rgba(0, 0, 0, 0.15) !important;
-    border-color: rgba(255,255,255,0.4) !important;
+        0 8px 22px rgba(0, 136, 255, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(255,255,255,0.5) !important;
+}
+
+#bg-toggle:hover::before, .nav-btn.modern-btn.change-bg-btn:hover::before {
+    left: 100% !important;
 }
 
 #bg-toggle:active, .nav-btn.modern-btn.change-bg-btn:active {
-    transform: translateY(1px) !important;
+    transform: translateY(-1px) scale(0.98) !important;
     box-shadow: 
-        0 3px 8px rgba(0, 0, 0, 0.15),
-        0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        0 4px 12px rgba(0, 136, 255, 0.35),
+        0 2px 6px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
 }
 
 /* 显式深色模式下的背景更换按钮样式强化 */
 [data-theme="dark"] #bg-toggle,
 [data-theme="dark"] .nav-btn.modern-btn.change-bg-btn {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(37, 99, 235, 0.5)) !important;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(37, 99, 235, 0.6)) !important;
     color: white !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
-    border: 1px solid rgba(255,255,255,0.3) !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
     /* 深色模式下增强按钮可见性 */
     box-shadow: 
-        0 4px 12px rgba(0, 136, 255, 0.15),
-        0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        0 5px 16px rgba(0, 136, 255, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
 }
 
 [data-theme="dark"] #bg-toggle:hover,
 [data-theme="dark"] .nav-btn.modern-btn.change-bg-btn:hover {
-    background: linear-gradient(135deg, rgba(79, 140, 255, 0.6), rgba(59, 130, 255, 0.7)) !important;
-    border-color: rgba(255,255,255,0.4) !important;
+    background: linear-gradient(135deg, rgba(79, 140, 255, 0.7), rgba(59, 130, 255, 0.8)) !important;
+    transform: translateY(-4px) scale(1.03) !important;
+    border-color: rgba(255,255,255,0.5) !important;
     /* 深色模式下增强悬浮效果 */
     box-shadow: 
-        0 6px 16px rgba(0, 136, 255, 0.2),
-        0 2px 6px rgba(0, 0, 0, 0.15) !important;
+        0 8px 22px rgba(0, 136, 255, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
 }
 
 [data-theme="dark"] #bg-toggle:active,
 [data-theme="dark"] .nav-btn.modern-btn.change-bg-btn:active {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.6), rgba(37, 99, 235, 0.7)) !important;
-    transform: translateY(1px) !important;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.65), rgba(37, 99, 235, 0.75)) !important;
+    transform: translateY(-1px) scale(0.98) !important;
     box-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.1),
-        0 1px 2px rgba(0, 0, 0, 0.05) !important;
+        0 4px 12px rgba(0, 136, 255, 0.35),
+        0 2px 6px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
 }
 
 .btn.modern-btn::before {
@@ -1861,19 +1982,25 @@ header h1 span.title-text {
     opacity: 0.7;
 }
 
-/* ===== 页面指示器样式 ===== */
+/* ===== 页面指示器样式 - 现代化设计 ===== */
 .page-indicator {
     position: fixed;
     top: 50%;
-    right: 20px;
+    right: 24px;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     z-index: 9999;
     opacity: 0;
-    transition: opacity 0.5s var(--transition-smooth), transform 0.5s var(--transition-smooth);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     transform: translateY(-50%) translateX(20px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 12px 8px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* 当添加visible类时显示元素 */
@@ -1888,66 +2015,139 @@ header h1 span.title-text {
     transform: translateY(-50%) translateX(20px);
 }
 
-/* 鼠标悬停到页面指示器容器上时，强制显示 */
+/* 鼠标悬停到页面指示器容器上时，强制显示并增强容器视觉效果 */
 .page-indicator:hover {
     opacity: 1 !important;
     transform: translateY(-50%) translateX(0) !important;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .indicator-item {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
-    border: 2px solid rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.6);
     cursor: pointer;
-    transition: all 0.3s var(--transition-fast);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     overflow: hidden;
     color: transparent;
     font-size: 0;
     line-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 指示器内部的发光效果 */
+.indicator-item::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 /* 鼠标悬停时的效果 */
 .indicator-item:hover {
-    width: 14px;
-    height: 14px;
-    background-color: rgba(255, 255, 255, 0.9);
-    transform: translateX(-2px);
-}
-
-/* 当前激活的指示器 */
-.indicator-item.active {
     width: 16px;
     height: 16px;
-    background-color: var(--primary-blue);
-    border-color: var(--primary-blue-light);
-    box-shadow: 0 0 10px rgba(0, 136, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 1);
+    transform: translateX(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* 悬停提示信息 */
+.indicator-item:hover::before {
+    opacity: 1;
+}
+
+/* 当前激活的指示器 - 增强视觉反馈 */
+.indicator-item.active {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+    border-color: var(--primary-blue-light);
+    box-shadow: 
+        0 0 20px rgba(0, 136, 255, 0.7),
+        0 4px 12px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    animation: pulse-ring 2.5s ease-in-out infinite;
+}
+
+/* 激活指示器的脉冲效果 */
+@keyframes pulse-ring {
+    0% {
+        box-shadow: 
+            0 0 20px rgba(0, 136, 255, 0.7),
+            0 4px 12px rgba(0, 0, 0, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 0 25px rgba(0, 136, 255, 0.9),
+            0 6px 16px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    100% {
+        box-shadow: 
+            0 0 20px rgba(0, 136, 255, 0.7),
+            0 4px 12px rgba(0, 0, 0, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* 悬停提示信息 - 优化样式和显示效果 */
 .indicator-item::after {
-    content: attr(data-tooltip);
+    content: attr(data-zh);
     position: absolute;
     right: 100%;
     top: 50%;
     transform: translateY(-50%) translateX(-10px);
-    padding: 4px 8px;
-    background-color: rgba(0, 0, 0, 0.8);
+    padding: 6px 12px;
+    background: linear-gradient(135deg, rgba(0, 136, 255, 0.95), rgba(0, 102, 204, 0.95));
     color: white;
-    border-radius: 4px;
-    font-size: 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s var(--transition-fast), transform 0.3s var(--transition-fast);
+    transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     z-index: 10000;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 4px 12px rgba(0, 136, 255, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'MiSans', 'Microsoft YaHei', sans-serif;
+}
+
+/* 英文环境下的提示信息 */
+[data-lang="en"] .indicator-item::after {
+    content: attr(data-en);
 }
 
 .indicator-item:hover::after {
     opacity: 1;
-    transform: translateY(-50%) translateX(-5px);
+    transform: translateY(-50%) translateX(-8px);
+    box-shadow: 
+        0 6px 16px rgba(0, 136, 255, 0.4),
+        0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 激活项的提示信息增强 */
+.indicator-item.active::after {
+    background: linear-gradient(135deg, rgba(0, 136, 255, 1), rgba(0, 102, 204, 1));
+    font-weight: 600;
 }
 
 /* 响应式设计 - 移动端隐藏页面指示器 */

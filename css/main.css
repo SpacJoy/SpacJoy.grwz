@@ -1,6 +1,22 @@
-/* HTML: <div class="loader"></div> 
-/* 注释掉的旧内容已移除 */
-/* 旧的 .loader 定位规则已由 index.css 覆盖，这里移除避免冲突 */
+/* 定义全局CSS变量，方便统一管理颜色和动画 */
+:root {
+    --primary-blue: rgba(0, 136, 255, 0.9);
+    --secondary-blue: rgba(0, 102, 204, 0.9);
+    --accent-blue: rgba(0, 136, 255, 0.6);
+    --text-primary: rgba(255, 255, 255, 0.95);
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --card-bg-hover: rgba(0, 136, 255, 0.9);
+    --border-color: rgba(255, 255, 255, 0.2);
+    --shadow-light: 0 4px 15px rgba(0, 136, 255, 0.2);
+    --shadow-medium: 0 8px 25px rgba(0, 136, 255, 0.3);
+    --shadow-hover: 0 12px 35px rgba(0, 136, 255, 0.4);
+    --transition-fast: 0.25s ease;
+    --transition-normal: 0.4s ease;
+    --transition-slow: 0.8s ease;
+}
+
+/* HTML: <div class="loader"></div> */
 /* 添加模糊效果的 div */
 .blur-effect {
     position: fixed;
@@ -10,23 +26,68 @@
     height: 100%;
     /* 背景模糊效果由JavaScript动态控制 */
     z-index: 1;
-    /* 设置 z-index 为 1 */
+    backdrop-filter: blur(0px);
+    transition: backdrop-filter var(--transition-slow);
 }
 
-/* 基础文章卡片样式 */
+/* 基础文章卡片样式 - 增强视觉效果 */
 article {
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all var(--transition-normal) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-light);
+    position: relative;
+    overflow: hidden;
 }
 
-/* 统一所有设备上的文章卡片悬停效果 */
+/* 卡片光泽效果 */
+article::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
+    transform: rotate(45deg);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+/* 统一所有设备上的文章卡片悬停效果 - 增强交互反馈 */
 article:hover,
 .project-card:hover {
     background: linear-gradient(
         135deg,
-        rgba(0, 136, 255, 0.85) 0%,
-        rgba(0, 102, 204, 0.85) 100%
+        var(--card-bg-hover) 0%,
+        var(--secondary-blue) 100%
     ) !important;
-    backdrop-filter: blur(10px) !important;
+    backdrop-filter: blur(12px) !important;
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+article:hover::before {
+    opacity: 1;
+    animation: shine 1.5s;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) rotate(45deg);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%) rotate(45deg);
+        opacity: 0;
+    }
 }
 
 /* 统一所有设备上的文章卡片标题和文本悬停颜色 */
@@ -46,22 +107,42 @@ article:hover p,
 
 /* 顶部导航栏样式由index.css中的.top-nav定义，这里不重复定义 */
 .home {
-    color: rgba(0, 120, 249, 0.911);
+    color: var(--primary-blue);
     text-decoration: none;
+    transition: color var(--transition-fast);
 }
-/* 设置h1标题样式 */
+
+.home:hover {
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+/* 设置标题样式 - 使用CSS变量统一管理 */
 h1 {
     /* 标题基础样式由 index.css 精细控制，这里仅保留颜色 */
-    color: rgba(0, 136, 255, 0.628);
-    text-shadow: 0 0 8px rgba(0, 136, 255, 0.45);
+    color: var(--accent-blue);
+    text-shadow: 0 0 8px var(--primary-blue);
 }
 
 h2 {
-    color: rgba(0, 136, 255, 0.628);
-    text-shadow: 0 0 8px rgba(0, 136, 255, 0.628);
+    color: var(--accent-blue);
+    text-shadow: 0 0 8px var(--accent-blue);
     font-size: 300%;
     text-align: left;
     padding-left: 2%;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 2%;
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-blue), transparent);
+    border-radius: 2px;
 }
 
 /* 基础背景样式 - 由JavaScript动态设置背景图 */
@@ -108,20 +189,58 @@ footer {
 p {
     font-size: 135%;
     text-align: center;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.2rem;
 }
+
+/* 增强按钮样式和交互效果 */
 .btn {
     width: 100%;
-    height: 40px;
+    height: 45px;
     font-size: 20px;
-    background-color: #007bff;
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 25px;
     cursor: pointer;
-    transition: 0.3s;
-    margin-bottom: 10px;
+    transition: all var(--transition-fast);
+    margin-bottom: 12px;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 136, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-/* 设置主要内容样式 - 默认Flexbox布局 */
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 136, 255, 0.4);
+    background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 136, 255, 0.3);
+}
+/* 设置主要内容样式 - 增强的Flexbox布局 */
 main {
     display: flex;
     flex-wrap: wrap;
@@ -133,6 +252,7 @@ main {
     max-width: 1400px; /* 限制最大宽度 */
     margin: 0 auto; /* 居中显示 */
     padding: 20px; /* 增加内边距 */
+    perspective: 1000px; /* 添加3D透视效果基础 */
 }
 
 /* 中等屏幕下的Flexbox处理 */
@@ -143,7 +263,7 @@ main {
     }
 }
 
-/* 平板端样式 (701px-1040px) - 参考桌面端横屏 */
+/* 平板端样式 (701px-1040px) - 优化的响应式设计 */
 @media (min-width: 701px) and (max-width: 1040px) {
     /* 平板端header样式 */
     header {
@@ -155,21 +275,22 @@ main {
 
     /* 平板端主要内容样式 */
     main {
-        padding: 15px;
-        margin: 15px;
-        --main-gap: 22px;
+        padding: 20px 15px;
+        margin: 10px auto;
+        --main-gap: 25px;
         gap: var(--main-gap);
-        min-height: calc(100vh - 120px);
+        min-height: calc(100vh - 140px);
     }
 
     /* 平板端文章样式 */
     article {
-        flex: 1 0 300px;
-        max-width: 380px;
+        flex: 1 0 320px;
+        max-width: 400px;
         margin: 0;
-        min-width: 300px;
+        min-width: 320px;
         box-sizing: border-box;
-        border-radius: 18px;
+        border-radius: 20px;
+        padding: 22px;
         backdrop-filter: blur(7px);
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
         transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -239,13 +360,23 @@ main {
         backdrop-filter: blur(4px);
     }
 
-    /* 平板端h1标题样式 */
+    /* 平板端h2标题样式优化 */
+    h2 {
+        font-size: 250%;
+        text-align: center;
+        padding-left: 0;
+    }
+    
+    h2::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
 
     /* 平板端页面顶部标题样式 */
     header {
-        width: 102%;
+        width: 100%;
         font-size: 75%;
-        text-align: left;
+        text-align: center;
     }
 
     /* 平板端页面底部样式 */
@@ -263,50 +394,39 @@ main {
     }
 } /* 移除固定背景设置，改用JavaScript随机背景 */
 
-/* 设置移动端样式 */
+/* 设置移动端样式 - 增强的移动端体验 */
 @media (max-width: 700px) {
     /* 移动端header高度优化 */
     header {
         height: auto;
-        min-height: 80px; /* 确保header有足够高度 */
+        min-height: 80px;
         padding: 10px 0;
-        z-index: 10; /* 提高z-index确保在最前面 */
+        z-index: 10;
     }
     /* 设置移动端主要内容样式 */
     main {
-        padding: 10px; /* 四边统一padding */
-        /* 移除padding-top设置，由index.css中的Grid布局控制 */
-        margin: 10px; /* 减少外边距 */
-        gap: 20px; /* 移动端增大gap防止重叠 */
-        min-height: calc(100vh - 140px); /* 确保内容区域足够高 */
+        padding: 15px 10px;
+        margin: 5px auto;
+        gap: 20px;
+        min-height: calc(100vh - 140px);
     }
 
-    /* 设置移动端文章样式 */
+    /* 设置移动端文章样式 - 增强视觉和交互 */
     article {
-        flex: 1 0 280px; /* 增加最小宽度 */
-        max-width: 100%; /* 移动端最大宽度为100% */
-        margin: 0; /* 移除margin，使用gap代替 */
-        min-width: 280px; /* 确保最小宽度 */
-        box-sizing: border-box; /* 确保边距计算正确 */
+        flex: 1 0 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        min-width: 280px;
+        box-sizing: border-box;
         border-radius: 20px;
-        backdrop-filter: blur(6px);
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-        /* 移动端悬浮效果 */
-        transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         cursor: pointer;
-        /* 移动端玻璃效果 */
-        border: 2px solid;
-        border-image: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.25) 0%,
-                rgba(255, 255, 255, 0.05) 25%,
-                rgba(255, 255, 255, 0.02) 50%,
-                rgba(255, 255, 255, 0.08) 75%,
-                rgba(255, 255, 255, 0.15) 100%
-            )
-            1;
-        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        padding: 20px;
         position: relative;
+        background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 255, 255, 0.05) 100%);
     }
 
     /* 移动端文章光泽效果 */
@@ -325,28 +445,22 @@ main {
         );
         border-radius: 18px 18px 6px 6px;
         pointer-events: none;
-    } /* 移动端文章悬浮效果 - 减小放大避免重叠 */
+    }
+
+    /* 移动端文章悬浮效果 - 优化交互反馈 */
     article:hover {
         background: linear-gradient(
             135deg,
-            rgba(0, 136, 255, 0.9) 0%,
-            rgba(0, 102, 204, 0.9) 100%
+            var(--card-bg-hover) 0%,
+            var(--secondary-blue) 100%
         );
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 25px rgba(0, 136, 255, 0.4),
+        backdrop-filter: blur(12px);
+        box-shadow: var(--shadow-hover),
             0 2px 8px rgba(0, 0, 0, 0.15),
             inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        transform: scale(1.01); /* 移动端减小放大比例避免重叠 */
-        /* 移动端悬浮时增强玻璃边框效果 */
-        border-image: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.4) 0%,
-                rgba(255, 255, 255, 0.12) 25%,
-                rgba(255, 255, 255, 0.06) 50%,
-                rgba(255, 255, 255, 0.15) 75%,
-                rgba(255, 255, 255, 0.3) 100%
-            )
-            1;
+        transform: translateY(-4px) scale(1.01); /* 增加上移效果 */
+        /* 移动端悬浮时增强边框效果 */
+        border-color: rgba(255, 255, 255, 0.3);
     }
 
     /* 移动端悬浮时增强光泽效果 */
@@ -360,21 +474,27 @@ main {
     }
 
     /* 移动端悬浮时调整内部文字颜色 */
-    article:hover h2 {
-        color: white;
-        text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    article:hover h2,
+    article:hover h3 {
+        color: white !important;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.5) !important;
+        transition: color var(--transition-fast);
     }
 
     article:hover p {
-        color: rgba(255, 255, 255, 0.95);
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        color: rgba(255, 255, 255, 0.95) !important;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;
+        transition: color var(--transition-fast);
     }
 
+    /* 移动端悬浮时按钮样式优化 */
     article:hover .btn {
-        background-color: rgba(255, 255, 255, 0.2);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(5px);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1)) !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        backdrop-filter: blur(5px) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
     }
 
     /* 移动端 h1 由 index.css 控制，不在此重复 */
