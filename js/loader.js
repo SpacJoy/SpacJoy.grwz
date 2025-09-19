@@ -21,13 +21,13 @@ function checkCanHideLoader() {
         !hideLoaderScheduled
     ) {
         (window.logger || console).info(
-            "[Loader] 首张背景图和README都已加载完成，1秒后隐藏 Loading"
+            "[Loader] 首张背景图和README都已加载完成，0.8秒后隐藏 Loading"
         );
         hideLoaderScheduled = true; // 设置标志防止重复调用
-        // 等待1秒后隐藏
+        // 等待0.8秒后隐藏
         setTimeout(() => {
             hideLoader();
-        }, 1000);
+        }, 800);
         return true;
     }
     return false;

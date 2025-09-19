@@ -83,7 +83,7 @@ function initializePageComplete() {
         (window.logger || console).error("[UI] addEventListeners 失败", e);
     }
 
-    // 安全兜底：10秒后强制隐藏 loader（如果还在显示）
+    // 安全兜底：8秒后强制隐藏 loader（如果还在显示）
     setTimeout(() => {
         const loader = document.querySelector(".loader");
         if (loader && loader.style.display !== "none" && !window.loaderHidden) {
@@ -93,7 +93,7 @@ function initializePageComplete() {
                 window.setLoadingState("readmeLoaded", true);
             }
         }
-    }, 10000);
+    }, 8000);
 }
 
 // 初始化页面指示器
@@ -149,12 +149,12 @@ function initPageIndicator() {
                 }
             });
 
-            // 静止状态下自动隐藏（如果显示超过2秒没有滚动）
+            // 静止状态下自动隐藏（如果显示超过0.5秒没有滚动）
             scrollTimeout = setTimeout(() => {
                 if (isVisible) {
                     indicator.classList.add("idle");
                 }
-            }, 2000);
+            }, 500);
         }
 
         // 鼠标移动事件 - 检测屏幕右侧四分之一区域显示/隐藏指示器
@@ -176,13 +176,13 @@ function initPageIndicator() {
                     isVisible = true;
                 }
 
-                // 延长自动隐藏时间到3秒，给予用户更多操作时间
+                // 延长自动隐藏时间到1.5秒，给予用户更多操作时间
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
                     if (isVisible) {
                         indicator.classList.add("idle");
                     }
-                }, 3000);
+                }, 1500);
             } else if (
                 !indicator.classList.contains("idle") &&
                 !indicator.matches(":hover")
