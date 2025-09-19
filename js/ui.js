@@ -72,7 +72,6 @@ function initializePageComplete() {
 
     // 现在由 loader.js 统一管理加载时序，这里只做基础初始化
     window.optimizeArticleLayout && window.optimizeArticleLayout();
-    window.createReadmeSkeleton && window.createReadmeSkeleton();
 
     try {
         // 直接调用addEventListeners函数，不依赖window对象引用
@@ -251,4 +250,7 @@ function initPageIndicator() {
 window.addEventListeners = addEventListeners;
 window.initializePageComplete = initializePageComplete;
 
+// 保持对 window.load 的监听作为兜底
 window.addEventListener("load", initializePageComplete);
+// 同时在 DOMContentLoaded 时尽早初始化页面（元素已可用），避免因资源加载顺序导致延迟
+window.addEventListener("DOMContentLoaded", initializePageComplete);

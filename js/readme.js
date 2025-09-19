@@ -44,46 +44,6 @@
 if (typeof window.markedLoaded === 'undefined') window.markedLoaded = false;
 if (typeof window.markedLoadFailed === 'undefined') window.markedLoadFailed = false;
 
-function createReadmeSkeleton() {
-    const container = document.getElementById("markdown-content");
-    if (!container) return;
-    // 仅当容器内无实际内容时添加骨架
-    if (container.dataset.filled === "1" || container.children.length > 0)
-        return;
-    const skeleton = document.createElement("div");
-    skeleton.className = "readme-skeleton";
-    const pattern = [
-        "long",
-        "long",
-        "mid",
-        "long",
-        "long",
-        "short",
-        "long",
-        "mid",
-        "long",
-    ];
-    skeleton.innerHTML = pattern
-        .map((cls) => `<div class="line ${cls}"></div>`)
-        .join("");
-    container.innerHTML = "";
-    container.appendChild(skeleton);
-    container.dataset.filled = "1";
-}
-
-function removeReadmeSkeleton() {
-    const container = document.getElementById("markdown-content");
-    // 安全检查
-    if (!container) return;
-    const skel = container.querySelector(".readme-skeleton");
-    // 仅当骨架存在时才移除
-    if (skel) skel.remove();
-    try {
-        delete container.dataset.filled;
-        window.logger || console.debug("[Markdown] 移除骨架屏");
-        // 删除 data-filled 属性以便未来重新创建骨架
-    } catch (_) {}
-}
 
 let isLoadingReadme = false; // 内部加载中标记
 window.isLoadingReadme = false; // 对外暴露以便其他模块判断
@@ -129,8 +89,6 @@ function renderMarkdown(markdownText) {
         const markdownContent = document.getElementById("markdown-content");
         if (markdownContent) {
             markdownContent.innerHTML = htmlContent;
-            // 渲染完成后移除骨架（如果存在），确保布局恢复正常
-            removeReadmeSkeleton();
             const links = markdownContent.querySelectorAll("a");
             links.forEach((link) => {
                 if (!link.hasAttribute("target"))
@@ -451,10 +409,6 @@ function loadReadmeContent() {
             window.isLoadingReadme = false;
         });
 
-        // 在真正开始加载 README 前确保显示骨架占位，减少闪烁
-        try {
-            createReadmeSkeleton && createReadmeSkeleton();
-        } catch (_) {}
 }
 
 function showReadmeError() {
@@ -490,5 +444,3 @@ function showReadmeError() {
         }
     }, 100);
 }
-
-window.createReadmeSkeleton = createReadmeSkeleton;
