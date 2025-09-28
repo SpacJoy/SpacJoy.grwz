@@ -50,10 +50,15 @@ function hideLoader() {
             // 调用模糊转清晰动画，而不是直接隐藏模糊层
             if (window.animateBlurToClear) window.animateBlurToClear();
             setTimeout(() => {
-                if (window.showScrollNotification)
-                    window.showScrollNotification();
+                if (window.showScrollNotification) window.showScrollNotification();
                 // 移除重复的服务器检查调用
             }, 100);
+            
+            // 在加载图隐藏后1秒显示悬浮窗
+            setTimeout(() => {
+                showSuspensionWindow();
+            }, 1000);
+            
             (window.logger || console).info("[Loader] Loader hidden");
         },
         { once: true }
@@ -137,3 +142,23 @@ function setupCssAnimationHide(durationMs) {
 
 window.estimateAnimationDuration = estimateAnimationDuration;
 window.setupCssAnimationHide = setupCssAnimationHide;
+
+// 显示悬浮窗函数
+function showSuspensionWindow() {
+    const suspensionWindow = document.getElementById('suspension-window');
+    if (suspensionWindow) {
+        suspensionWindow.classList.add('show');
+        (window.logger || console).info('[Loader] 悬浮窗已显示');
+        
+        // 添加关闭按钮事件监听
+        const closeButton = document.getElementById('suspension-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', function() {
+                suspensionWindow.classList.remove('show');
+                (window.logger || console).info('[Loader] 悬浮窗已关闭');
+            });
+        }
+    } else {
+        (window.logger || console).warn('[Loader] 未找到悬浮窗元素');
+    }
+}
