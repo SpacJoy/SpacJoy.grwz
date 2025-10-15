@@ -3,8 +3,7 @@ async function checkServerStatus(url, timeout = 8000) {
     (window.logger || console).debug(`[Server Check] 开始检测服务器: ${url}`);
     const result = await checkServerWithImage(url, timeout);
     (window.logger || console).info(
-        `[Server Check] ${url}: ${result.online ? "在线" : "离线"} (${
-            result.status
+        `[Server Check] ${url}: ${result.online ? "在线" : "离线"} (${result.status
         })${result.loadTime ? `, ${result.loadTime}ms` : ""}`
     );
     return result;
@@ -57,9 +56,8 @@ function checkServerWithImage(url, timeout) {
         };
         try {
             const urlObj = new URL(url);
-            const baseUrl = `${urlObj.protocol}//${urlObj.hostname}${
-                urlObj.port ? ":" + urlObj.port : ""
-            }`;
+            const baseUrl = `${urlObj.protocol}//${urlObj.hostname}${urlObj.port ? ":" + urlObj.port : ""
+                }`;
             const iconPaths = [
                 "/favicon.ico",
                 "/favicon.png",
@@ -70,9 +68,8 @@ function checkServerWithImage(url, timeout) {
             let currentPathIndex = 0;
             function tryNextIcon() {
                 if (currentPathIndex < iconPaths.length && !resolved) {
-                    const iconUrl = `${baseUrl}${
-                        iconPaths[currentPathIndex]
-                    }?t=${Date.now()}`;
+                    const iconUrl = `${baseUrl}${iconPaths[currentPathIndex]
+                        }?t=${Date.now()}`;
                     img.src = iconUrl;
                     currentPathIndex++;
                 }
@@ -101,8 +98,7 @@ function checkServerWithImage(url, timeout) {
 
 function updateServerStatusDisplay(serviceId, status) {
     (window.logger || console).debug(
-        `[Server UI] ${serviceId}: ${status.online ? "在线" : "离线"} (${
-            status.status
+        `[Server UI] ${serviceId}: ${status.online ? "在线" : "离线"} (${status.status
         })`
     );
     const statusElement = document.getElementById(`${serviceId}-status`);
@@ -114,77 +110,67 @@ function updateServerStatusDisplay(serviceId, status) {
             statusText = window.currentLanguage === "zh" ? "在线" : "Online";
             statusColor = "#4CAF50";
             const responseTime = status.loadTime
-                ? ` (${
-                      window.currentLanguage === "zh"
-                          ? "响应时间"
-                          : "Response time"
-                  }: ${status.loadTime}ms)`
+                ? ` (${window.currentLanguage === "zh"
+                    ? "响应时间"
+                    : "Response time"
+                }: ${status.loadTime}ms)`
                 : "";
             const clickToRecheck =
                 window.currentLanguage === "zh"
                     ? "点击重新检测"
                     : "Click to recheck";
-            tooltipText = `${
-                window.currentLanguage === "zh"
-                    ? "服务器正常运行"
-                    : "Server running normally"
-            }${responseTime} - ${clickToRecheck}`;
+            tooltipText = `${window.currentLanguage === "zh"
+                ? "服务器正常运行"
+                : "Server running normally"
+                }${responseTime} - ${clickToRecheck}`;
             break;
         case "server_error":
             statusIcon = "🔴";
             statusText =
                 window.currentLanguage === "zh" ? "服务器错误" : "Server Error";
             statusColor = "#F44336";
-            tooltipText = `${
-                window.currentLanguage === "zh" ? "服务器错误" : "Server error"
-            } - ${
-                window.currentLanguage === "zh"
+            tooltipText = `${window.currentLanguage === "zh" ? "服务器错误" : "Server error"
+                } - ${window.currentLanguage === "zh"
                     ? "点击重新检测"
                     : "Click to recheck"
-            }`;
+                }`;
             break;
         case "timeout":
             statusIcon = "🟡";
             statusText = window.currentLanguage === "zh" ? "超时" : "Timeout";
             statusColor = "#FF9800";
-            tooltipText = `${
-                window.currentLanguage === "zh"
-                    ? "连接超时，服务器可能过载"
-                    : "Connection timeout, server may be overloaded"
-            } - ${
-                window.currentLanguage === "zh"
+            tooltipText = `${window.currentLanguage === "zh"
+                ? "连接超时，服务器可能过载"
+                : "Connection timeout, server may be overloaded"
+                } - ${window.currentLanguage === "zh"
                     ? "点击重新检测"
                     : "Click to recheck"
-            }`;
+                }`;
             break;
         case "network_error":
             statusIcon = "🟠";
             statusText =
                 window.currentLanguage === "zh" ? "网络错误" : "Network Error";
             statusColor = "#FF5722";
-            tooltipText = `${
-                window.currentLanguage === "zh"
-                    ? "网络连接问题"
-                    : "Network connection issue"
-            } - ${
-                window.currentLanguage === "zh"
+            tooltipText = `${window.currentLanguage === "zh"
+                ? "网络连接问题"
+                : "Network connection issue"
+                } - ${window.currentLanguage === "zh"
                     ? "点击重新检测"
                     : "Click to recheck"
-            }`;
+                }`;
             break;
         default:
             statusIcon = "🔴";
             statusText = window.currentLanguage === "zh" ? "离线" : "Offline";
             statusColor = "#F44336";
-            tooltipText = `${
-                window.currentLanguage === "zh"
-                    ? "服务器不可达"
-                    : "Server unreachable"
-            } - ${
-                window.currentLanguage === "zh"
+            tooltipText = `${window.currentLanguage === "zh"
+                ? "服务器不可达"
+                : "Server unreachable"
+                } - ${window.currentLanguage === "zh"
                     ? "点击重新检测"
                     : "Click to recheck"
-            }`;
+                }`;
     }
     statusElement.innerHTML = `<span style="color: ${statusColor}; cursor: pointer;" onclick="recheckServerStatus()" title="${tooltipText}">${statusIcon} ${statusText}</span>`;
 }
@@ -202,11 +188,11 @@ async function checkAllServerStatus() {
             name: "Openlist",
         },
         { id: "photo", url: "https://photo.146019.xyz", name: "相册服务" },
-        { id: "fnos", url: "https://fn.146019.xyz/v", name: "飞牛服务" },
-        { id: "moontv", url: "https://moontv.146019.xyz", name: "MoonTV" },
+        { id: "fnos", url: "https://ys.146019.xyz:1125", name: "飞牛服务" },
+        { id: "moontv", url: "https://moon-wk.146019.xyz", name: "MoonTV" },
         {
             id: "moon-primary",
-            url: "https://moon.146019.xyz",
+            url: "https://tv.146019.xyz:1125",
             name: "MoonTV主站",
         },
     ];

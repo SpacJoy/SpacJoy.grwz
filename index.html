@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title data-zh="喵~嗷呜~~！" data-en="Meow~? Awoo~~!">喵~嗷呜~~！</title>
-	<link rel="icon" type="image/webp" href="https://ysy.146019.xyz/icon/top.webp">    
+	<link rel="icon" type="image/webp" href="https://ysy.146019.xyz/icon/top.webp">
 	<!-- 设置网页样式-->
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link rel="stylesheet" type="text/css" href="css/index.css">
@@ -18,31 +18,31 @@
 	<!-- marked.js 加载逻辑已移动至 js/readme.js（该模块会负责尝试加载 marked 并回退到本地解析器） -->
 
 
-	
+
 </head>
 
 <body>
 	<!-- 背景层容器 -->
 	<div class="bg-layer-stack"></div>
-	
+
 	<!-- 加载覆盖层 -->
 	<div class="loader">
 		<img id="loading-gif" src="" alt="Loading...">
 	</div>
 	<!-- 悬浮窗组件 -->
-		<div class="suspension-window" id="suspension-window">
-			<div class="suspension-header">
-				<div class="suspension-icon">!</div>
-				<button class="suspension-close" id="suspension-close" title="关闭">×</button>
-			</div>
-			<div class="suspension-content">
-				<p>因不可抗因素：硬盘损坏、数据丢失</br>"OpenList和2406相册被迫关停"</p>
-			</div>
+	<div class="suspension-window" id="suspension-window">
+		<div class="suspension-header">
+			<div class="suspension-icon">!</div>
+			<button class="suspension-close" id="suspension-close" title="关闭">×</button>
 		</div>
-	
+		<div class="suspension-content">
+			<p>因不可抗因素：硬盘损坏、数据丢失</br>"OpenList和2406相册被迫关停"</p>
+		</div>
+	</div>
+
 	<!-- 模糊效果覆盖层 -->
 	<div class="blur-effect"></div>
-	
+
 	<!-- 顶部导航栏 - 固定位置 -->
 	<header class="top-nav fixed-header">
 		<div class="nav-container">
@@ -53,33 +53,35 @@
 					<div class="logo-glow"></div>
 				</div>
 			</div>
-			
+
 			<!-- 右上角控制按钮 - 优化样式 -->
 			<div class="nav-controls modern-controls">
 				<!-- 语言切换按钮 -->
 				<div class="language-switch">
-					<button id="lang-toggle" class="nav-btn modern-btn lang-btn" onclick="toggleLanguage()" title="切换语言 / Switch Language">
+					<button id="lang-toggle" class="nav-btn modern-btn lang-btn" onclick="toggleLanguage()"
+						title="切换语言 / Switch Language">
 						<span id="lang-text">EN</span>
 					</button>
 				</div>
-				
+
 				<!-- 背景切换按钮 -->
 				<div class="change-bg">
-					<button id="bg-toggle" class="nav-btn modern-btn change-bg-btn" onclick="changeRandomBackground()" 
-					data-zh-title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景" 
-					data-en-title="Change Background (Ctrl+B)\nEach device/window sees its own random background" 
-					title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景">
+					<button id="bg-toggle" class="nav-btn modern-btn change-bg-btn" onclick="changeRandomBackground()"
+						data-zh-title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景"
+						data-en-title="Change Background (Ctrl+B)\nEach device/window sees its own random background"
+						title="更换背景 (Ctrl+B)\n不同设备/窗口会看到不同随机背景">
 						<span data-zh="🎨 更换背景(Ctrl+B)" data-en="🎨 Background(Ctrl+B)">🎨 更换背景(Ctrl+B)</span>
 					</button>
 				</div>
 			</div>
 		</div>
 	</header>
-	
+
 	<!-- 第一屏：标语屏幕 -->
 	<section class="section screen-section hero-screen" id="hero-section">
 		<div class="typing-container">
-			<span class="typing-text" data-zh="记忆塑造灵魂，灵魂影响记忆！" data-en="Memory shapes the soul, the soul influences memory!"></span>
+			<span class="typing-text" data-zh="记忆塑造灵魂，灵魂影响记忆！"
+				data-en="Memory shapes the soul, the soul influences memory!"></span>
 		</div>
 		<div class="scroll-indicator" id="scroll-indicator">
 			<span class="scroll-text" data-zh="向下滚动探索" data-en="Scroll down to explore"></span>
@@ -96,7 +98,7 @@
 	<script src="./js/blur-transition.js"></script>
 	<script src="./js/background.js" defer></script>
 	<script src="./js/readme.js" defer></script>
-    <script src="./js/local-markdown.js" defer></script>
+	<script src="./js/local-markdown.js" defer></script>
 	<script src="./js/servers.js" defer></script>
 	<script src="./js/notifications.js" defer></script>
 
@@ -105,7 +107,7 @@
 
 	<script>
 		// 页面加载完成后初始化打字效果和系统颜色
-		document.addEventListener('DOMContentLoaded', function() {
+		document.addEventListener('DOMContentLoaded', function () {
 			// 初始化页面效果 - 语言初始化已在ui.js的load事件中处理
 			if (window.initPageEffects) {
 				window.initPageEffects();
@@ -116,7 +118,7 @@
 	<section class="section screen-section blank-screen" id="blank-section">
 		<!-- 空白屏幕，仅包含背景和导航 -->
 	</section>
-	
+
 	<!-- 第三屏：项目列表屏幕 -->
 	<section class="section screen-section projects-screen" id="projects-section">
 		<div class="section-header">
@@ -125,60 +127,88 @@
 		<div class="projects-container">
 			<article class="project-card">
 				<h3 data-zh="影视" data-en="Film(TV)">影视</h3>
-				<p><span data-zh="MoonTV(主站)" data-en="MoonTV(Main)">MoonTV(主站)</span> <span id="moon-primary-status">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></p>
-				<p><span data-zh="MoonTV" data-en="MoonTV">MoonTV</span> <span id="moontv-status">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></p>
+				<p><span data-zh="MoonTV(主站)" data-en="MoonTV(Main)">MoonTV(主站)</span> <span id="moon-primary-status">🔄
+						<span data-zh="检测中..." data-en="Checking...">检测中...</span></span></p>
+				<p><span data-zh="MoonTV" data-en="MoonTV">MoonTV</span> <span id="moontv-status">🔄 <span
+							data-zh="检测中..." data-en="Checking...">检测中...</span></span></p>
 				<p data-zh="免费影视资源站点" data-en="Free Film Resources">免费影视资源站点</p>
 				<p data-zh="开源项目" data-en="Open Source Projects">开源项目</p>
 				<p data-zh="自带跳广告" data-en="Built-in Ad Skipper">自带跳广告</p>
-				<button class="btn modern-btn" onclick="window.open('https://moon.146019.xyz', '_blank')" data-zh="前往MoonTV" data-en="Go to MoonTV">前往MoonTV</button>
-				<button class="btn modern-btn" onclick="window.open('https://moontv.146019.xyz', '_blank')" data-zh="前往MoonTV(备用)" data-en="Go to MoonTV(Backup)">前往MoonTV(备用)</button>
-				<button class="btn modern-btn" onclick="copyServerAddress('2012520')" data-zh="点击复制访问码" data-en="Click to copy the access code">点击复制访问码</button>
+				<button class="btn modern-btn" onclick="window.open('https://tv.146019.xyz:1125', '_blank')"
+					data-zh="前往MoonTV" data-en="Go to MoonTV">前往MoonTV</button>
+				<button class="btn modern-btn" onclick="window.open('https://moon-wk.146019.xyz', '_blank')"
+					data-zh="前往MoonTV(备用)" data-en="Go to MoonTV(Backup)">前往MoonTV(备用)</button>
+				<button class="btn modern-btn" onclick="copyServerAddress('2012520')" data-zh="点击复制访问码"
+					data-en="Click to copy the access code">点击复制访问码</button>
 			</article>
 			<article class="project-card">
 				<h3 data-zh="将 Windows 设备接入智能家居" data-en="Connect Windows Devices to Smart Home">将 Windows 设备接入智能家居</h3>
-				<p data-zh="通过小爱同学、天猫精灵等智能家具设备" data-en="Via XiaoAi, Tmall Genie and other smart home devices">通过小爱同学、天猫精灵等智能家具设备</p>
+				<p data-zh="通过小爱同学、天猫精灵等智能家具设备" data-en="Via XiaoAi, Tmall Genie and other smart home devices">
+					通过小爱同学、天猫精灵等智能家具设备</p>
 				<p data-zh="实现对 Windows 电脑的远程控制" data-en="Remote control of Windows computers">实现对 Windows 电脑的远程控制</p>
-				<p data-zh="包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能" data-en="Including shutdown, lock, launch apps/scripts, service management, display brightness, volume control">包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能</p>
-				<p data-zh="适合有远程自动化需求的用户。" data-en="Suitable for users with remote automation needs.">适合有远程自动化需求的用户。</p>
-				<button class="btn modern-btn" onclick="window.open('https://github.com/chen6019/Remote-Controls', '_blank')" data-zh="前往项目" data-en="Go to Project">前往项目</button>
+				<p data-zh="包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能"
+					data-en="Including shutdown, lock, launch apps/scripts, service management, display brightness, volume control">
+					包括关机、锁定、启动自定义应用/脚本、服务管理、调节显示器亮度、音量等功能</p>
+				<p data-zh="适合有远程自动化需求的用户。" data-en="Suitable for users with remote automation needs.">适合有远程自动化需求的用户。
+				</p>
+				<button class="btn modern-btn"
+					onclick="window.open('https://github.com/chen6019/Remote-Controls', '_blank')" data-zh="前往项目"
+					data-en="Go to Project">前往项目</button>
 			</article>
 			<article class="project-card">
-				<h3><span data-zh="飞牛影视" data-en="FeiNiu Media">飞牛影视</span> <span id="fnos-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h3>
+				<h3><span data-zh="飞牛影视" data-en="FeiNiu Media">飞牛影视</span> <span id="fnos-status"
+						style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..."
+							data-en="Checking...">检测中...</span></span></h3>
 				<p data-zh="我的个人影视库" data-en="My personal movie and TV library">我的个人影视库</p>
 				<p data-zh="游客账号：tlbx" data-en="Guest account: tlbx">游客账号：TLBX</p>
-				<p data-zh="有我自己下载剪辑的" data-en="I downloaded and edited it myself.">有我自己下载剪辑的</p>
+				<p data-zh="有我自己下载剪辑的" data-en="I downloaded and edited it myself.">也有我自己下载剪辑的</p>
 				<p data-zh="服务器带宽有限" data-en="Server bandwidth is limited.">服务器带宽有限</p>
 				<p data-zh="有手机客户端" data-en="Mobile app available">有手机客户端</p>
 				<p data-zh="支持下载到本地离线播放" data-en="supports offline download">支持下载到本地离线播放</p>
-				<button class="btn modern-btn" onclick="window.open('https://fn.146019.xyz/v', '_blank')" data-zh="前往影视库" data-en="Go to Media Library">前往影视库</button>
-				<button class="btn modern-btn" onclick="copyServerAddress('20120224')" data-zh="复制密码" data-en="Copy Password">复制密码</button>
+				<button class="btn modern-btn" onclick="window.open('https://ys.146019.xyz:1125', '_blank')"
+					data-zh="前往影视库" data-en="Go to Media Library">前往影视库</button>
+				<button class="btn modern-btn" onclick="window.open('https://fn-tu.2012520.xyz', '_blank')"
+					data-zh="前往影视库(备用)" data-en="Go to Media Library(Spare)">前往影视库(备用)</button>
+				<button class="btn modern-btn" onclick="copyServerAddress('20120224')" data-zh="复制密码"
+					data-en="Copy Password">复制密码</button>
 			</article>
 			<article class="project-card">
-				<h3><span data-zh="Openlist" data-en="Openlist">Openlist</span> <span id="openlist-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h3>
+				<h3><span data-zh="Openlist" data-en="Openlist">Openlist</span> <span id="openlist-status"
+						style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..."
+							data-en="Checking...">检测中...</span></span></h3>
 				<p data-zh="Openlist网盘" data-en="Openlist Cloud Storage">Openlist网盘</p>
 				<p data-zh="仅支持网页使用" data-en="Web-only access">仅支持网页使用</p>
 				<p data-zh="影视、应用、游戏等资源" data-en="Movies, apps, games and other resources">影视、应用、游戏等资源</p>
 				<!-- <p data-zh="默认可在共享目录上传文件" data-en="Upload files to shared directory by default">默认可在共享目录上传文件</p> -->
-				<button class="btn modern-btn" onclick="window.open('https://openlist.146019.xyz', '_blank')" data-zh="前往Openlist" data-en="Go to Openlist">前往Openlist</button>
-				<button class="btn modern-btn" onclick="window.open('https://openlist.2012521.xyz', '_blank')" data-zh="备用链接" data-en="Backup Link">备用链接</button>
+				<button class="btn modern-btn" onclick="window.open('', '_blank')" data-zh="前往Openlist"
+					data-en="Go to Openlist">前往Openlist</button>
+				<button class="btn modern-btn" onclick="window.open('', '_blank')" data-zh="备用链接"
+					data-en="Backup Link">备用链接</button>
 			</article>
 			<article class="project-card">
 				<h3 data-zh="关于小说" data-en="About My Novel">关于小说</h3>
 				<p data-zh="这是我写的一部小说。" data-en="This is a novel I'm writing.">这是我写的一部小说。</p>
 				<p data-zh="目前仍在撰写大纲。" data-en="Currently still working on the outline.">目前仍在撰写大纲。</p>
 				<p data-zh="实际上，这也是我的幻想。" data-en="Actually, this is also my fantasy.">实际上，这也是我的幻想。</p>
-				<button class="btn modern-btn" onclick="window.open('https://github.com/chen6019/My.novel.ysy', '_blank')" data-zh="前往Github(未公开)" data-en="Go to Github (Unpublished)">前往Github(未公开)</button>
+				<button class="btn modern-btn"
+					onclick="window.open('https://github.com/chen6019/My.novel.ysy', '_blank')" data-zh="前往Github(未公开)"
+					data-en="Go to Github (Unpublished)">前往Github(未公开)</button>
 			</article>
 			<article class="project-card">
-				<h3><span data-zh="2406寝室相册" data-en="2406 Dorm Album">2406寝室相册</span> <span id="photo-status" style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..." data-en="Checking...">检测中...</span></span></h3>
+				<h3><span data-zh="2406寝室相册" data-en="2406 Dorm Album">2406寝室相册</span> <span id="photo-status"
+						style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..."
+							data-en="Checking...">检测中...</span></span></h3>
 				<p data-zh="2406专用寝室用相册" data-en="Exclusive photo album for dorm 2406">2406专用寝室用相册</p>
 				<p data-zh="账号密码在寝室群公告" data-en="Account info in dorm group announcement">账号密码在寝室群公告</p>
-				<button class="btn modern-btn" onclick="window.open('https://photo.146019.xyz/', '_blank')" data-zh="前往相册" data-en="Go to Album">前往相册</button>
-				<button class="btn modern-btn" onclick="window.open('https://immich.app/docs/features/mobile-app/', '_blank')" data-zh="安装相册" data-en="Install Album">安装相册</button>
+				<button class="btn modern-btn" onclick="window.open('', '_blank')" data-zh="前往相册"
+					data-en="Go to Album">前往相册</button>
+				<button class="btn modern-btn"
+					onclick="window.open('https://immich.app/docs/features/mobile-app/', '_blank')" data-zh="安装相册"
+					data-en="Install Album">安装相册</button>
 			</article>
 		</div>
 	</section>
-	
+
 	<!-- 第四屏：README屏幕 -->
 	<section class="section screen-section readme-screen" id="readme-section">
 		<div class="section-header">
@@ -201,7 +231,7 @@
 	</div>
 
 	<footer>
-	<!-- 可在此放置其它底部信息 -->
+		<!-- 可在此放置其它底部信息 -->
 	</footer>
 </body>
 
