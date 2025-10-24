@@ -53,12 +53,12 @@ function hideLoader() {
                 if (window.showScrollNotification) window.showScrollNotification();
                 // 移除重复的服务器检查调用
             }, 100);
-            
+
             // 在加载图隐藏后1秒显示悬浮窗
             setTimeout(() => {
                 showSuspensionWindow();
             }, 1000);
-            
+
             (window.logger || console).info("[Loader] Loader hidden");
         },
         { once: true }
@@ -77,7 +77,7 @@ window.setLoadingState = setLoadingState;
 window.checkCanHideLoader = checkCanHideLoader;
 (function initLoadingImage() {
     // 使用新的目录结构：bqb/AM（替换原：/res/loading）
-    const RANDOM_ENDPOINT = "https://rad.ysy.146019.xyz/bqb/AM";
+    const RANDOM_ENDPOINT = "https://eo-rad.ysy.146019.xyz/bqb/AM";
     const imgEl = document.getElementById("loading-gif");
     if (!imgEl) return;
 
@@ -149,11 +149,11 @@ function showSuspensionWindow() {
     if (suspensionWindow) {
         suspensionWindow.classList.add('show');
         (window.logger || console).info('[Loader] 悬浮窗已显示');
-        
+
         // 添加关闭按钮事件监听
         const closeButton = document.getElementById('suspension-close');
         if (closeButton) {
-            closeButton.addEventListener('click', function() {
+            closeButton.addEventListener('click', function () {
                 suspensionWindow.classList.remove('show');
                 (window.logger || console).info('[Loader] 悬浮窗已关闭');
             });

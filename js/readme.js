@@ -1,10 +1,10 @@
 // README 加载与骨架屏
 // 动态加载 marked.js（原本内联在 index.html）
-(function() {
+(function () {
     try {
         var markedScript = document.createElement('script');
         markedScript.src = 'https://cdn.jsdelivr.net/npm/marked@12.0.0/lib/marked.umd.js';
-        markedScript.onload = function() {
+        markedScript.onload = function () {
             window.markedLoaded = true;
             // 配置 marked.js
             if (window.marked) {
@@ -21,7 +21,7 @@
             }
             (window.logger || console).debug('[Markdown] marked.js 加载成功并已配置');
         };
-        markedScript.onerror = function() {
+        markedScript.onerror = function () {
             window.markedLoaded = false;
             window.markedLoadFailed = true;
             (window.logger || console).warn('[Markdown] marked.js 加载失败，将使用本地解析器');
@@ -29,7 +29,7 @@
         document.head.appendChild(markedScript);
 
         // 6秒超时检测
-        setTimeout(function() {
+        setTimeout(function () {
             if (!window.markedLoaded && !window.markedLoadFailed) {
                 window.markedLoadFailed = true;
                 (window.logger || console).warn('[Markdown] marked.js 加载超时（6秒），将使用本地解析器');
@@ -246,8 +246,8 @@ function renderMarkdown(markdownText) {
                                     });
                             }
                         }
-                    } catch (_) {}
-                } catch (_) {}
+                    } catch (_) { }
+                } catch (_) { }
             });
         }
     } catch (error) {
@@ -256,16 +256,16 @@ function renderMarkdown(markdownText) {
         if (markdownContent) {
             const zh = {
                 title: "📝 Markdown渲染失败",
-                    msg: window.markedLoaded
-                        ? "请检查 marked.js 是否正确加载"
-                        : "请检查本地解析器是否正确加载",
+                msg: window.markedLoaded
+                    ? "请检查 marked.js 是否正确加载"
+                    : "请检查本地解析器是否正确加载",
                 retry: "🔄 重新加载页面",
             };
             const en = {
                 title: "📝 Markdown render failed",
-                    msg: window.markedLoaded
-                        ? "Please check if marked.js is loaded correctly"
-                        : "Please check if the local parser is loaded correctly",
+                msg: window.markedLoaded
+                    ? "Please check if marked.js is loaded correctly"
+                    : "Please check if the local parser is loaded correctly",
                 retry: "🔄 Reload page",
             };
             const t = window.currentLanguage === "en" ? en : zh;
@@ -304,19 +304,19 @@ function replaceLocalImagePaths(markdownText) {
     // 匹配格式：src="bqb_xxx.gif" 或 src='bqb_xxx.gif'
     let processedText = markdownText.replace(
         /src=["']([^"']*bqb_\d+\.gif)["']/g,
-        'src="https://ysy.146019.xyz/bqb/AM/hp/$1"'
+        'src="https://eo.ysy.146019.xyz/bqb/AM/hp/$1"'
     );
 
     // 也处理可能的webp格式
     processedText = processedText.replace(
         /src=["']([^"']*bqb_\d+\.webp)["']/g,
-        'src="https://ysy.146019.xyz/bqb/AM/hp/$1"'
+        'src="https://eo.ysy.146019.xyz/bqb/AM/hp/$1"'
     );
 
     // 处理loading图片
     processedText = processedText.replace(
         /src=["']([^"']*loading_\d+\.(?:gif|webp))["']/g,
-        'src="https://ysy.146019.xyz/bqb/AM/$1"'
+        'src="https://eo.ysy.146019.xyz/bqb/AM/$1"'
     );
 
     (window.logger || console).debug("[Markdown] 图片路径替换完成");

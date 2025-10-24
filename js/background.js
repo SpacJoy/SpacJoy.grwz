@@ -1,5 +1,5 @@
 // 三张预取 + 多层淡入淡出实现
-const RANDOM_API_BASE = "https://rad.ysy.146019.xyz/";
+const RANDOM_API_BASE = "https://eo-rad.ysy.146019.xyz/";
 function mapDir(layout) {
     // 新的目录结构：bz下按设备类型分类，不再区分深色模式
     if (layout === "desktop") return "bz/hp"; // 横屏
@@ -249,7 +249,7 @@ function _prefetchOne() {
             }
         }
         prefetchingNow = false;
-        
+
         // 当预取队列达到目标大小时显示通知并记录日志
         const loadedCount = queue.filter((e) => e.loaded).length;
         if (loadedCount >= PREFETCH_TARGET) {
@@ -257,7 +257,7 @@ function _prefetchOne() {
             (window.logger || console).info(
                 "[Background] 预加载成功完成: 已预加载 ", loadedCount, " 张背景图"
             );
-            
+
             // 显示通知
             if (window.showBackgroundPrefetchNotification) {
                 setTimeout(() => {
@@ -265,7 +265,7 @@ function _prefetchOne() {
                 }, 500);
             }
         }
-        
+
         // 完成一张后尝试预取下一张
         setTimeout(() => prefetchNextBackground(), 100);
     };
