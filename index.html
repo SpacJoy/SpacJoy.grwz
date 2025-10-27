@@ -101,6 +101,7 @@
 	<script src="./js/local-markdown.js" defer></script>
 	<script src="./js/servers.js" defer></script>
 	<script src="./js/notifications.js" defer></script>
+	<script src="./js/random-meme.js" defer></script>
 
 	<!-- 打字效果和系统颜色响应 -->
 	<script src="./js/typing-effect.js" defer></script>
@@ -185,6 +186,15 @@
 					data-en="Copy Password"></button>
 			</article>
 			<article class="project-card">
+				<h3><span data-zh="随机表情包" data-en="Random Stickers"></span></h3>
+				<div class="project-image-wrapper">
+					<img id="photo-random-image" src="https://eo-rad.ysy.146019.xyz/bqb/" alt="2406 寝室相册"
+						class="project-image" style="width: 100%; height: auto; border-radius: 12px;">
+				</div>
+				<button class="btn modern-btn" onclick="refreshRandomPhoto()" data-zh="刷新图片"
+					data-en="Refresh Image"></button>
+			</article>
+			<article class="project-card">
 				<h3 data-zh="关于小说" data-en="About My Novel"></h3>
 				<p data-zh="这是我写的一部小说。" data-en="This is a novel that I wrote."></p>
 				<p data-zh="目前仍在撰写大纲，可能还需要好几年"
@@ -194,19 +204,6 @@
 					data-zh="前往文章(未公开)" data-en="Go to Github (Unpublished)"></button>
 				<button class="btn modern-btn" onclick="window.open('https://home-tu.146019.xyz', '_blank')"
 					data-zh="前往文章(备用)" data-en="Go to article (backup)"></button>
-			</article>
-			<article class="project-card">
-				<h3><span data-zh="2406 寝室相册" data-en="Dormitory 2406 Photo Album"></span> <span id="photo-status"
-						style="font-size: 0.8em; margin-left: 10px;">🔄 <span data-zh="检测中..."
-							data-en="Checking..."></span></span></h3>
-				<p data-zh="因不可抗因素：硬盘损坏、数据丢失" data-en="Due to force majeure: hard drive damage, data loss"></p>
-				<p data-zh="2406专用寝室用相册" data-en="Exclusive photo album for dorm 2406"></p>
-				<p data-zh="账号密码在寝室群公告" data-en="Account info in dorm group announcement"></p>
-				<button class="btn modern-btn" onclick="window.open('', '_blank')" data-zh="前往相册"
-					data-en="Go to Album"></button>
-				<button class="btn modern-btn"
-					onclick="window.open('https://immich.app/docs/features/mobile-app/', '_blank')" data-zh="安装相册"
-					data-en="Install Album"></button>
 			</article>
 		</div>
 	</section>

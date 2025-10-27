@@ -534,7 +534,6 @@ async function checkAllServerStatus() {
             url: "https://home.146019.xyz:1125",
             name: "Blog",
         },
-        { id: "photo", url: "https://photo.146019.xyz", name: "相册服务" },
         { id: "fnos", url: "https://ys.146019.xyz:1125", name: "飞牛服务" },
         { id: "moontv", url: "https://moon-nf.netlify.app", name: "MoonTV" },
         {

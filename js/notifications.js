@@ -6,9 +6,9 @@ function showBackgroundPrefetchNotification() {
     hideCurrentNotification(); // 覆盖前一条通知
     const notification = document.createElement("div");
     notification.className = "copy-notification success";
-    notification.innerHTML = 
-        window.currentLanguage === "zh" 
-            ? "✨ 背景图预加载完成" 
+    notification.innerHTML =
+        window.currentLanguage === "zh"
+            ? "✨ 背景图预加载完成"
             : "✨ Background image preloaded";
     document.body.appendChild(notification);
     currentNotification = notification;
@@ -74,7 +74,7 @@ function hideCopyNotification(notification) {
         try {
             if (notification && notification.parentNode)
                 notification.parentNode.removeChild(notification);
-        } catch (e) {}
+        } catch (e) { }
     }, 500);
 }
 
@@ -179,7 +179,7 @@ function fallbackCopyTextToClipboard(text) {
                 navigator.clipboard.writeText(text);
                 return true;
             }
-        } catch (e2) {}
+        } catch (e2) { }
         return false;
     }
 }
@@ -260,3 +260,50 @@ window.fallbackCopyTextToClipboard = fallbackCopyTextToClipboard;
 window.changeRandomBackground = changeRandomBackground;
 window.showScrollNotification = showScrollNotification;
 window.showNoPrefetchNotification = showNoPrefetchNotification;
+
+function showStickerPrefetchNotification() {
+    const n = document.createElement("div");
+    n.className = "copy-notification success";
+    n.innerHTML =
+        window.currentLanguage === "zh"
+            ? "✨ 表情包预加载完成"
+            : "✨ Sticker prefetch ready";
+    mountNotification(n, false);
+    setTimeout(() => {
+        hideCopyNotification(n);
+        if (currentNotification === n) currentNotification = null;
+    }, 2200);
+}
+
+function showStickerChangeNotification() {
+    const n = document.createElement("div");
+    n.className = "copy-notification success";
+    n.innerHTML =
+        window.currentLanguage === "zh"
+            ? "🖼️ 表情包已刷新"
+            : "🖼️ Sticker refreshed";
+    mountNotification(n, false);
+    setTimeout(() => {
+        hideCopyNotification(n);
+        if (currentNotification === n) currentNotification = null;
+    }, 1800);
+}
+
+function showStickerPrefetchingNotification() {
+    const n = document.createElement("div");
+    n.className = "copy-notification no-prefetch-tip";
+    n.style.background = "rgba(255, 193, 7, 0.9)";
+    n.innerHTML =
+        window.currentLanguage === "zh"
+            ? "⏳ 表情包加载中，请稍候"
+            : "⏳ Loading stickers, please wait";
+    mountNotification(n, false);
+    setTimeout(() => {
+        hideCopyNotification(n);
+        if (currentNotification === n) currentNotification = null;
+    }, 2000);
+}
+
+window.showStickerPrefetchNotification = showStickerPrefetchNotification;
+window.showStickerChangeNotification = showStickerChangeNotification;
+window.showStickerPrefetchingNotification = showStickerPrefetchingNotification;
