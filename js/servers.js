@@ -536,7 +536,7 @@ async function checkAllServerStatus() {
         },
         { id: "photo", url: "https://photo.146019.xyz", name: "相册服务" },
         { id: "fnos", url: "https://ys.146019.xyz:1125", name: "飞牛服务" },
-        { id: "moontv", url: "https://moon-wk.146019.xyz", name: "MoonTV" },
+        { id: "moontv", url: "https://moon-nf.netlify.app", name: "MoonTV" },
         {
             id: "moon-primary",
             url: "https://tv.146019.xyz:1125",
