@@ -304,6 +304,38 @@ function showStickerPrefetchingNotification() {
     }, 2000);
 }
 
+function showStickerRefreshingNotification() {
+    const n = document.createElement("div");
+    n.className = "copy-notification success";
+    n.style.background = "rgba(33, 150, 243, 0.9)";
+    n.innerHTML =
+        window.currentLanguage === "zh"
+            ? "🔄 表情包刷新中..."
+            : "🔄 Refreshing sticker...";
+    mountNotification(n, false);
+    setTimeout(() => {
+        hideCopyNotification(n);
+        if (currentNotification === n) currentNotification = null;
+    }, 1600);
+}
+
+function showStickerStillLoadingNotification() {
+    const n = document.createElement("div");
+    n.className = "copy-notification no-prefetch-tip";
+    n.style.background = "rgba(255, 193, 7, 0.9)";
+    n.innerHTML =
+        window.currentLanguage === "zh"
+            ? "⏳ 正在加载上一张，请稍候"
+            : "⏳ Previous refresh still loading";
+    mountNotification(n, false);
+    setTimeout(() => {
+        hideCopyNotification(n);
+        if (currentNotification === n) currentNotification = null;
+    }, 2000);
+}
+
 window.showStickerPrefetchNotification = showStickerPrefetchNotification;
 window.showStickerChangeNotification = showStickerChangeNotification;
 window.showStickerPrefetchingNotification = showStickerPrefetchingNotification;
+window.showStickerRefreshingNotification = showStickerRefreshingNotification;
+window.showStickerStillLoadingNotification = showStickerStillLoadingNotification;

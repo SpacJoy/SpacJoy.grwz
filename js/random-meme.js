@@ -12,6 +12,7 @@
     let pendingStickerLoadHandler = null;
     let pendingStickerErrorHandler = null;
     let directLoadPending = false;
+    let refreshInProgress = false;
 
     function buildStickerUrl() {
         return `${STICKER_ENDPOINT}${STICKER_ENDPOINT.includes('?') ? '&' : '?'}t=${Date.now()}_${Math.random()
@@ -127,7 +128,10 @@
 
     function applyPrefetchedSticker() {
         const img = ensureImageElement();
-        if (!img) return;
+        if (!img) {
+            refreshInProgress = false;
+            return;
+        }
 
         if (stickerQueue.length === 0) {
             prefetchedNotified = false;
@@ -141,6 +145,7 @@
             directLoadPending = true;
             setImageSourceWithCallback(img, buildStickerUrl(), (success) => {
                 directLoadPending = false;
+                refreshInProgress = false;
                 if (success) {
                     if (window.showStickerChangeNotification) {
                         window.showStickerChangeNotification();
@@ -155,6 +160,7 @@
         const url = stickerQueue.shift();
         prefetchedNotified = false;
         setImageSourceWithCallback(img, url, (success) => {
+            refreshInProgress = false;
             if (success && window.showStickerChangeNotification) {
                 window.showStickerChangeNotification();
             } else if (!success && window.showStickerPrefetchingNotification) {
@@ -183,6 +189,16 @@
     }
 
     window.refreshRandomPhoto = function refreshRandomPhoto() {
+        if (refreshInProgress) {
+            if (window.showStickerStillLoadingNotification) {
+                window.showStickerStillLoadingNotification();
+            }
+            return;
+        }
+        if (window.showStickerRefreshingNotification) {
+            window.showStickerRefreshingNotification();
+        }
+        refreshInProgress = true;
         applyPrefetchedSticker();
     };
 
