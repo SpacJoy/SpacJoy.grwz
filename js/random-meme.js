@@ -1,210 +1,205 @@
 (function () {
     const STICKER_ENDPOINT = "https://eo-rad.ysy.146019.xyz/bqb/";
     const PREFETCH_TARGET = 5;
-    const MAX_INFLIGHT = 2;
+    const MAX_INFLIGHT = 3;
 
     let stickerQueue = [];
     let inflight = 0;
-    let initialized = false;
     let prefetchedNotified = false;
-    let lastPrefetchingNotice = 0;
-    let imageEl = null;
-    let pendingStickerLoadHandler = null;
-    let pendingStickerErrorHandler = null;
-    let directLoadPending = false;
-    let refreshInProgress = false;
+    let container = null;
+    let activeLayer = null;
 
     function buildStickerUrl() {
-        return `${STICKER_ENDPOINT}${STICKER_ENDPOINT.includes('?') ? '&' : '?'}t=${Date.now()}_${Math.random()
+        return `${STICKER_ENDPOINT}${STICKER_ENDPOINT.includes("?") ? "&" : "?"}t=${Date.now()}_${Math.random()
             .toString(36)
             .slice(2)}`;
     }
 
-    function ensureImageElement() {
-        if (!imageEl) {
-            imageEl = document.getElementById("photo-random-image");
+    function ensureContainer() {
+        if (container) return container;
+        container = document.getElementById("photo-random-container");
+        if (!container) {
+            container = document.querySelector(".project-image-wrapper");
+            if (container) {
+                container.id = "photo-random-container";
+            }
         }
-        return imageEl;
+        if (container && !container.classList.contains("sticker-layer-container")) {
+            container.classList.add("sticker-layer-container");
+        }
+        return container;
+    }
+
+    function createLayerElement() {
+        const img = document.createElement("img");
+        img.className = "sticker-layer project-image";
+        img.decoding = "async";
+        img.loading = "eager";
+        img.alt = "Random sticker";
+        return img;
     }
 
     function notifyPrefetchReadyIfNeeded() {
-        if (stickerQueue.length >= PREFETCH_TARGET && !prefetchedNotified) {
+        if (!prefetchedNotified && stickerQueue.length >= PREFETCH_TARGET) {
             prefetchedNotified = true;
             if (window.showStickerPrefetchNotification) {
-                setTimeout(() => window.showStickerPrefetchNotification(), 200);
+                setTimeout(() => window.showStickerPrefetchNotification(), 100);
             }
         }
     }
 
     function ensurePrefetchQueue() {
-        const desired = PREFETCH_TARGET;
-        while (stickerQueue.length + inflight < desired) {
-            if (inflight >= MAX_INFLIGHT) {
-                break;
-            }
+        while (stickerQueue.length + inflight < PREFETCH_TARGET) {
+            if (inflight >= MAX_INFLIGHT) return;
             prefetchSticker();
         }
     }
 
     function prefetchSticker() {
-        if (inflight >= MAX_INFLIGHT) {
-            return;
-        }
         inflight++;
         const url = buildStickerUrl();
-        const img = new Image();
-        img.decoding = "async";
-        img.loading = "eager";
-        img.onload = () => {
-            stickerQueue.push(url);
+        const layer = createLayerElement();
+
+        const cleanup = () => {
+            layer.onload = null;
+            layer.onerror = null;
+        };
+
+        layer.onload = () => {
+            cleanup();
             inflight--;
+            stickerQueue.push({ url, layer });
             notifyPrefetchReadyIfNeeded();
             ensurePrefetchQueue();
         };
-        img.onerror = () => {
+
+        layer.onerror = () => {
+            cleanup();
             inflight--;
             ensurePrefetchQueue();
         };
-        img.src = url;
+
+        layer.src = url;
     }
 
-    function showPrefetchingNotice() {
-        const now = Date.now();
-        if (now - lastPrefetchingNotice < 1500) return;
-        lastPrefetchingNotice = now;
-        if (window.showStickerPrefetchingNotification) {
-            window.showStickerPrefetchingNotification();
+    function activateLayer(layer) {
+        const host = ensureContainer();
+        if (!host || !layer) return false;
+
+        const previous = activeLayer;
+        if (!previous) {
+            layer.classList.add("active");
+            layer.style.position = "relative";
+            host.innerHTML = "";
+            host.appendChild(layer);
+            activeLayer = layer;
+            return true;
         }
+
+        layer.style.position = "absolute";
+        layer.style.inset = "0";
+        layer.style.opacity = "0";
+        host.appendChild(layer);
+
+        requestAnimationFrame(() => {
+            layer.classList.add("active");
+            layer.style.opacity = "1";
+            previous.classList.remove("active");
+            previous.classList.add("fading");
+            previous.style.opacity = "0";
+        });
+
+        const teardown = () => {
+            previous.removeEventListener("transitionend", teardown);
+            if (previous.parentNode) previous.parentNode.removeChild(previous);
+            layer.style.position = "relative";
+            layer.style.inset = "";
+        };
+
+        previous.addEventListener("transitionend", teardown, { once: true });
+
+        activeLayer = layer;
+        return true;
     }
 
-    function setImageSourceWithCallback(img, url, onComplete) {
-        if (!img) return;
-
-        if (pendingStickerLoadHandler) {
-            img.removeEventListener("load", pendingStickerLoadHandler);
-            pendingStickerLoadHandler = null;
-        }
-        if (pendingStickerErrorHandler) {
-            img.removeEventListener("error", pendingStickerErrorHandler);
-            pendingStickerErrorHandler = null;
-        }
-
-        const cleanup = () => {
-            if (pendingStickerLoadHandler) {
-                img.removeEventListener("load", pendingStickerLoadHandler);
-                pendingStickerLoadHandler = null;
-            }
-            if (pendingStickerErrorHandler) {
-                img.removeEventListener("error", pendingStickerErrorHandler);
-                pendingStickerErrorHandler = null;
-            }
-        };
-
-        const handler = () => {
-            cleanup();
-            if (typeof onComplete === "function") {
-                onComplete(true);
-            }
-        };
-
-        const errorHandler = () => {
-            cleanup();
-            if (typeof onComplete === "function") {
-                onComplete(false);
-            }
-        };
-
-        if (img.complete && img.naturalWidth > 0 && img.src === url) {
-            handler();
-            return;
-        }
-
-        pendingStickerLoadHandler = handler;
-        pendingStickerErrorHandler = errorHandler;
-        img.addEventListener("load", handler, { once: true });
-        img.addEventListener("error", errorHandler, { once: true });
-        img.src = url;
-    }
-
-    function applyPrefetchedSticker() {
-        const img = ensureImageElement();
-        if (!img) {
-            refreshInProgress = false;
-            return;
-        }
-
+    function crossfadeToPrefetchedSticker() {
         if (stickerQueue.length === 0) {
-            prefetchedNotified = false;
             ensurePrefetchQueue();
-            showPrefetchingNotice();
-
-            if (directLoadPending) {
-                return;
-            }
-
-            directLoadPending = true;
-            setImageSourceWithCallback(img, buildStickerUrl(), (success) => {
-                directLoadPending = false;
-                refreshInProgress = false;
-                if (success) {
-                    if (window.showStickerChangeNotification) {
-                        window.showStickerChangeNotification();
-                    }
-                } else if (window.showStickerPrefetchingNotification) {
-                    window.showStickerPrefetchingNotification();
-                }
-            });
-            return;
-        }
-
-        const url = stickerQueue.shift();
-        prefetchedNotified = false;
-        setImageSourceWithCallback(img, url, (success) => {
-            refreshInProgress = false;
-            if (success && window.showStickerChangeNotification) {
-                window.showStickerChangeNotification();
-            } else if (!success && window.showStickerPrefetchingNotification) {
+            if (window.showStickerPrefetchingNotification) {
                 window.showStickerPrefetchingNotification();
             }
-        });
+            return false;
+        }
+
+        const entry = stickerQueue.shift();
+        prefetchedNotified = false;
+        activateLayer(entry.layer);
         ensurePrefetchQueue();
+        return true;
     }
 
-    function initRandomSticker() {
-        if (initialized) return;
-        initialized = true;
-        const img = ensureImageElement();
-        if (!img) return;
+    function initializeStickerLayers() {
+        const host = ensureContainer();
+        if (!host) return;
 
-        const startPrefetch = () => {
-            img.removeEventListener("load", startPrefetch);
-            ensurePrefetchQueue();
-        };
+        const existingActive = host.querySelector(".sticker-layer.active");
+        if (existingActive) {
+            activeLayer = existingActive;
+        } else {
+            const existing = host.querySelector(".sticker-layer");
+            if (existing) {
+                existing.classList.add("active");
+                activeLayer = existing;
+            }
+        }
 
-        if (img.complete && img.naturalWidth > 0) {
+        if (!activeLayer) {
+            const initialLayer = createLayerElement();
+            initialLayer.classList.add("active");
+            host.appendChild(initialLayer);
+            activeLayer = initialLayer;
+            initialLayer.onload = () => {
+                initialLayer.onload = null;
+                ensurePrefetchQueue();
+            };
+            initialLayer.onerror = () => {
+                initialLayer.onerror = null;
+                ensurePrefetchQueue();
+            };
+            initialLayer.src = buildStickerUrl();
+        } else if (activeLayer.complete && activeLayer.naturalWidth > 0) {
             ensurePrefetchQueue();
         } else {
-            img.addEventListener("load", startPrefetch);
+            activeLayer.addEventListener(
+                "load",
+                () => {
+                    ensurePrefetchQueue();
+                },
+                { once: true }
+            );
+            activeLayer.addEventListener(
+                "error",
+                () => {
+                    ensurePrefetchQueue();
+                },
+                { once: true }
+            );
         }
     }
 
     window.refreshRandomPhoto = function refreshRandomPhoto() {
-        if (refreshInProgress) {
-            if (window.showStickerStillLoadingNotification) {
-                window.showStickerStillLoadingNotification();
-            }
-            return;
-        }
         if (window.showStickerRefreshingNotification) {
             window.showStickerRefreshingNotification();
         }
-        refreshInProgress = true;
-        applyPrefetchedSticker();
+        const switched = crossfadeToPrefetchedSticker();
+        if (switched && window.showStickerChangeNotification) {
+            setTimeout(() => window.showStickerChangeNotification(), 180);
+        }
     };
 
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initRandomSticker);
+        document.addEventListener("DOMContentLoaded", initializeStickerLayers);
     } else {
-        initRandomSticker();
+        initializeStickerLayers();
     }
 })();
