@@ -140,7 +140,10 @@
 
     function initializeStickerLayers() {
         const host = ensureContainer();
-        if (!host) return;
+        if (!host) {
+            if (window.setLoadingState) window.setLoadingState("stickerLoaded", true); // 容器不存在也标记为完成
+            return;
+        }
 
         const existingActive = host.querySelector(".sticker-layer.active");
         if (existingActive) {
@@ -153,37 +156,42 @@
             }
         }
 
+        const setStickerLoaded = () => {
+            if (window.setLoadingState) window.setLoadingState("stickerLoaded", true);
+            ensurePrefetchQueue();
+        };
+
+        const handleInitialError = () => {
+            // 加载失败，使用加载图作为回退
+            const loadingGif = document.getElementById("loading-gif");
+            if (loadingGif && loadingGif.src) {
+                (window.logger || console).warn("[Sticker] 初始表情包加载失败，使用加载图作为回退");
+                if (activeLayer) {
+                    activeLayer.src = loadingGif.src;
+                } else {
+                    const fallbackLayer = createLayerElement();
+                    fallbackLayer.src = loadingGif.src;
+                    activateLayer(fallbackLayer);
+                }
+            } else {
+                (window.logger || console).error("[Sticker] 初始表情包和加载图都加载失败");
+            }
+            setStickerLoaded();
+        };
+
         if (!activeLayer) {
             const initialLayer = createLayerElement();
             initialLayer.classList.add("active");
             host.appendChild(initialLayer);
             activeLayer = initialLayer;
-            initialLayer.onload = () => {
-                initialLayer.onload = null;
-                ensurePrefetchQueue();
-            };
-            initialLayer.onerror = () => {
-                initialLayer.onerror = null;
-                ensurePrefetchQueue();
-            };
+            initialLayer.onload = setStickerLoaded;
+            initialLayer.onerror = handleInitialError;
             initialLayer.src = buildStickerUrl();
         } else if (activeLayer.complete && activeLayer.naturalWidth > 0) {
-            ensurePrefetchQueue();
+            setStickerLoaded();
         } else {
-            activeLayer.addEventListener(
-                "load",
-                () => {
-                    ensurePrefetchQueue();
-                },
-                { once: true }
-            );
-            activeLayer.addEventListener(
-                "error",
-                () => {
-                    ensurePrefetchQueue();
-                },
-                { once: true }
-            );
+            activeLayer.addEventListener("load", setStickerLoaded, { once: true });
+            activeLayer.addEventListener("error", handleInitialError, { once: true });
         }
     }
 

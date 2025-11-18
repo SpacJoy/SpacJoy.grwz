@@ -1,3 +1,29 @@
+// 本地图片列表
+const localImages = {
+    desktop: ["res/hp.jpg", "res/hp (1).jpg", "res/hp (2).jpg", "res/hp (3).jpg"],
+    mobile: ["res/sp.jpg"],
+    tablet: ["res/hp.jpg", "res/hp (1).jpg", "res/hp (2).jpg", "res/hp (3).jpg"], // 平板使用横屏图片
+};
+
+// 从本地图片列表中随机获取一张背景图
+function getLocalRandomBackground() {
+    try {
+        const layout = detectLayout();
+        const images = localImages[layout];
+        if (!images || images.length === 0) {
+            (window.logger || console).warn("[Background] 当前布局没有可用的本地图片:", layout);
+            return getRandomBackground(); // 回退到API
+        }
+        const randomIndex = Math.floor(Math.random() * images.length);
+        const localUrl = images[randomIndex];
+        (window.logger || console).info("[Background] 使用本地背景图:", localUrl);
+        return localUrl;
+    } catch (e) {
+        (window.logger || console).warn("[Background] 获取本地背景图失败", e);
+        return getRandomBackground(); // 出错时回退到API
+    }
+}
+
 // 三张预取 + 多层淡入淡出实现
 const RANDOM_API_BASE = "https://eo-rad.ysy.146019.xyz/";
 function mapDir(layout) {
@@ -67,10 +93,15 @@ function loadFirstBackground() {
     if (firstBackgroundLoaded) return;
 
     ensureContainer();
-    const url = getRandomBackground();
+    const url = getLocalRandomBackground(); // 优先加载本地图片
     if (!url) return;
 
     (window.logger || console).info("[Background] 开始加载首张背景:", url);
+    loadFirstBackgroundFromUrl(url);
+}
+
+// 辅助函数，用于从给定的URL加载首张背景图
+function loadFirstBackgroundFromUrl(url) {
     const layer = createLayer(url);
     const img = new Image();
     img.decoding = "async";
@@ -87,26 +118,35 @@ function loadFirstBackground() {
             const checkLoaderHidden = () => {
                 if (window.loaderHidden) {
                     // 加载器已隐藏，开始清晰背景
-                    layer.style.filter = "blur(0px)";
+                    if (layer) layer.style.filter = "blur(0px)";
                 } else {
                     // 继续检查
                     setTimeout(checkLoaderHidden, 100);
                 }
             };
             checkLoaderHidden();
+        } else {
+            if (layer) layer.style.filter = "blur(0px)";
         }
     };
     const finalizeFail = () => {
-        (window.logger || console).warn("[Background] 首张背景加载失败");
+        (window.logger || console).warn("[Background] 首张背景加载失败:", url);
         if (layer.parentNode) layer.parentNode.removeChild(layer);
+
+        // 如果是本地图片失败，尝试用API回退
+        if (url.startsWith("res/")) {
+            (window.logger || console).info("[Background] 本地首张背景加载失败，尝试API回退");
+            const apiUrl = getRandomBackground();
+            if (apiUrl) {
+                loadFirstBackgroundFromUrl(apiUrl);
+            }
+        }
     };
     if (window.netUtils && window.netUtils.loadImageWithTimeout) {
         window.netUtils
             .loadImageWithTimeout(img, 8000)
             .then(finalizeSuccess)
-            .catch(() => {
-                finalizeFail();
-            });
+            .catch(finalizeFail);
         img.src = url;
     } else {
         img.onload = finalizeSuccess;
@@ -117,21 +157,6 @@ function loadFirstBackground() {
 
 // 检查是否可以开始预取（需要README和首张背景都完成）
 function checkCanStartPrefetch() {
-    // 检查是否为内网地址，如果是则禁用预加载
-    // const hostname = window.location.hostname;
-    // const isPrivateNetwork = 
-    //     hostname === "localhost" ||
-    //     hostname === "127.0.0.1" ||
-    //     /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
-    //     /^172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
-    //     /^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname);
-
-    // if (isPrivateNetwork) {
-    //     (window.logger || console).info(
-    //         "[Background] 内网环境，禁用背景图预加载"
-    //     );
-    //     return;
-    // }
 
     // 记录当前各状态值以便调试
     (window.logger || console).debug(

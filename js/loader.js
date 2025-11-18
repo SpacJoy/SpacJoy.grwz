@@ -5,6 +5,7 @@ window.loadingStates = {
     firstBackgroundLoaded: false,
     readmeLoaded: false,
     serversChecked: false, // 服务器检查状态，默认false
+    stickerLoaded: false, // 表情包加载状态
 };
 
 // 防止重复调用隐藏逻辑的标志
@@ -13,15 +14,16 @@ let hideLoaderScheduled = false;
 // 检查是否可以隐藏 Loading
 function checkCanHideLoader() {
     const states = window.loadingStates;
-    // 需要首张背景图和README都加载完成
+    // 需要首张背景图、README和表情包都加载完成
     if (
         states.loadingImageReady &&
         states.firstBackgroundLoaded &&
         states.readmeLoaded &&
+        states.stickerLoaded &&
         !hideLoaderScheduled
     ) {
         (window.logger || console).info(
-            "[Loader] 首张背景图和README都已加载完成，0.8秒后隐藏 Loading"
+            "[Loader] 所有初始资源加载完成，0.8秒后隐藏 Loading"
         );
         hideLoaderScheduled = true; // 设置标志防止重复调用
         // 等待0.8秒后隐藏
@@ -112,10 +114,12 @@ window.checkCanHideLoader = checkCanHideLoader;
     };
     imgEl.onerror = () => {
         (window.logger || console).warn(
-            "[Loader] 随机接口加载失败，不再使用本地图片回退，将隐藏加载图。"
+            "[Loader] 随机接口加载失败，将隐藏加载图。"
         );
         // 简单隐藏图片区域，保持 loader 其余逻辑继续
         imgEl.style.display = "none";
+        // 即使加载图失败，也要标记为完成以继续页面加载
+        setLoadingState("loadingImageReady", true);
     };
     applyCommonStyle();
     const loadUrl = RANDOM_ENDPOINT + "?t=" + Date.now();
