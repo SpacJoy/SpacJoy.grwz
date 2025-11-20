@@ -2,7 +2,7 @@
 
 # <div align="center">Hi there 👋 this is SpaceJoy</div>
 
-# <div align="center"><img src="https://eo-ysy.146019.xyz/bqb/AM/hp/bqb_005.gif" alt="天禄辟邪玩~喵~" width="48%"> <img src="https://eo-ysy.146019.xyz/bqb/AM/hp/bqb_006.gif" alt="天禄和辟邪可以一起生蛋！嗷~" width="48%"></div>
+# <div align="center"><img src="https://eo-ysy.146019.xyz/bqb/AM/hp/bqb_003.gif" alt="天禄辟邪玩~喵~" width="48%"> <img src="https://eo-ysy.146019.xyz/bqb/AM/hp/bqb_006.gif" alt="天禄和辟邪可以一起生蛋！嗷~" width="48%"></div>
 
 ## <div align="center">记忆塑造灵魂，灵魂影响记忆<br/>Memory Shapes the Soul, and the Soul Affects Memory</div>
 
