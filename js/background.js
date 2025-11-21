@@ -25,7 +25,7 @@ function getLocalRandomBackground() {
 }
 
 // 三张预取 + 多层淡入淡出实现
-const RANDOM_API_BASE = "https://eo-rad.ysy.146019.xyz/";
+const RANDOM_API_BASE = "https://rad.ysy.spacjoy.top/";
 function mapDir(layout) {
     // 新的目录结构：bz下按设备类型分类，不再区分深色模式
     if (layout === "desktop") return "bz/hp"; // 横屏
