@@ -22,7 +22,7 @@
 
 # <div align="center">🔗 Services</div>
 
-# <div align="center"><img src="https://ysy.spacjoy.top/bqb/AM/hp/bqb_004.gif" alt="转圈圈~喵~" style="width:25%; height:auto;"></div>
+# <div align="center"><img src="https://ysy.spacjoy.top/bqb/AM/hp/bqb_002.gif" alt="转圈圈~喵~" style="width:25%; height:auto;"></div>
 
 ## <div align="center"><a href="https://nf.spacjoy.top"><img src="https://img.shields.io/badge/喵~-nf.spacjoy.top-3EA8FF?logo=netlify" title="点击访问" /></a> <a href="https://eo.spacjoy.top"><img src="https://img.shields.io/badge/嗷~-eo.spacjoy.top-3EA8FF?logo=EdgeOne" title="备用（edgeone）" /></a> <a href="https://146019.xyz"><img src="https://img.shields.io/badge/备用1-146019.xyz-3EA8FF?logo=CloudFlare" title="备用1" /></a> <a href="https://2012520.xyz"><img src="https://img.shields.io/badge/备用2-2012520.xyz-3EA8FF?logo=macys" title="备用2" /></a></div>
 
