@@ -531,7 +531,7 @@ async function checkAllServerStatus() {
     const servers = [
         {
             id: "Blog",
-            url: "https://home.146019.xyz:1125",
+            url: "https://eo-blog.spacjoy.top",
             name: "Blog",
         },
         { id: "fnos", url: "https://ys.146019.xyz:1125", name: "飞牛服务" },
