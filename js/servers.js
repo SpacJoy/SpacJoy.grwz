@@ -7,6 +7,82 @@ const DEFAULT_ICON_PATHS = [
 ];
 const DEGRADED_HTTP_CODES = new Set([401, 403, 404, 405, 406, 429, 451]);
 
+async function checkAllServerStatus() {
+    if (window.isCheckingServers) return;
+    (window.logger || console).info(
+        `[Server Check] 开始批量检测所有服务器状态`
+    );
+    window.isCheckingServers = true;
+    const servers = [
+        {
+            id: "Blog",
+            url: "https://blog.spacjoy.top",
+            name: "Blog",
+        },
+        { id: "fnos", url: "https://ys.spacjoy.top:1125", name: "飞牛服务" },
+        { id: "moontv", url: "https://moon-nf.netlify.app", name: "MoonTV" },
+        {
+            id: "moon-primary",
+            url: "https://tv.spacjoy.top:1125",
+            name: "MoonTV主站",
+        },
+    ];
+    const promises = servers.map(async (server) => {
+        try {
+            const status = await checkServerStatus(server);
+            updateServerStatusDisplay(server.id, status);
+            return { id: server.id, name: server.name, ...status };
+        } catch (error) {
+            updateServerStatusDisplay(server.id, {
+                online: false,
+                status: "error",
+                error: error.message,
+            });
+            return {
+                id: server.id,
+                name: server.name,
+                online: false,
+                status: "error",
+                error: error.message,
+            };
+        }
+    });
+    try {
+        const results = await Promise.all(promises);
+        (window.logger || console).info(
+            `[Server Check] 所有服务器检测完成，共检测 ${results.length} 个服务器`
+        );
+        // 汇总在线和离线数量
+        const onlineCount = results.filter((r) => r.online).length;
+        const offlineCount = results.length - onlineCount;
+        (window.logger || console).info(
+            `[Server Check] 检测结果汇总: 在线 ${onlineCount} 个, 离线 ${offlineCount} 个`
+        );
+        window.isCheckingServers = false;
+        // 标记服务器检查已完成
+        if (window.loadingStates) {
+            window.loadingStates.serversChecked = true;
+            (window.logger || console).debug(
+                `[Server Check] 服务器状态已标记为检查完成`
+            );
+            // 检查是否可以开始预加载背景图
+            if (window.checkCanStartPrefetch) {
+                window.checkCanStartPrefetch();
+            }
+        }
+    } catch (e) {
+        (window.logger || console).error(
+            `[Server Check] 批量检测服务器过程中发生错误:`,
+            e
+        );
+        window.isCheckingServers = false;
+        // 即使发生错误也标记检查完成
+        if (window.loadingStates) {
+            window.loadingStates.serversChecked = true;
+        }
+    }
+}
+
 // 服务器检测
 async function checkServerStatus(target, timeout = 8000) {
     const config = typeof target === "string" ? { url: target } : target || {};
@@ -522,81 +598,7 @@ function getProbeMethodLabel(method, isZh) {
     }
 }
 
-async function checkAllServerStatus() {
-    if (window.isCheckingServers) return;
-    (window.logger || console).info(
-        `[Server Check] 开始批量检测所有服务器状态`
-    );
-    window.isCheckingServers = true;
-    const servers = [
-        {
-            id: "Blog",
-            url: "https://blog.spacjoy.top",
-            name: "Blog",
-        },
-        { id: "fnos", url: "https://ys.146019.xyz:1125", name: "飞牛服务" },
-        { id: "moontv", url: "https://moon-nf.netlify.app", name: "MoonTV" },
-        {
-            id: "moon-primary",
-            url: "https://tv.146019.xyz:1125",
-            name: "MoonTV主站",
-        },
-    ];
-    const promises = servers.map(async (server) => {
-        try {
-            const status = await checkServerStatus(server);
-            updateServerStatusDisplay(server.id, status);
-            return { id: server.id, name: server.name, ...status };
-        } catch (error) {
-            updateServerStatusDisplay(server.id, {
-                online: false,
-                status: "error",
-                error: error.message,
-            });
-            return {
-                id: server.id,
-                name: server.name,
-                online: false,
-                status: "error",
-                error: error.message,
-            };
-        }
-    });
-    try {
-        const results = await Promise.all(promises);
-        (window.logger || console).info(
-            `[Server Check] 所有服务器检测完成，共检测 ${results.length} 个服务器`
-        );
-        // 汇总在线和离线数量
-        const onlineCount = results.filter((r) => r.online).length;
-        const offlineCount = results.length - onlineCount;
-        (window.logger || console).info(
-            `[Server Check] 检测结果汇总: 在线 ${onlineCount} 个, 离线 ${offlineCount} 个`
-        );
-        window.isCheckingServers = false;
-        // 标记服务器检查已完成
-        if (window.loadingStates) {
-            window.loadingStates.serversChecked = true;
-            (window.logger || console).debug(
-                `[Server Check] 服务器状态已标记为检查完成`
-            );
-            // 检查是否可以开始预加载背景图
-            if (window.checkCanStartPrefetch) {
-                window.checkCanStartPrefetch();
-            }
-        }
-    } catch (e) {
-        (window.logger || console).error(
-            `[Server Check] 批量检测服务器过程中发生错误:`,
-            e
-        );
-        window.isCheckingServers = false;
-        // 即使发生错误也标记检查完成
-        if (window.loadingStates) {
-            window.loadingStates.serversChecked = true;
-        }
-    }
-}
+
 
 function recheckServerStatus() {
     (window.logger || console).info(
