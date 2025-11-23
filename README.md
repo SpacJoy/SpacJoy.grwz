@@ -26,7 +26,7 @@
 
 # <div align="center"><img src="https://eo-ysy.146019.xyz/bqb/AM/hp/bqb_004.gif" alt="转圈圈~喵~" style="width:55%; height:auto;"></div>
 
-# <div align="center"><a href="https://nf.spacjoy.top"><img src="https://img.shields.io/badge/喵~-nf.spacjoy.top-3EA8FF?logo=netlify" title="点击访问" /></a> <a href="https://eo.spacjoy.top"><img src="https://img.shields.io/badge/嗷~-eo.spacjoy.top-3EA8FF?logo=EdgeOne" title="备用（edgeone）" /></a> <a href="https://cf.spacjoy.top"><img src="https://img.shields.io/badge/备用1-cf.spacjoy.top-3EA8FF?logo=CloudFlare" title="备用1" /></a> <a href="https://cf-blog.spacjoy.top"><img src="https://img.shields.io/badge/备用博客-blog.spacjoy.top-3EA8FF?logo=CloudFlare" title="备用博客" /></a></div>
+# <div align="center"><a href="https://eo.spacjoy.top"><img src="https://img.shields.io/badge/嗷~-eo.spacjoy.top-3EA8FF?logo=EdgeOne" title="备用（edgeone）" /></a> <a href="https://spacjoy.top"><img src="https://img.shields.io/badge/备用-spacjoy.top-3EA8FF?logo=CloudFlare" title="备用1" /></a> <a href="https://blog.spacjoy.top"><img src="https://img.shields.io/badge/博客-blog.spacjoy.top-3EA8FF?logo=edgeone" title="博客" /></a> <a href="https://blog.146019.xyz"><img src="https://img.shields.io/badge/备用博客-blog.146019.xyz-3EA8FF?logo=CloudFlare" title="备用博客" /></a></div>
 
 # <div align="center"><img src="https://raw.githubusercontent.com/alexnaiman/alexnaiman/master/resources/bongocat.gif" width="200px" /> How to reach me: ...</div>
 
