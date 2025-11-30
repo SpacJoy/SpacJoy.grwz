@@ -19,11 +19,11 @@ async function checkAllServerStatus() {
             url: "https://blog.spacjoy.top",
             name: "Blog",
         },
-        { id: "fnos", url: "https://ys.spacjoy.top:1125", name: "飞牛服务" },
+        { id: "fnos", url: "https://ys.spacejoy.top:1125", name: "飞牛服务" },
         { id: "moontv", url: "https://moon-nf.netlify.app", name: "MoonTV" },
         {
             id: "moon-primary",
-            url: "https://tv.spacjoy.top:1125",
+            url: "https://tv.spacejoy.top:1125",
             name: "MoonTV主站",
         },
     ];
