@@ -1,5 +1,5 @@
 (function () {
-    const STICKER_ENDPOINT = "https://eo-rad.ysy.146019.xyz/bqb/";
+    const STICKER_ENDPOINT = "https://rad.ysy.spacjoy.top/bqb/";
     const PREFETCH_TARGET = 5;
     const MAX_INFLIGHT = 3;
 

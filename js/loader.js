@@ -79,7 +79,7 @@ window.setLoadingState = setLoadingState;
 window.checkCanHideLoader = checkCanHideLoader;
 (function initLoadingImage() {
     // 使用新的目录结构：bqb/AM（替换原：/res/loading）
-    const RANDOM_ENDPOINT = "https://eo-rad.ysy.146019.xyz/bqb/AM";
+    const RANDOM_ENDPOINT = "https://rad.ysy.spacjoy.top/bqb/AM";
     const imgEl = document.getElementById("loading-gif");
     if (!imgEl) return;
 

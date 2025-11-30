@@ -304,19 +304,19 @@ function replaceLocalImagePaths(markdownText) {
     // 匹配格式：src="bqb_xxx.gif" 或 src='bqb_xxx.gif'
     let processedText = markdownText.replace(
         /src=["']([^"']*bqb_\d+\.gif)["']/g,
-        'src="https://eo.ysy.146019.xyz/bqb/AM/hp/$1"'
+        'src="https://ysy.spacjoy.top/bqb/AM/hp/$1"'
     );
 
     // 也处理可能的webp格式
     processedText = processedText.replace(
         /src=["']([^"']*bqb_\d+\.webp)["']/g,
-        'src="https://eo.ysy.146019.xyz/bqb/AM/hp/$1"'
+        'src="https://ysy.spacjoy.top/bqb/AM/hp/$1"'
     );
 
     // 处理loading图片
     processedText = processedText.replace(
         /src=["']([^"']*loading_\d+\.(?:gif|webp))["']/g,
-        'src="https://eo.ysy.146019.xyz/bqb/AM/$1"'
+        'src="https://ysy.spacjoy.top/bqb/AM/$1"'
     );
 
     (window.logger || console).debug("[Markdown] 图片路径替换完成");

@@ -23,9 +23,8 @@ const DOMAIN_RULES = [
     {
         hosts: [
             "rad.ysy.146019.xyz",
-            "eo-rad.ysy.146019.xyz",
             "rad.ysy.spacjoy.top",
-            "eo-rad.ysy.spacjoy.top",
+            "rad.ysy.spacejoy.top",
         ],
         bucketName: "YSY_BUCKET",
         kvPrefix: "idx:ysy:",
@@ -35,9 +34,8 @@ const DOMAIN_RULES = [
     {
         hosts: [
             "rad.data.146019.xyz",
-            "eo-rad.data.146019.xyz",
             "rad.data.spacjoy.top",
-            "eo-rad.data.spacjoy.top",
+            "rad.data.spacejoy.top",
         ],
         bucketName: "DATA_BUCKET",
         kvPrefix: "idx:data:",
@@ -47,9 +45,8 @@ const DOMAIN_RULES = [
     {
         hosts: [
             "rad.all.146019.xyz",
-            "eo-rad.all.146019.xyz",
             "rad.all.spacjoy.top",
-            "eo-rad.all.spacjoy.top",
+            "rad.all.spacejoy.top",
         ],
         allowPathAccess: false,
         allowManualRefresh: false,
