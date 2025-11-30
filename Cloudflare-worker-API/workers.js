@@ -22,9 +22,9 @@ const chunkCache = new Map();
 const DOMAIN_RULES = [
     {
         hosts: [
-            "rad.ysy.146019.xyz",
-            "rad.ysy.spacjoy.top",
-            "rad.ysy.spacejoy.top",
+            "rad.146019.xyz",
+            "rad.spacjoy.top",
+            "rad.spacejoy.top",
         ],
         bucketName: "YSY_BUCKET",
         kvPrefix: "idx:ysy:",
