@@ -97,10 +97,10 @@ function loadFirstBackground() {
     // --- 背景图模式切换 ---
     // 模式1：优先使用本地背景图（默认启用）
     // 逻辑：尝试从 localImages 获取图片，如果失败或为空则回退到 API
-    const url = getLocalRandomBackground();
+    // const url = getLocalRandomBackground();
 
     // 模式2：仅使用随机图API（如需启用，请注释掉上面的模式1代码，并取消注释下方代码）
-    // const url = getRandomBackground();
+    const url = getRandomBackground();
     // ---------------------
 
     if (!url) return;
