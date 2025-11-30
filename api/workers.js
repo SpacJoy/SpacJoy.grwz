@@ -31,32 +31,10 @@ const DOMAIN_RULES = [
         allowPathAccess: true,
         allowManualRefresh: true,
     },
-    {
-        hosts: [
-            "rad.data.146019.xyz",
-            "rad.data.spacjoy.top",
-            "rad.data.spacejoy.top",
-        ],
-        bucketName: "DATA_BUCKET",
-        kvPrefix: "idx:data:",
-        allowPathAccess: true,
-        allowManualRefresh: true,
-    },
-    {
-        hosts: [
-            "rad.all.146019.xyz",
-            "rad.all.spacjoy.top",
-            "rad.all.spacejoy.top",
-        ],
-        allowPathAccess: false,
-        allowManualRefresh: false,
-        multiBucket: true,
-    },
 ];
 
 const MULTI_BUCKET_CHOICES = [
     { bucketName: "YSY_BUCKET", kvPrefix: "idx:ysy:" },
-    { bucketName: "DATA_BUCKET", kvPrefix: "idx:data:" },
 ];
 
 export default {
