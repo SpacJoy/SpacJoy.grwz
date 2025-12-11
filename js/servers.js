@@ -23,7 +23,7 @@ async function checkAllServerStatus() {
         { id: "moontv", url: "https://moon-nf.netlify.app", name: "MoonTV" },
         {
             id: "moon-primary",
-            url: "https://tv.spacejoy.top:1125",
+            url: "https://moontv.spacejoy.top",
             name: "MoonTV主站",
         },
     ];
